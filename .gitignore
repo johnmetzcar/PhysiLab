@@ -1,0 +1,9 @@
+*.svg
+output/*.xml
+*.csv
+*.o
+*.mat
+*.png
+*.DS_store
+**./DS_store
+PhysiBoSS_Cell_Lines
