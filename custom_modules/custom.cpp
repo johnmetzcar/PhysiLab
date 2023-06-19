@@ -125,6 +125,20 @@ void create_cell_types( void )
 	/*
 	   This summarizes the setup. 
 	*/
+
+	/*
+       Cell rule definitions 
+	*/
+
+	setup_cell_rules(); 
+
+	/* 
+	   Put any modifications to individual cell definitions here. 
+	   
+	   This is a good place to set custom functions. 
+	*/ 
+
+	cell_defaults.functions.update_phenotype = from_nodes_to_cell; 
 	
 	display_cell_definitions( std::cout ); 
 
@@ -150,6 +164,34 @@ void setup_tissue( void )
 {
 	// load cells from your CSV file
 	load_cells_from_pugixml(); 	
+}
+
+void from_nodes_to_cell(Cell* pCell, Phenotype& phenotype, double dt)
+{
+	double prosurvival_value = pCell->phenotype.intracellular->get_boolean_variable_value("Apoptosis") ? 1.0 : 0.0;
+
+	static int start_phase_index; // Q_phase_index; 
+	static int end_phase_index; // K_phase_index;
+	double multiplier = 1.0;
+
+	// live model 
+			
+	if( pCell->phenotype.cycle.model().code == PhysiCell_constants::live_cells_cycle_model )
+	{
+		start_phase_index = phenotype.cycle.model().find_phase_index( PhysiCell_constants::live );
+		end_phase_index = phenotype.cycle.model().find_phase_index( PhysiCell_constants::live );
+
+		multiplier = ( ( prosurvival_value * 20 ) + 1 ); //[1, 21]
+		phenotype.cycle.data.transition_rate(start_phase_index,end_phase_index) = multiplier *	phenotype.cycle.data.transition_rate(start_phase_index,end_phase_index);
+		std::cout<< "prosurvival_value: " << prosurvival_value << " multiplier: " << multiplier << std::endl;
+	}
+	else
+	{
+		std::cout << "Warning: from_nodes_to_cell() is only implemented for live cells model. \n";
+		std::cout << "         This function will not affect the transition rates for the current cell cycle model. \n";
+	}
+
+	pCell->set_internal_uptake_constants(dt); // why this? because we are not using the default uptake and secretion rates???
 }
 
 void pre_update_intracellular( Cell* pCell, Phenotype& phenotype, double dt )
