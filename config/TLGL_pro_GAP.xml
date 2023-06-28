@@ -23,7 +23,7 @@
     </domain>
 
     <overall>
-        <max_time units="min">720</max_time>
+        <max_time units="min">7200</max_time>
         <time_units>min</time_units>
         <space_units>micron</space_units>
         <dt_diffusion units="min">0.02</dt_diffusion>
@@ -76,7 +76,7 @@
         <variable name="pro_GAP" units="dimensionless" ID="1">
             <physical_parameter_set>
                 <diffusion_coefficient units="micron^2/min">1000</diffusion_coefficient>
-                <decay_rate units="1/min">1</decay_rate>
+                <decay_rate units="1/min">0.1</decay_rate>
             </physical_parameter_set>
             <initial_condition units="dimensionless">0.0</initial_condition>
             <Dirichlet_boundary_condition units="dimensionless" enabled="True">1</Dirichlet_boundary_condition>
@@ -106,12 +106,12 @@
             <phenotype>
                 <cycle code="5" name="live">
                     <phase_transition_rates units="1/min">
-                        <rate start_index="0" end_index="0" fixed_duration="false">0.0</rate>
+                        <rate start_index="0" end_index="0" fixed_duration="false">0.00072</rate>
                     </phase_transition_rates>
                 </cycle>
                 <death>
                     <model code="100" name="apoptosis">
-                        <death_rate units="1/min">0</death_rate>
+                        <death_rate units="1/min">0.00072</death_rate>
                         <phase_durations units="min">
                             <duration index="0" fixed_duration="true">516</duration>
                         </phase_durations>
@@ -141,18 +141,18 @@
                     </model>
                 </death>
                 <volume>
-                    <total units="micron^3">1000</total>
+                    <total units="micron^3">2494</total>
                     <fluid_fraction units="dimensionless">0.75</fluid_fraction>
                     <nuclear units="micron^3">540</nuclear>
-                    <fluid_change_rate units="1/min">0.0</fluid_change_rate>
-                    <cytoplasmic_biomass_change_rate units="1/min">0.0</cytoplasmic_biomass_change_rate>
-                    <nuclear_biomass_change_rate units="1/min">0.0</nuclear_biomass_change_rate>
-                    <calcified_fraction units="dimensionless">0</calcified_fraction>
-                    <calcification_rate units="1/min">0</calcification_rate>
-                    <relative_rupture_volume units="dimensionless">2.0</relative_rupture_volume>
+                    <fluid_change_rate units="1/min">0.05</fluid_change_rate>
+                    <cytoplasmic_biomass_change_rate units="1/min">0.0045</cytoplasmic_biomass_change_rate>
+                    <nuclear_biomass_change_rate units="1/min">0.0055</nuclear_biomass_change_rate>
+                    <calcified_fraction units="dimensionless">0.0</calcified_fraction>
+                    <calcification_rate units="1/min">0.0</calcification_rate>
+                    <relative_rupture_volume units="dimensionless">2</relative_rupture_volume>
                 </volume>
                 <mechanics>
-                    <cell_cell_adhesion_strength units="micron/min">0</cell_cell_adhesion_strength>
+                    <cell_cell_adhesion_strength units="micron/min">0.4</cell_cell_adhesion_strength>
                     <cell_cell_repulsion_strength units="micron/min">10.0</cell_cell_repulsion_strength>
                     <relative_maximum_adhesion_distance units="dimensionless">1.25</relative_maximum_adhesion_distance>
                     <cell_adhesion_affinities>
@@ -165,7 +165,7 @@
                     <cell_BM_adhesion_strength units="micron/min">4.0</cell_BM_adhesion_strength>
                     <cell_BM_repulsion_strength units="micron/min">10.0</cell_BM_repulsion_strength>
                     <attachment_elastic_constant units="1/min">0.01</attachment_elastic_constant>
-                    <attachment_rate units="1/min">10.0</attachment_rate>
+                    <attachment_rate units="1/min">0.0</attachment_rate>
                     <detachment_rate units="1/min">0.0</detachment_rate>
                 </mechanics>
                 <motility>
@@ -198,9 +198,9 @@
                         <net_export_rate units="total substrate/min">0</net_export_rate>
                     </substrate>
                     <substrate name="pro_GAP">
-                        <secretion_rate units="1/min">5.0</secretion_rate>
+                        <secretion_rate units="1/min">0.0</secretion_rate>
                         <secretion_target units="substrate density">1.0</secretion_target>
-                        <uptake_rate units="1/min">0.0</uptake_rate>
+                        <uptake_rate units="1/min">0.05</uptake_rate>
                         <net_export_rate units="total substrate/min">0.0</net_export_rate>
                     </substrate>
                 </secretion>
@@ -236,8 +236,9 @@
             </phenotype>
             <custom_data>
                 <somedata conserved="false" units="dimensionless" description="">1.0</somedata>
-                <value1 conserved="false" units="" description="">5.0</value1>
-                <value2 conserved="false" units="" description="">10.0</value2>
+                <drug_threshold conserved="false" units="" description="">0.5</drug_threshold>
+                <apoptosis_multiplier conserved="false" units="" description="">10.0</apoptosis_multiplier>
+                <proliferation_multiplier conserved="false" units="" description="">10.0</proliferation_multiplier>
             </custom_data>
         </cell_definition>
     </cell_definitions>

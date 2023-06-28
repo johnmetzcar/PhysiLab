@@ -76,7 +76,7 @@ std::vector<bool> nodes;
 void create_cell_types( void )
 {
 	// set the random seed 
-	SeedRandom( parameters.ints("random_seed") );  
+	// SeedRandom( parameters.ints("random_seed") );  
 	
 	/* 
 	   Put any modifications to default cell definition here if you 
@@ -85,16 +85,18 @@ void create_cell_types( void )
 	   This is a good place to set default functions. 
 	*/ 
 	
-	cell_defaults.functions.volume_update_function = standard_volume_update_function;
-	cell_defaults.functions.update_velocity = NULL;
+	// cell_defaults.functions.volume_update_function = standard_volume_update_function;
+	cell_defaults.functions.update_velocity = standard_update_cell_velocity;
 
-	cell_defaults.functions.update_migration_bias = NULL; 
+	// cell_defaults.functions.update_migration_bias = NULL; 
 	cell_defaults.functions.pre_update_intracellular = pre_update_intracellular; 
 	cell_defaults.functions.post_update_intracellular = post_update_intracellular; 
-	cell_defaults.functions.custom_cell_rule = NULL; 
+	// cell_defaults.functions.custom_cell_rule = NULL; 
 	
-	cell_defaults.functions.add_cell_basement_membrane_interactions = NULL; 
-	cell_defaults.functions.calculate_distance_to_membrane = NULL; 
+	cell_defaults.functions.volume_update_function = standard_volume_update_function;
+
+	// cell_defaults.functions.add_cell_basement_membrane_interactions = NULL; 
+	// cell_defaults.functions.calculate_distance_to_membrane = NULL; 
 	
 	cell_defaults.custom_data.add_variable(parameters.strings("node_to_visualize"), "dimensionless", 0.0 ); //for paraview visualization
 
@@ -138,7 +140,8 @@ void create_cell_types( void )
 	   This is a good place to set custom functions. 
 	*/ 
 
-	cell_defaults.functions.update_phenotype = from_nodes_to_cell; 
+	// cell_defaults.functions.update_phenotype = from_nodes_to_cell; 
+	cell_defaults.functions.update_phenotype = drug_effect; 
 	
 	display_cell_definitions( std::cout ); 
 
@@ -166,10 +169,105 @@ void setup_tissue( void )
 	load_cells_from_pugixml(); 	
 }
 
+void drug_effect(Cell* pCell, Phenotype& phenotype, double dt)
+{
+	Cell_Definition* pCD = find_cell_definition(pCell->type_name);	
+
+	double drug_conc = get_single_signal(pCell, "pro_GAP");
+	// std::cout<<"drug_conc = "<<drug_conc<<std::endl;
+	if(drug_conc > pCell->custom_data["drug_threshold"])
+	{
+		pCell->phenotype.intracellular->set_boolean_variable_value("pro_GAP", true);
+	}
+	else
+	{
+		pCell->phenotype.intracellular->set_boolean_variable_value("pro_GAP", false);
+	}
+	
+	// Without doing something with the accumulating substrate, internal values rises without end. So - skipping for now 
+	// and assuming uptake is just proportional to the external concentration. I could do something fancy 
+	// like slowing the rate of uptake as the internal concentration rises, but I don't think that's merited at this time.
+
+	bool Apoptosis = pCell->phenotype.intracellular->get_boolean_variable_value("Apoptosis"); // ? 1.0 : 0.0;
+	bool Proliferation = pCell->phenotype.intracellular->get_boolean_variable_value("Proliferation"); // ? 1.0 : 0.0;
+
+	if(Apoptosis == true)
+	{
+		// double base_cycle_entry = get_single_base_behavior(pCell, "cycle entry");
+		// std::cout<<"base_cycle_entry = "<<base_cycle_entry<<std::endl;
+		// set_single_behavior( pCell , "cycle entry" , base_cycle_entry  ); 
+
+		double base_apoptosis = get_single_base_behavior(pCell, "apoptosis");
+		// std::cout<<"base_apoptosis = "<<base_apoptosis<<std::endl;
+		set_single_behavior( pCell , "apoptosis" , base_apoptosis * pCell->custom_data["apoptosis_multiplier"]  );
+	}
+
+	else
+	{
+		set_single_behavior( pCell , "apoptosis" , 0  );
+	}
+
+
+	// if(Apoptosis == true && Proliferation == true)
+	// {
+	// 	double base_cycle_entry = get_single_base_behavior(pCell, "cycle entry");
+	// 	std::cout<<"base_cycle_entry = "<<base_cycle_entry<<std::endl;
+	// 	set_single_behavior( pCell , "cycle entry" , base_cycle_entry * pCell->custom_data["proliferation_multiplier"] ); 
+		
+	// 	double base_apoptosis = get_single_base_behavior(pCell, "apoptosis");
+	// 	// std::cout<<"base_apoptosis = "<<base_apoptosis<<std::endl;
+	// 	set_single_behavior( pCell , "apoptosis" , base_apoptosis * pCell->custom_data["apoptosis_multiplier"]  );
+	// }
+
+	// else if(Apoptosis == false && Proliferation == true)
+	// {
+	// 	double base_cycle_entry = get_single_base_behavior(pCell, "cycle entry");
+	// 	std::cout<<"base_cycle_entry = "<<base_cycle_entry<<std::endl;
+	// 	set_single_behavior( pCell , "cycle entry" , base_cycle_entry * pCell->custom_data["proliferation_multiplier"] ); 
+
+	// 	set_single_behavior( pCell , "apoptosis" , 0  );
+	// }
+
+	// else if(Apoptosis == true && Proliferation == false)
+	// {
+	// 	set_single_behavior( pCell , "cycle entry" , 0  ); 
+
+	// 	double base_apoptosis = get_single_base_behavior(pCell, "apoptosis");
+	// 	std::cout<<"base_apoptosis = "<<base_apoptosis<<std::endl;
+	// 	set_single_behavior( pCell , "apoptosis" , base_apoptosis * pCell->custom_data["apoptosis_multiplier"]  );
+	// }
+
+	// else
+	// {
+	// 	set_single_behavior( pCell , "cycle entry" , 0  ); 
+	// 	set_single_behavior( pCell , "apoptosis" , 0  );
+	// }
+}
+
+
+
+void test_function(Cell* pCell, Phenotype& phenotype, double dt)
+{
+	// double value1 = pCell->custom_data["value1"];
+	// double value2 = pCell->custom_data["value2"];
+	// std::cout<<"value1 = "<<value1<<std::endl;
+	// std::cout<<"value2 = "<<value2<<std::endl;
+	// std::cout<<"Boolean result "<<(value1 < value2)<< std::endl;
+
+	pCell->phenotype.intracellular->get_boolean_variable_value("Apoptosis"); // ? 1.0 : 0.0;
+	// pCell->phenotype.intracellular->set_boolean_variable_value("Caspase", true);
+
+
+
+	return;
+}
+
 void from_nodes_to_cell(Cell* pCell, Phenotype& phenotype, double dt)
 {
 	double prosurvival_value = pCell->phenotype.intracellular->get_boolean_variable_value("Apoptosis") ? 1.0 : 0.0;
-
+	std::cout<<"Apotosis = "<< pCell->phenotype.intracellular->get_boolean_variable_value("Apoptosis")<<std::endl;
+	pCell->phenotype.intracellular->set_boolean_variable_value("Apoptosis", true);
+	std::cout<<"Apotosis = "<<pCell->phenotype.intracellular->get_boolean_variable_value("Apoptosis")<<std::endl;
 	static int start_phase_index; // Q_phase_index; 
 	static int end_phase_index; // K_phase_index;
 	double multiplier = 1.0;
@@ -215,12 +313,12 @@ std::vector<std::string> my_coloring_function( Cell* pCell )
 	
 	if ( !pCell->phenotype.intracellular->get_boolean_variable_value( parameters.strings("node_to_visualize") ) )
 	{
-		output[0] = "rgb(255,0,0)";
+		output[0] = "rgb(255,0,0)"; // Red
 		output[2] = "rgb(125,0,0)";
 		
 	}
 	else{
-		output[0] = "rgb(0, 255,0)";
+		output[0] = "rgb(0, 255,0)"; // Green
 		output[2] = "rgb(0, 125,0)";
 	}
 	

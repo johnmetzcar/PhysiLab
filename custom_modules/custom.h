@@ -83,6 +83,8 @@ void setup_microenvironment( void );
 
 std::vector<std::string> my_coloring_function( Cell* );
 
+void test_function( Cell* pCell, Phenotype& phenotype, double dt );
+void drug_effect( Cell* pCell, Phenotype& phenotype, double dt );
 // custom cell phenotype functions could go here 
 void from_nodes_to_cell(Cell* pCell, Phenotype& phenotype, double dt);
 void pre_update_intracellular( Cell* pCell, Phenotype& phenotype, double dt );
