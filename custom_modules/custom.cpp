@@ -244,7 +244,40 @@ void drug_effect(Cell* pCell, Phenotype& phenotype, double dt)
 	// }
 }
 
+void add_compound( double drug_amount, double dose_interval ) 
+{
 
+	// Adds compounds uniformly to the microenvironment at concentration/amount "drug_amount" and every "drug_interval" minutes
+
+    int number_of_voxels = microenvironment.mesh.voxels.size();
+
+	// std::cout<<number_of_voxels<<" voxels"<<std::endl;
+	
+	static int pro_GAP_index = BioFVM::microenvironment.find_density_index( "pro_GAP" ); 
+	if (pro_GAP_index < 0) 
+    {
+        std::cout << "        static int pro_GAP_index = " <<pro_GAP_index << std::endl;
+        std::exit(-1);  //rwh: should really do these for each
+    }
+
+    for( int n=0; n < number_of_voxels ; n++ )
+    {
+		BioFVM::microenvironment.density_vector(n)[pro_GAP_index] = drug_amount;
+		// (*p_density_vectors)[n][ECM_density_index] = ecm.ecm_voxels[n].density;
+		// std::cout<<BioFVM::microenvironment.density_vector(n)[ECM_anisotropy_index]<<std::endl;
+		// std::cout<<&BioFVM::microenvironment.density_vector(n)[ECM_anisotropy_index]<<std::endl;
+		// BioFVM::microenvironment.density_vector(n)[ECM_anisotropy_index] = ecm.ecm_voxels[n].anisotropy;
+		// std::cout<<BioFVM::microenvironment.density_vector(n)[ECM_anisotropy_index]<<std::endl;
+		// BioFVM::microenvironment.density_vector(n)[ECM_density_index] = ecm.ecm_voxels[n].density;
+		// std::cout<<BioFVM::microenvironment.density_vector(n)[ECM_density_index]<<std::endl;
+		// BioFVM::microenvironment.voxels[i].density_vector[ECM_density_index] = ecm.ecm_voxels[i].density;
+		//  = ecm.ecm_voxels[i].anisotropy;
+	
+        // BioFVM::microenvironment.voxels[i].density_vector[ECM_density_index] = ecm.ecm_voxels[i].density;
+    }
+    return;
+
+}
 
 void test_function(Cell* pCell, Phenotype& phenotype, double dt)
 {

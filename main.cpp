@@ -183,6 +183,8 @@ int main( int argc, char* argv[] )
 		report_file<<"simulated time\tnum cells\tnum division\tnum death\twall time"<<std::endl;
 	}
 	
+	int dosing_counter = 0;
+
 	// main loop 
 	
 	try 
@@ -231,9 +233,18 @@ int main( int argc, char* argv[] )
 			  Custom add-ons could potentially go here. 
 			*/
 
-
+			// Adds compounds uniformly to the microenvironment at concentration/amount "drug_amount" and every "drug_interval" minutes
+			if(fabs(PhysiCell_globals.current_time - (dosing_counter * parameters.doubles("dose_interval"))) < 0.01*diffusion_dt)
+			{
+				add_compound( parameters.doubles("drug_amount"), parameters.doubles("dose_interval") ); 
+				std::cout<<"adding compound "<<fabs(PhysiCell_globals.current_time - (dosing_counter * parameters.doubles("dose_interval")))<<std::endl;
+				std::cout<<"current time "<<PhysiCell_globals.current_time<<std::endl;
+				std::cout<<"dosing counter "<<dosing_counter<<std::endl;
+				dosing_counter++;
+			}
 			// update the microenvironment
 			microenvironment.simulate_diffusion_decay( diffusion_dt );
+			// microenvironment.simulate_bulk_sources_and_sinks( diffusion_dt);
 			
 			// run PhysiCell 
 			((Cell_Container *)microenvironment.agent_container)->update_all_cells( PhysiCell_globals.current_time );

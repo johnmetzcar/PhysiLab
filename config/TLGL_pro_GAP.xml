@@ -23,7 +23,7 @@
     </domain>
 
     <overall>
-        <max_time units="min">7200</max_time>
+        <max_time units="min">2880</max_time>
         <time_units>min</time_units>
         <space_units>micron</space_units>
         <dt_diffusion units="min">0.02</dt_diffusion>
@@ -75,16 +75,16 @@
         </variable>
         <variable name="pro_GAP" units="dimensionless" ID="1">
             <physical_parameter_set>
-                <diffusion_coefficient units="micron^2/min">1000</diffusion_coefficient>
+                <diffusion_coefficient units="micron^2/min">0</diffusion_coefficient>
                 <decay_rate units="1/min">0.1</decay_rate>
             </physical_parameter_set>
-            <initial_condition units="dimensionless">0.0</initial_condition>
-            <Dirichlet_boundary_condition units="dimensionless" enabled="True">1</Dirichlet_boundary_condition>
+            <initial_condition units="dimensionless">50</initial_condition>
+            <Dirichlet_boundary_condition units="dimensionless" enabled="False">1</Dirichlet_boundary_condition>
             <Dirichlet_options>
-                <boundary_value ID="xmin" enabled="True">1</boundary_value>
-                <boundary_value ID="xmax" enabled="True">1</boundary_value>
-                <boundary_value ID="ymin" enabled="True">1</boundary_value>
-                <boundary_value ID="ymax" enabled="True">1</boundary_value>
+                <boundary_value ID="xmin" enabled="False">1</boundary_value>
+                <boundary_value ID="xmax" enabled="False">1</boundary_value>
+                <boundary_value ID="ymin" enabled="False">1</boundary_value>
+                <boundary_value ID="ymax" enabled="False">1</boundary_value>
                 <boundary_value ID="zmin" enabled="False">1</boundary_value>
                 <boundary_value ID="zmax" enabled="False">1</boundary_value>
             </Dirichlet_options>
@@ -178,7 +178,7 @@
                         <chemotaxis>
                             <enabled>false</enabled>
                             <substrate>oxygen</substrate>
-                            <direction>1</direction>
+                            <direction>-1</direction>
                         </chemotaxis>
                         <advanced_chemotaxis>
                             <enabled>false</enabled>
@@ -200,7 +200,7 @@
                     <substrate name="pro_GAP">
                         <secretion_rate units="1/min">0.0</secretion_rate>
                         <secretion_target units="substrate density">1.0</secretion_target>
-                        <uptake_rate units="1/min">0.05</uptake_rate>
+                        <uptake_rate units="1/min">0.00</uptake_rate>
                         <net_export_rate units="total substrate/min">0.0</net_export_rate>
                     </substrate>
                 </secretion>
@@ -253,5 +253,7 @@
     <user_parameters>
         <random_seed type="int" units="dimensionless" description="">100</random_seed>
         <node_to_visualize type="string" units="" description="">Apoptosis</node_to_visualize>
+        <dose_interval type="double" units="minutes" description="interval between doses of compound">1440.0</dose_interval>
+        <drug_amount type="double" units="dimensionless" description="concentration/amount of compound to add at dosing interval">50.0</drug_amount>
     </user_parameters>
 </PhysiCell_settings>
