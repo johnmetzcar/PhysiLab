@@ -89,8 +89,8 @@ void create_cell_types( void )
 	cell_defaults.functions.update_velocity = standard_update_cell_velocity;
 
 	// cell_defaults.functions.update_migration_bias = NULL; 
-	cell_defaults.functions.pre_update_intracellular = pre_update_intracellular; 
-	cell_defaults.functions.post_update_intracellular = post_update_intracellular; 
+	cell_defaults.functions.pre_update_intracellular = pre_update_intracellular_drug_effect; 
+	cell_defaults.functions.post_update_intracellular = post_update_intracellular_drug_effect; 
 	// cell_defaults.functions.custom_cell_rule = NULL; 
 	
 	cell_defaults.functions.volume_update_function = standard_volume_update_function;
@@ -140,9 +140,10 @@ void create_cell_types( void )
 	   This is a good place to set custom functions. 
 	*/ 
 
-	// cell_defaults.functions.update_phenotype = from_nodes_to_cell; 
-	cell_defaults.functions.update_phenotype = drug_effect; 
-	
+	Cell_Definition* TLGL = find_cell_definition("TLGL");
+	Cell_Definition* TLGL_resistant = find_cell_definition("TLGL_resistant");
+	TLGL->functions.update_phenotype = transition_to_resistant_cell_type;
+	TLGL_resistant->functions.update_phenotype = transition_to_post_resistant_cell_type;
 	display_cell_definitions( std::cout ); 
 
 
@@ -169,7 +170,7 @@ void setup_tissue( void )
 	load_cells_from_pugixml(); 	
 }
 
-void drug_effect(Cell* pCell, Phenotype& phenotype, double dt)
+void pre_update_intracellular_drug_effect(Cell* pCell, Phenotype& phenotype, double dt)
 {
 	Cell_Definition* pCD = find_cell_definition(pCell->type_name);	
 
@@ -187,7 +188,10 @@ void drug_effect(Cell* pCell, Phenotype& phenotype, double dt)
 	// Without doing something with the accumulating substrate, internal values rises without end. So - skipping for now 
 	// and assuming uptake is just proportional to the external concentration. I could do something fancy 
 	// like slowing the rate of uptake as the internal concentration rises, but I don't think that's merited at this time.
+}
 
+void post_update_intracellular_drug_effect(Cell* pCell, Phenotype& phenotype, double dt)
+{
 	bool Apoptosis = pCell->phenotype.intracellular->get_boolean_variable_value("Apoptosis"); // ? 1.0 : 0.0;
 	bool Proliferation = pCell->phenotype.intracellular->get_boolean_variable_value("Proliferation"); // ? 1.0 : 0.0;
 
@@ -279,19 +283,31 @@ void add_compound( double drug_amount, double dose_interval )
 
 }
 
-void test_function(Cell* pCell, Phenotype& phenotype, double dt)
+void transition_to_resistant_cell_type(Cell* pCell, Phenotype& phenotype, double dt)
 {
-	// double value1 = pCell->custom_data["value1"];
-	// double value2 = pCell->custom_data["value2"];
-	// std::cout<<"value1 = "<<value1<<std::endl;
-	// std::cout<<"value2 = "<<value2<<std::endl;
-	// std::cout<<"Boolean result "<<(value1 < value2)<< std::endl;
+	bool Apoptosis = pCell->phenotype.intracellular->get_boolean_variable_value("Apoptosis"); // ? 1.0 : 0.0;
+	bool pro_GAP = pCell->phenotype.intracellular->get_boolean_variable_value("pro_GAP"); // ? 1.0 : 0.0;
 
-	pCell->phenotype.intracellular->get_boolean_variable_value("Apoptosis"); // ? 1.0 : 0.0;
-	// pCell->phenotype.intracellular->set_boolean_variable_value("Caspase", true);
+	if(pro_GAP == true && Apoptosis == true)
+	{
+		// double base_apoptosis = get_single_base_behavior(pCell, "transform to TLGL_resistant");
+		// std::cout<<"base_apoptosis = "<<base_apoptosis<<std::endl;
+		set_single_behavior( pCell , "transform to TLGL_resistant" , 1E9  );
+	}
+	return;
+}
 
+void transition_to_post_resistant_cell_type( Cell* pCell, Phenotype& phenotype, double dt )
+{
+	bool Apoptosis = pCell->phenotype.intracellular->get_boolean_variable_value("Apoptosis"); // ? 1.0 : 0.0;
+	bool pro_GAP = pCell->phenotype.intracellular->get_boolean_variable_value("pro_GAP"); // ? 1.0 : 0.0;
 
-
+	if(pro_GAP == false && Apoptosis == true)
+	{
+		// double base_apoptosis = get_single_base_behavior(pCell, "transform to TLGL_post_resistant");
+		// std::cout<<"base_apoptosis = "<<base_apoptosis<<std::endl;
+		set_single_behavior( pCell , "transform to TLGL_post_resistant" , 1E9  );
+	}
 	return;
 }
 
@@ -340,23 +356,23 @@ void post_update_intracellular( Cell* pCell, Phenotype& phenotype, double dt )
 	color_node(pCell);
 }
 
-std::vector<std::string> my_coloring_function( Cell* pCell )
-{
-	std::vector< std::string > output( 4 , "rgb(0,0,0)" );
+// std::vector<std::string> my_coloring_function( Cell* pCell )
+// {
+// 	std::vector< std::string > output( 4 , "rgb(0,0,0)" );
 	
-	if ( !pCell->phenotype.intracellular->get_boolean_variable_value( parameters.strings("node_to_visualize") ) )
-	{
-		output[0] = "rgb(255,0,0)"; // Red
-		output[2] = "rgb(125,0,0)";
+// 	if ( !pCell->phenotype.intracellular->get_boolean_variable_value( parameters.strings("node_to_visualize") ) )
+// 	{
+// 		output[0] = "rgb(255,0,0)"; // Red
+// 		output[2] = "rgb(125,0,0)";
 		
-	}
-	else{
-		output[0] = "rgb(0, 255,0)"; // Green
-		output[2] = "rgb(0, 125,0)";
-	}
+// 	}
+// 	else{
+// 		output[0] = "rgb(0, 255,0)"; // Green
+// 		output[2] = "rgb(0, 125,0)";
+// 	}
 	
-	return output;
-}
+// 	return output;
+// }
 
 void color_node(Cell* pCell){
 	std::string node_name = parameters.strings("node_to_visualize");

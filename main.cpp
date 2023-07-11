@@ -159,7 +159,7 @@ int main( int argc, char* argv[] )
 
 	// for simplicity, set a pathology coloring function 
 	
-	std::vector<std::string> (*cell_coloring_function)(Cell*) = my_coloring_function;
+	std::vector<std::string> (*cell_coloring_function)(Cell*) = paint_by_number_cell_coloring;
 	
 	sprintf( filename , "%s/initial.svg" , PhysiCell_settings.folder.c_str() ); 
 	SVG_plot( filename , microenvironment, 0.0 , PhysiCell_globals.current_time, cell_coloring_function );
@@ -234,7 +234,7 @@ int main( int argc, char* argv[] )
 			*/
 
 			// Adds compounds uniformly to the microenvironment at concentration/amount "drug_amount" and every "drug_interval" minutes
-			if(fabs(PhysiCell_globals.current_time - (dosing_counter * parameters.doubles("dose_interval"))) < 0.01*diffusion_dt)
+			if(fabs(PhysiCell_globals.current_time - (dosing_counter * parameters.doubles("dose_interval"))) < 0.01*diffusion_dt && parameters.bools("add_compound") == true)
 			{
 				add_compound( parameters.doubles("drug_amount"), parameters.doubles("dose_interval") ); 
 				std::cout<<"adding compound "<<fabs(PhysiCell_globals.current_time - (dosing_counter * parameters.doubles("dose_interval")))<<std::endl;
