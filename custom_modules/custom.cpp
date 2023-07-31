@@ -142,8 +142,8 @@ void create_cell_types( void )
 
 	Cell_Definition* TLGL = find_cell_definition("TLGL");
 	Cell_Definition* TLGL_resistant = find_cell_definition("TLGL_resistant");
-	TLGL->functions.update_phenotype = transition_to_resistant_cell_type;
-	TLGL_resistant->functions.update_phenotype = transition_to_post_resistant_cell_type;
+	// TLGL->functions.update_phenotype = transition_to_resistant_cell_type;
+	// TLGL_resistant->functions.update_phenotype = transition_to_post_resistant_cell_type;
 	display_cell_definitions( std::cout ); 
 
 
@@ -288,7 +288,8 @@ void transition_to_resistant_cell_type(Cell* pCell, Phenotype& phenotype, double
 	bool Apoptosis = pCell->phenotype.intracellular->get_boolean_variable_value("Apoptosis"); // ? 1.0 : 0.0;
 	bool pro_GAP = pCell->phenotype.intracellular->get_boolean_variable_value("pro_GAP"); // ? 1.0 : 0.0;
 
-	if(pro_GAP == true && Apoptosis == true)
+	// if(pro_GAP == true && Apoptosis == false)
+	if(pro_GAP == true)
 	{
 		// double base_apoptosis = get_single_base_behavior(pCell, "transform to TLGL_resistant");
 		// std::cout<<"base_apoptosis = "<<base_apoptosis<<std::endl;
@@ -302,7 +303,7 @@ void transition_to_post_resistant_cell_type( Cell* pCell, Phenotype& phenotype, 
 	bool Apoptosis = pCell->phenotype.intracellular->get_boolean_variable_value("Apoptosis"); // ? 1.0 : 0.0;
 	bool pro_GAP = pCell->phenotype.intracellular->get_boolean_variable_value("pro_GAP"); // ? 1.0 : 0.0;
 
-	if(pro_GAP == false && Apoptosis == true)
+	if(pro_GAP == false && Apoptosis == false)
 	{
 		// double base_apoptosis = get_single_base_behavior(pCell, "transform to TLGL_post_resistant");
 		// std::cout<<"base_apoptosis = "<<base_apoptosis<<std::endl;

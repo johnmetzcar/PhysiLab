@@ -23,12 +23,12 @@
     </domain>
 
     <overall>
-        <max_time units="min">10080</max_time>
+        <max_time units="min">2880</max_time>
         <time_units>min</time_units>
         <space_units>micron</space_units>
         <dt_diffusion units="min">0.02</dt_diffusion>
         <dt_mechanics units="min">0.1</dt_mechanics>
-        <dt_phenotype units="min">6</dt_phenotype>
+        <dt_phenotype units="min">12</dt_phenotype>
     </overall>
 
     <parallel>
@@ -76,9 +76,9 @@
         <variable name="pro_GAP" units="dimensionless" ID="1">
             <physical_parameter_set>
                 <diffusion_coefficient units="micron^2/min">0</diffusion_coefficient>
-                <decay_rate units="1/min">0.1</decay_rate>
+                <decay_rate units="1/min">0</decay_rate>
             </physical_parameter_set>
-            <initial_condition units="dimensionless">50</initial_condition>
+            <initial_condition units="dimensionless">0</initial_condition>
             <Dirichlet_boundary_condition units="dimensionless" enabled="False">1</Dirichlet_boundary_condition>
             <Dirichlet_options>
                 <boundary_value ID="xmin" enabled="False">1</boundary_value>
@@ -240,14 +240,14 @@
                         <time_stochasticity>0.0</time_stochasticity>
                         <scaling>1.0</scaling>
                         <start_time>0.0</start_time>
-                        <inheritance global="False" />
+                        <inheritance global="true" />
                     </settings>
                 </intracellular>
             </phenotype>
             <custom_data>
                 <somedata conserved="false" units="dimensionless" description="">1.0</somedata>
                 <drug_threshold conserved="false" units="" description="">0.5</drug_threshold>
-                <apoptosis_multiplier conserved="false" units="" description="">10.0</apoptosis_multiplier>
+                <apoptosis_multiplier conserved="false" units="" description="">100000000.0</apoptosis_multiplier>
                 <proliferation_multiplier conserved="false" units="" description="">10.0</proliferation_multiplier>
             </custom_data>
         </cell_definition>
@@ -389,7 +389,7 @@
                         <time_stochasticity>0.0</time_stochasticity>
                         <scaling>1.0</scaling>
                         <start_time>0.0</start_time>
-                        <inheritance global="False" />
+                        <inheritance global="true" />
                     </settings>
                 </intracellular>
             </phenotype>
@@ -563,6 +563,6 @@
         <node_to_visualize type="string" units="" description="">Apoptosis</node_to_visualize>
         <dose_interval type="double" units="minutes" description="interval between doses of compound">1440.0</dose_interval>
         <drug_amount type="double" units="dimensionless" description="concentration/amount of compound to add at dosing interval">50.0</drug_amount>
-        <add_compound type="bool" units="" description="">false</add_compound>
+        <add_compound type="bool" units="" description="">true</add_compound>
     </user_parameters>
 </PhysiCell_settings>

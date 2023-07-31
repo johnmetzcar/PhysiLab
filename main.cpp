@@ -194,6 +194,29 @@ int main( int argc, char* argv[] )
 			// save data if it's time. 
 			if( fabs( PhysiCell_globals.current_time - PhysiCell_globals.next_full_save_time ) < 0.01 * diffusion_dt )
 			{
+			
+			// Adds compounds uniformly to the microenvironment at concentration/amount "drug_amount" and every "drug_interval" minutes. Place AFTER? (or should it be before to record it???) diffusion/decay/souce/sink calculations - so it takes effect in this time step. 
+
+			if(fabs(PhysiCell_globals.current_time - (dosing_counter * parameters.doubles("dose_interval"))) < 0.01*diffusion_dt && parameters.bools("add_compound") == true)
+			{
+				if(dosing_counter == 0)
+				{
+					dosing_counter++;
+				}
+
+				else if(dosing_counter > 0)
+				{
+					add_compound( parameters.doubles("drug_amount"), parameters.doubles("dose_interval") ); 
+					std::cout<<"adding compound "<<fabs(PhysiCell_globals.current_time - (dosing_counter * parameters.doubles("dose_interval")))<<std::endl;
+					std::cout<<"current time "<<PhysiCell_globals.current_time<<std::endl;
+					std::cout<<"dosing counter "<<dosing_counter<<std::endl;
+					dosing_counter++;
+
+				}
+			}
+			
+			std::cout<<"pro_GAP = "<<microenvironment.density_vector(0)[1]<<std::endl;				
+
 				display_simulation_status( std::cout ); 
 				if( PhysiCell_settings.enable_legacy_saves == true )
 				{	
@@ -233,18 +256,8 @@ int main( int argc, char* argv[] )
 			  Custom add-ons could potentially go here. 
 			*/
 
-			// Adds compounds uniformly to the microenvironment at concentration/amount "drug_amount" and every "drug_interval" minutes
-			if(fabs(PhysiCell_globals.current_time - (dosing_counter * parameters.doubles("dose_interval"))) < 0.01*diffusion_dt && parameters.bools("add_compound") == true)
-			{
-				add_compound( parameters.doubles("drug_amount"), parameters.doubles("dose_interval") ); 
-				std::cout<<"adding compound "<<fabs(PhysiCell_globals.current_time - (dosing_counter * parameters.doubles("dose_interval")))<<std::endl;
-				std::cout<<"current time "<<PhysiCell_globals.current_time<<std::endl;
-				std::cout<<"dosing counter "<<dosing_counter<<std::endl;
-				dosing_counter++;
-			}
 			// update the microenvironment
 			microenvironment.simulate_diffusion_decay( diffusion_dt );
-			// microenvironment.simulate_bulk_sources_and_sinks( diffusion_dt);
 			
 			// run PhysiCell 
 			((Cell_Container *)microenvironment.agent_container)->update_all_cells( PhysiCell_globals.current_time );
