@@ -84,7 +84,7 @@ void create_cell_types( void )
 	   
 	   This is a good place to set default functions. 
 	*/ 
-	
+	initialize_default_cell_definition(); 
 	// cell_defaults.functions.volume_update_function = standard_volume_update_function;
 	cell_defaults.functions.update_velocity = standard_update_cell_velocity;
 
@@ -357,23 +357,23 @@ void post_update_intracellular( Cell* pCell, Phenotype& phenotype, double dt )
 	color_node(pCell);
 }
 
-// std::vector<std::string> my_coloring_function( Cell* pCell )
-// {
-// 	std::vector< std::string > output( 4 , "rgb(0,0,0)" );
+std::vector<std::string> my_coloring_function( Cell* pCell )
+{
+	std::vector< std::string > output( 4 , "rgb(0,0,0)" );
 	
-// 	if ( !pCell->phenotype.intracellular->get_boolean_variable_value( parameters.strings("node_to_visualize") ) )
-// 	{
-// 		output[0] = "rgb(255,0,0)"; // Red
-// 		output[2] = "rgb(125,0,0)";
+	if ( !pCell->phenotype.intracellular->get_boolean_variable_value( parameters.strings("node_to_visualize") ) )
+	{
+		output[0] = "rgb(255,0,0)"; // Red
+		output[2] = "rgb(125,0,0)";
 		
-// 	}
-// 	else{
-// 		output[0] = "rgb(0, 255,0)"; // Green
-// 		output[2] = "rgb(0, 125,0)";
-// 	}
+	}
+	else{
+		output[0] = "rgb(0, 255,0)"; // Green
+		output[2] = "rgb(0, 125,0)";
+	}
 	
-// 	return output;
-// }
+	return output;
+}
 
 void color_node(Cell* pCell){
 	std::string node_name = parameters.strings("node_to_visualize");
