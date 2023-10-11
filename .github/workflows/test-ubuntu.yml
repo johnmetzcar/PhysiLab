@@ -3,14 +3,18 @@ name: Tests Ubuntu
 on:
   push:
   pull_request:
+  workflow_dispatch:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v3
+    
+    - name: Build model
+      run: |
+        make
         
     - name: Build PhysiBoSS cell lines project
       run: |
@@ -18,4 +22,4 @@ jobs:
         
     - name: Run PhysiBoSS cell lines project
       run: |
-        ./PhysiBoSS_Cell_Lines
+        ./PhysiBoSS_Cell_Lines config/PhysiCell_settings_TLGL.xml

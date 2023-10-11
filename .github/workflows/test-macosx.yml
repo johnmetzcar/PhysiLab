@@ -21,4 +21,4 @@ jobs:
         
     - name: Run PhysiBoSS cell lines project
       run: |
-        ./PhysiBoSS_Cell_Lines
+        ./PhysiBoSS_Cell_Lines config/PhysiCell_settings_TLGL.xml
