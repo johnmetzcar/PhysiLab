@@ -1,0 +1,31 @@
+name: Tests Windows
+run-name: ${{ github.actor }} 
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+    
+jobs:
+  build:
+
+    runs-on: windows-latest
+    
+    defaults:
+      run:
+        shell: msys2 {0}
+        
+    steps:
+    - uses: actions/checkout@v3
+    
+    - uses: msys2/setup-msys2@v2
+      with:
+        update: true
+        install: base-devel flex bison gcc make diffutils mingw-w64-x86_64-toolchain mingw-w64-x86_64-ca-certificates
+        
+    - name: Build PhysiBoSS cell lines project
+      run: |
+        make 
+      
+    - name: Run PhysiBoSS cell lines project
+      run: |
+        .\\PhysiBoSS_Cell_Lines.exe

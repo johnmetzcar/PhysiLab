@@ -1,0 +1,24 @@
+name: Tests MacOSX
+
+on:
+  push:
+  pull_request:
+    
+jobs:
+  build:
+
+    runs-on: macos-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Install dependencies
+      run : brew install gcc@11
+        
+    - name: Build PhysiBoSS cell lines project
+      run: |
+        make
+        
+    - name: Run PhysiBoSS cell lines project
+      run: |
+        ./PhysiBoSS_Cell_Lines

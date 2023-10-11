@@ -1,0 +1,21 @@
+name: Tests Ubuntu
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+        
+    - name: Build PhysiBoSS cell lines project
+      run: |
+        make
+        
+    - name: Run PhysiBoSS cell lines project
+      run: |
+        ./PhysiBoSS_Cell_Lines
