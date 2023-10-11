@@ -7,3 +7,4 @@ output/*.xml
 *.DS_store
 **./DS_store
 PhysiBoSS_Cell_Lines
+.vscode
