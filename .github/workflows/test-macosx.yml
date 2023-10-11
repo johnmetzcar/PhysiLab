@@ -17,7 +17,7 @@ jobs:
         
     - name: Build PhysiBoSS cell lines project
       run: |
-        make
+        make PHYSICELL_CPP=g++-11
         
     - name: Run PhysiBoSS cell lines project
       run: |
