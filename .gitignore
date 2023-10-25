@@ -8,3 +8,13 @@ output/*.xml
 **./DS_store
 PhysiBoSS_Cell_Lines
 .vscode
+addons/PhysiBoSS/MaBoSS-env-2.0/*
+out*.xml
+out*.mat
+final*.xml
+final*.mat
+initial*.xml
+initial*.mat
+out*.txt
+final*.txt
+initial*.txt

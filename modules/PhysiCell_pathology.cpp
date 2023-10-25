@@ -416,8 +416,6 @@ void SVG_plot( std::string filename , Microenvironment& M, double z_slice , doub
 	double font_size = 0.025 * plot_height; // PhysiCell_SVG_options.font_size; 
 	double top_margin = font_size*(.2+1+.2+.9+.5 ); 
 
-    std::cout<<"Boop 419"<<std::endl;
-
 	// open the file, write a basic "header"
 	std::ofstream os( filename , std::ios::out );
 	if( os.fail() )
@@ -432,7 +430,7 @@ void SVG_plot( std::string filename , Microenvironment& M, double z_slice , doub
 	} 
 	
 	if(PhysiCell_settings.enable_substrate_plot == true && (*substrate_coloring_function) != NULL){
-std::cout<<"Boop 435"<<std::endl;
+
 		double legend_padding = 200.0; // I have to add a margin on the left to visualize the bar plot and the values
 
 		Write_SVG_start( os, plot_width + legend_padding, plot_height + top_margin );
@@ -442,7 +440,7 @@ std::cout<<"Boop 435"<<std::endl;
 
 	}
 	else{
-std::cout<<"Boop 445"<<std::endl;
+
 		Write_SVG_start( os, plot_width , plot_height + top_margin );
 
 		// draw the background 
@@ -464,19 +462,19 @@ std::cout<<"Boop 445"<<std::endl;
 		z_slice , PhysiCell_SVG_options.simulation_space_units.c_str() ); 
 	Write_SVG_text( os, szString, font_size*0.5,  font_size*(.2+1), 
 		font_size, PhysiCell_SVG_options.font_color.c_str() , PhysiCell_SVG_options.font.c_str() );
-	std::cout<<"Boop 467"<<std::endl;
+	
 	if (cell_counts_function != NULL){
 		cell_counts_function(szString);
 	} else {
 		sprintf( szString , "%u agents" , total_cell_count ); 
 	}
-	std::cout<<"Boop 473"<<std::endl;
+	
 	Write_SVG_text( os, szString, font_size*0.5,  font_size*(.2+1+.2+.9), 
 		0.95*font_size, PhysiCell_SVG_options.font_color.c_str() , PhysiCell_SVG_options.font.c_str() );
 	
 	delete [] szString; 
 
-	std::cout<<"Boop 479"<<std::endl;
+
 	// add an outer "g" for coordinate transforms 
 	
 	os << " <g id=\"tissue\" " << std::endl 
@@ -565,7 +563,6 @@ std::cout<<"Boop 445"<<std::endl;
 
 		}
 	}
-	std::cout<<"Boop 568"<<std::endl;
 /* 
  if( ECM.TellRows() > 0 )
  {
@@ -605,7 +602,7 @@ std::cout<<"Boop 445"<<std::endl;
  }
 */
 	os << "  </g>" << std::endl; 
- std::cout<<"Boop 608"<<std::endl;
+ 
 	// Now draw vessels
 
 	/*
@@ -635,16 +632,15 @@ std::cout<<"Boop 445"<<std::endl;
 			else
 			{ os << "dead=\"false\" " ; } 
 			os << ">" << std::endl; 
-			std::cout<<"Boop 638"<<std::endl;
+			
 			pC->functions.plot_agent_SVG(os, pC, z_slice, cell_coloring_function, X_lower, Y_lower);
-std::cout<<"Boop 640"<<std::endl;
+
 			os << "   </g>" << std::endl; 
 
 		}
 		
 	}
 	os << "  </g>" << std::endl; 
-	std::cout<<"Boop 647"<<std::endl;
 	// plot intersecting BM points
 	/* 
 	 for( int i=0 ; i < BasementMembraneNodes.size() ; i++ )
@@ -762,7 +758,6 @@ std::cout<<"Boop 640"<<std::endl;
 }
 
 void standard_agent_SVG(std::ofstream& os, PhysiCell::Cell* pC, double z_slice, std::vector<std::string> (*cell_coloring_function)(Cell*), double X_lower, double Y_lower) {
-std::cout<<"Boop 765"<<std::endl;
 	double r = pC->phenotype.geometry.radius ; 
 	double rn = pC->phenotype.geometry.nuclear_radius ; 
 	double z = fabs( (pC->position)[2] - z_slice) ; 
