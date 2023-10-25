@@ -27,4 +27,4 @@ jobs:
         
     - name: Run model
       run: |
-        .\\PhysiBoSS_Cell_Lines config/PhysiCell_settings_TLGL.xml
+        .\\PhysiBoSS_Cell_Lines config/TLGL_pro_GAP_well_mixed.xml
