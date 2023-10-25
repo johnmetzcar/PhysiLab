@@ -1,6 +1,6 @@
 *.svg
 output/*.xml
-*.csv
+output/*.csv
 *.o
 *.mat
 *.png
