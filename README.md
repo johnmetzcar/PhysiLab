@@ -1,3 +1,12 @@
+
+make rule:
+ - `make`
+
+Execution:
+ - `PhysiBoSS_Cell_Lines config/TLGL_pro_GAP_well_mixed.xml`
+
+# ------------------------------------ TO UPDATE --------------------------------------
+
 # PhysiCell: an Open Source Physics-Based Cell Simulator for 3-D Multicellular Systems
 **Versions:** 1.13.0 - 
 
