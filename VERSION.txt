@@ -1,1 +1,31 @@
-1.13.0 - manual upgrade from 1.12.0
+1.13.1
+
+Code was originally in 1.12. Manually copied from clean download the following folders on 01.16.24 - JPM:
+
+`addons`
+
+`beta`
+
+`BioFVM`
+
+`core`
+
+`examples`
+
+`licenses`
+
+`matlab`
+
+`modules`
+
+`povray`
+
+`protocols`
+
+`sample_projects`
+
+`sample_projects_intracellular`
+
+`tests`
+
+`unit_test`

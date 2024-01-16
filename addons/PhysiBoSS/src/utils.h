@@ -44,9 +44,10 @@ public:
             true_value = smoothed_value;
         }
 
-        if (state) {   // If the node is active
+        if (state) {
             if (action == "inhibition") {
-                return true_value <= inact_threshold; // When the node is active/on AND interaction is inhibit, when below inact therhold,  active/on
+                return true_value <= inact_threshold; // When the node is active, and this is an activation, the node stays true if the value is below the inact threshold
+
             } else {
                 return true_value >= inact_threshold; // When the node is active, the node stays true if the value is above the inact threshold
             }
@@ -80,37 +81,48 @@ public:
     double value;
     double base_value;
     int smoothing;
-    double smoothed_value;
+    double probability;
+    bool initialized = false;
 
-    MaBoSSOutput(std::string physicell_name, std::string intracellular_name, std::string action, double value, double base_value, int smoothing) : physicell_name(physicell_name), intracellular_name(intracellular_name), action(action), value(value), base_value(base_value), smoothing(smoothing) {
-        smoothed_value = base_value;
+    MaBoSSOutput(std::string physicell_name, std::string intracellular_name,
+                std::string action, double value, double base_value,
+                int smoothing)
+        : physicell_name(physicell_name), intracellular_name(intracellular_name),
+        action(action), value(value), base_value(base_value),
+        smoothing(smoothing) {
+    probability = 0.5;
     }
 
-    void update_value(bool test) {
-        smoothed_value = (smoothed_value*smoothing + (test?1.0:0.0)) / (smoothing + 1.0);
+    double update_probability(bool test) {
+    if (!initialized) {
+        probability = test;
+        initialized = true;
+    } else
+        probability =
+            (probability * smoothing + (test ? 1.0 : 0.0)) / (smoothing + 1.0);
+
+    return probability;
     }
 
-    double update(bool test)
-    {
-        double true_value;
-        if (smoothing == 0) {
-            true_value = value;
-        } else {
-            update_value((action == "activation" && test) || (action == "inhibition" and !test));
-            true_value = smoothed_value;
-        }
+    double update(bool test) {
 
-        if (action == "activation" && test) {
-            double hill = PhysiCell::Hill_response_function( true_value*2 , 1 , 10 ); 
-            return (value-base_value)*hill+base_value;
-        // } else if (action == "inhibition" && test) {
-        //     double hill = PhysiCell::Hill_response_function( true_value*2 , 1 , 10 ); 
-        //     return value-(value-base_value)*hill;
-        } else if (action == "inhibition" && !test) {
-            double hill = PhysiCell::Hill_response_function( true_value*2 , 1 , 10 ); 
-            return (value-base_value)*hill+base_value;
-        }
-        return base_value;
+    double hill_input;
+
+    if (smoothing == 0) {
+        hill_input = test ? 1.0 : 0.0;
+    } else {
+        hill_input = update_probability(test);
+    }
+
+    if (action == "activation") {
+        double hill = PhysiCell::Hill_response_function(hill_input * 2, 1, 10);
+        return (value - base_value) * hill + base_value;
+    } else if (action == "inhibition") {
+        double hill = PhysiCell::Hill_response_function(hill_input * 2, 1, 10);
+        return ((value - base_value) * (1 - hill)) + base_value;
+    }
+
+    return base_value;
     }
 };
 #endif
