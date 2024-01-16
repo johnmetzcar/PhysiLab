@@ -52,7 +52,7 @@ for i in range(len(results)):
     # WILL NEED TO ADD LOGIC FOR SUPPRESSION OF NODE OF INTEREST
 
 # create new BND file
-newFile = open("updatedBND.bnd", "w") # need to change the output based on the interventions
+newFile = open("config/updatedBND.bnd", "w") # need to change the output based on the interventions
 for n in nodeDict:
     nodeString = "Node " + n + " {\n" + nodeDict.get(n) + ";\n rate_up = @logic ? $time_scale : 0;\n rate_down = @logic ? 0 : $time_scale;\n}"
     newFile.write(nodeString + '\n\n')

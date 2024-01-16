@@ -1,17 +1,29 @@
 Node A {
-  logic = A;
+  logic = (node1 & node2 ) | pro_A;
   rate_up  = @logic ? $time_scale : 0;
   rate_down  = @logic ? 0 : $time_scale;
 }
 
 Node B {
-  logic = B;
+  logic = node3 | anti_B; // natural dyanmics if anti_B is absent; otherwise (in the presense of anti_B), B is off. 
+  rate_up  = @logic ? $time_scale : 0;
+  rate_down  = @logic ? 0 : $time_scale;
+}
+
+Node pro_A {
+  logic = pro_A;
+  rate_up  = @logic ? $time_scale : 0;
+  rate_down  = @logic ? 0 : $time_scale;
+}
+
+Node anti_B {
+  logic = anti_B;
   rate_up  = @logic ? $time_scale : 0;
   rate_down  = @logic ? 0 : $time_scale;
 }
 
 Node C {
-  logic = A & B;
+  logic = (A & B);
   rate_up  = @logic ? $time_scale : 0;
   rate_down  = @logic ? 0 : $time_scale;
 }

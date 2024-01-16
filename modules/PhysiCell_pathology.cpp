@@ -641,6 +641,7 @@ void SVG_plot( std::string filename , Microenvironment& M, double z_slice , doub
 		
 	}
 	os << "  </g>" << std::endl; 
+	
 	// plot intersecting BM points
 	/* 
 	 for( int i=0 ; i < BasementMembraneNodes.size() ; i++ )
@@ -758,6 +759,7 @@ void SVG_plot( std::string filename , Microenvironment& M, double z_slice , doub
 }
 
 void standard_agent_SVG(std::ofstream& os, PhysiCell::Cell* pC, double z_slice, std::vector<std::string> (*cell_coloring_function)(Cell*), double X_lower, double Y_lower) {
+
 	double r = pC->phenotype.geometry.radius ; 
 	double rn = pC->phenotype.geometry.nuclear_radius ; 
 	double z = fabs( (pC->position)[2] - z_slice) ; 

@@ -44,10 +44,9 @@ public:
             true_value = smoothed_value;
         }
 
-        if (state) {
+        if (state) {   // If the node is active
             if (action == "inhibition") {
-                return true_value <= inact_threshold; // When the node is active, and this is an activation, the node stays true if the value is below the inact threshold
-
+                return true_value <= inact_threshold; // When the node is active/on AND interaction is inhibit, when below inact therhold,  active/on
             } else {
                 return true_value >= inact_threshold; // When the node is active, the node stays true if the value is above the inact threshold
             }
@@ -104,9 +103,12 @@ public:
         if (action == "activation" && test) {
             double hill = PhysiCell::Hill_response_function( true_value*2 , 1 , 10 ); 
             return (value-base_value)*hill+base_value;
+        // } else if (action == "inhibition" && test) {
+        //     double hill = PhysiCell::Hill_response_function( true_value*2 , 1 , 10 ); 
+        //     return value-(value-base_value)*hill;
         } else if (action == "inhibition" && !test) {
             double hill = PhysiCell::Hill_response_function( true_value*2 , 1 , 10 ); 
-            return value-(value-base_value)*hill;
+            return (value-base_value)*hill+base_value;
         }
         return base_value;
     }
