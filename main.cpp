@@ -206,7 +206,7 @@ int main( int argc, char* argv[] )
 
 				else if(dosing_counter > 0)
 				{
-					add_compound( parameters.doubles("drug_amount"), parameters.doubles("dose_interval") ); 
+					add_compound( parameters.doubles("drug_amount"), parameters.doubles("dose_interval"), parameters.strings("substrate_name") ); 
 					std::cout<<"adding compound "<<fabs(PhysiCell_globals.current_time - (dosing_counter * parameters.doubles("dose_interval")))<<std::endl;
 					std::cout<<"current time "<<PhysiCell_globals.current_time<<std::endl;
 					std::cout<<"dosing counter "<<dosing_counter<<std::endl;
@@ -215,7 +215,8 @@ int main( int argc, char* argv[] )
 				}
 			}
 			
-			std::cout<<"pro_GAP = "<<microenvironment.density_vector(0)[1]<<std::endl;				
+			std::cout<< parameters.strings("substrate_name") << microenvironment.density_vector(0)[1]<<std::endl;
+			//std::cout<<"pro_GAP = "<<microenvironment.density_vector(0)[1]<<std::endl;				
 
 				display_simulation_status( std::cout ); 
 				if( PhysiCell_settings.enable_legacy_saves == true )

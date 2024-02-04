@@ -68,6 +68,7 @@
 #include "custom.h"
 #include "../BioFVM/BioFVM.h"  
 using namespace BioFVM;
+// using namespace std;
 
 // declare cell definitions here 
 
@@ -84,7 +85,9 @@ void create_cell_types( void )
 	   
 	   This is a good place to set default functions. 
 	*/ 
-	
+
+	initialize_default_cell_definition(); 
+	cell_defaults.functions.update_phenotype = NULL;
 	// cell_defaults.functions.volume_update_function = standard_volume_update_function;
 	cell_defaults.functions.update_velocity = standard_update_cell_velocity;
 
@@ -170,19 +173,20 @@ void setup_tissue( void )
 	load_cells_from_pugixml(); 	
 }
 
+// Old - not using this anymore - 02.04.24 - replaced with XML (but probably chould have just used this instead of changing to XML....)
 void pre_update_intracellular_drug_effect(Cell* pCell, Phenotype& phenotype, double dt)
 {
 	Cell_Definition* pCD = find_cell_definition(pCell->type_name);	
 
-	double drug_conc = get_single_signal(pCell, "pro_GAP");
+	double drug_conc = get_single_signal(pCell, parameters.strings("substrate_name"));
 	// std::cout<<"drug_conc = "<<drug_conc<<std::endl;
 	if(drug_conc > pCell->custom_data["drug_threshold"])
 	{
-		pCell->phenotype.intracellular->set_boolean_variable_value("pro_GAP", true);
+		pCell->phenotype.intracellular->set_boolean_variable_value(parameters.strings("substrate_name"), true);
 	}
 	else
 	{
-		pCell->phenotype.intracellular->set_boolean_variable_value("pro_GAP", false);
+		pCell->phenotype.intracellular->set_boolean_variable_value(parameters.strings("substrate_name"), false);
 	}
 	
 	// Without doing something with the accumulating substrate, internal values rises without end. So - skipping for now 
@@ -248,7 +252,7 @@ void post_update_intracellular_drug_effect(Cell* pCell, Phenotype& phenotype, do
 	// }
 }
 
-void add_compound( double drug_amount, double dose_interval ) 
+void add_compound( double drug_amount, double dose_interval, std::string substrate_name) 
 {
 
 	// Adds compounds uniformly to the microenvironment at concentration/amount "drug_amount" and every "drug_interval" minutes
@@ -257,16 +261,17 @@ void add_compound( double drug_amount, double dose_interval )
 
 	// std::cout<<number_of_voxels<<" voxels"<<std::endl;
 	
-	static int pro_GAP_index = BioFVM::microenvironment.find_density_index( "pro_GAP" ); 
-	if (pro_GAP_index < 0) 
+	static int substrate_index = BioFVM::microenvironment.find_density_index( substrate_name ); 
+	if (substrate_index < 0) 
     {
-        std::cout << "        static int pro_GAP_index = " <<pro_GAP_index << std::endl;
+        // std::cout << "        static int << pro_GAP_index = " <<substrate_index << std::endl;
+		std::cout << "        static int << " << substrate_name << "_index = " << substrate_index << std::endl;
         std::exit(-1);  //rwh: should really do these for each
     }
 
     for( int n=0; n < number_of_voxels ; n++ )
     {
-		BioFVM::microenvironment.density_vector(n)[pro_GAP_index] = drug_amount;
+		BioFVM::microenvironment.density_vector(n)[substrate_index] = drug_amount;
 		// (*p_density_vectors)[n][ECM_density_index] = ecm.ecm_voxels[n].density;
 		// std::cout<<BioFVM::microenvironment.density_vector(n)[ECM_anisotropy_index]<<std::endl;
 		// std::cout<<&BioFVM::microenvironment.density_vector(n)[ECM_anisotropy_index]<<std::endl;
@@ -283,13 +288,15 @@ void add_compound( double drug_amount, double dose_interval )
 
 }
 
+
+// Old - not using this anymore - 02.04.24
 void transition_to_resistant_cell_type(Cell* pCell, Phenotype& phenotype, double dt)
 {
 	bool Apoptosis = pCell->phenotype.intracellular->get_boolean_variable_value("Apoptosis"); // ? 1.0 : 0.0;
-	bool pro_GAP = pCell->phenotype.intracellular->get_boolean_variable_value("pro_GAP"); // ? 1.0 : 0.0;
+	bool substrate = pCell->phenotype.intracellular->get_boolean_variable_value(parameters.strings("substrate_name")); // ? 1.0 : 0.0;
 
 	// if(pro_GAP == true && Apoptosis == false)
-	if(pro_GAP == true)
+	if(substrate == true)
 	{
 		// double base_apoptosis = get_single_base_behavior(pCell, "transform to TLGL_resistant");
 		// std::cout<<"base_apoptosis = "<<base_apoptosis<<std::endl;
@@ -298,12 +305,13 @@ void transition_to_resistant_cell_type(Cell* pCell, Phenotype& phenotype, double
 	return;
 }
 
-void transition_to_post_resistant_cell_type( Cell* pCell, Phenotype& phenotype, double dt )
+// Old - not using this anymore - 02.04.24
+void transition_to_post_resistant_cell_type( Cell* pCell, Phenotype& phenotype, double dt)
 {
 	bool Apoptosis = pCell->phenotype.intracellular->get_boolean_variable_value("Apoptosis"); // ? 1.0 : 0.0;
-	bool pro_GAP = pCell->phenotype.intracellular->get_boolean_variable_value("pro_GAP"); // ? 1.0 : 0.0;
+	bool substrate = pCell->phenotype.intracellular->get_boolean_variable_value(parameters.strings("substrate_name")); // ? 1.0 : 0.0;
 
-	if(pro_GAP == false && Apoptosis == false)
+	if(substrate == false && Apoptosis == false)
 	{
 		// double base_apoptosis = get_single_base_behavior(pCell, "transform to TLGL_post_resistant");
 		// std::cout<<"base_apoptosis = "<<base_apoptosis<<std::endl;
@@ -312,6 +320,7 @@ void transition_to_post_resistant_cell_type( Cell* pCell, Phenotype& phenotype, 
 	return;
 }
 
+// Old - not using this anymore - 02.04.24
 void from_nodes_to_cell(Cell* pCell, Phenotype& phenotype, double dt)
 {
 	double prosurvival_value = pCell->phenotype.intracellular->get_boolean_variable_value("Apoptosis") ? 1.0 : 0.0;
@@ -342,6 +351,7 @@ void from_nodes_to_cell(Cell* pCell, Phenotype& phenotype, double dt)
 	pCell->set_internal_uptake_constants(dt); // why this? because we are not using the default uptake and secretion rates???
 }
 
+// Old - not using this anymore - 02.04.24
 void pre_update_intracellular( Cell* pCell, Phenotype& phenotype, double dt )
 {
 	if (PhysiCell::PhysiCell_globals.current_time >= 100.0 
@@ -351,29 +361,29 @@ void pre_update_intracellular( Cell* pCell, Phenotype& phenotype, double dt )
 	}
 
 }
-
+// Old - not using this anymore - 02.04.24
 void post_update_intracellular( Cell* pCell, Phenotype& phenotype, double dt )
 {
 	color_node(pCell);
 }
 
-// std::vector<std::string> my_coloring_function( Cell* pCell )
-// {
-// 	std::vector< std::string > output( 4 , "rgb(0,0,0)" );
+std::vector<std::string> my_coloring_function( Cell* pCell )
+{
+	std::vector< std::string > output( 4 , "rgb(0,0,0)" );
 	
-// 	if ( !pCell->phenotype.intracellular->get_boolean_variable_value( parameters.strings("node_to_visualize") ) )
-// 	{
-// 		output[0] = "rgb(255,0,0)"; // Red
-// 		output[2] = "rgb(125,0,0)";
+	if ( !pCell->phenotype.intracellular->get_boolean_variable_value( parameters.strings("node_to_visualize") ) )
+	{
+		output[0] = "rgb(255,0,0)"; // Red
+		output[2] = "rgb(125,0,0)";
 		
-// 	}
-// 	else{
-// 		output[0] = "rgb(0, 255,0)"; // Green
-// 		output[2] = "rgb(0, 125,0)";
-// 	}
+	}
+	else{
+		output[0] = "rgb(0, 255,0)"; // Green
+		output[2] = "rgb(0, 125,0)";
+	}
 	
-// 	return output;
-// }
+	return output;
+}
 
 void color_node(Cell* pCell){
 	std::string node_name = parameters.strings("node_to_visualize");
