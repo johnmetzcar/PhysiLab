@@ -1,6 +1,12 @@
 *.svg
 output/*.xml
 output/*.csv
+output/*.html
+output/detailed_rules.html
+output/detailed_rules.txt
+output/dictionaries.txt
+output/rules.html
+output/rules.txt
 *.o
 *.mat
 *.png
@@ -18,3 +24,4 @@ initial*.mat
 out*.txt
 final*.txt
 initial*.txt
+Variant Model Files/*

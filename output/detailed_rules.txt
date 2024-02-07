@@ -1,4 +1,5 @@
 Cell Hypothesis Rules (detailed)
 
 In TLGL cells:
+pressure decreases cycle entry from 0.00072 towards 0 with a Hill response, with half-max 0.75 and Hill power 4.
 

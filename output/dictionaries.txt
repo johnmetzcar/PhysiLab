@@ -1,8 +1,8 @@
 Signals: 
 =======
-0 : pro_DISC
-1 : intracellular pro_DISC
-2 : pro_DISC gradient
+0 : anti_A20
+1 : intracellular anti_A20
+2 : anti_A20 gradient
 3 : pressure
 4 : volume
 5 : contact with TLGL
@@ -23,10 +23,10 @@ Signals:
 
 Behaviors: 
 =========
-0 : pro_DISC secretion
-1 : pro_DISC secretion target
-2 : pro_DISC uptake
-3 : pro_DISC export
+0 : anti_A20 secretion
+1 : anti_A20 secretion target
+2 : anti_A20 uptake
+3 : anti_A20 export
 4 : cycle entry
 5 : exit from cycle phase 1
 6 : exit from cycle phase 2
@@ -38,7 +38,7 @@ Behaviors:
 12 : migration speed
 13 : migration bias
 14 : migration persistence time
-15 : chemotactic response to pro_DISC
+15 : chemotactic response to anti_A20
 16 : cell-cell adhesion
 17 : cell-cell adhesion elastic constant
 18 : adhesive affinity to TLGL

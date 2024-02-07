@@ -8,7 +8,7 @@ import xml.etree.ElementTree as ET
 # function for reading bnd file
 def getBNDdata():
     # open original bnd  --> EDIT TO BE LOCATION OF ORIGINAL BND FILE
-    baseBND = open("C:\\Users\\pletz\\OneDrive\\Desktop\\IU\\Y390\\Variant Model Files\\TLGL.bnd", "r+")
+    baseBND = open("TLGL.bnd", "r+")
     bndText = baseBND.readlines()
 
     # create one big long string of the entire bnd file
@@ -100,7 +100,7 @@ def createCFG(fileName):
     cfgfile.writelines(part2)
 
 # set working directory --> EDIT TO BE LOCATION OF YOUR CSV FILES
-os.chdir("C:\\Users\\pletz\\OneDrive\\Desktop\\IU\\Y390\\Variant Model Files")
+os.chdir(".")
 
 # import csv files
 ibmfa = pandas.read_csv("IBMFA_top_interventions.csv")
@@ -110,14 +110,14 @@ edgetic = pandas.read_csv("single_edge_perturbations_top_interventions.csv")
 # create files for IBMFA results
 
 # change directory --> EDIT TO BE THE LOCATION YOU WANT TO STORE IBMFA FILES
-os.chdir("C:\\Users\\pletz\\OneDrive\\Desktop\\IU\\Y390\\Variant Model Files\\IBMFA Files")
+# os.chdir("C:\\Users\\pletz\\OneDrive\\Desktop\\IU\\Y390\\Variant Model Files\\IBMFA Files")
 
 for i in range(len(ibmfa)):
     # get base bnd file info
     nodeDict = getBNDdata()
 
     # load and parse base xml file
-    base_xml = open("C:\\Users\\pletz\\OneDrive\\Desktop\\IU\\Y390\\Variant Model Files\\base_model_file.xml")
+    base_xml = open("base_model_file.xml")
     tree = ET.parse(base_xml)
     xml_root = tree.getroot()
 
@@ -243,14 +243,14 @@ print("--------------------------")
 # create files for Stable Motifs results
 
 # change directory --> EDIT TO BE THE LOCATION YOU WANT TO STORE STABLE MOTIFS FILES
-os.chdir("C:\\Users\\pletz\\OneDrive\\Desktop\\IU\\Y390\\Variant Model Files\\Stable Motifs Files")
+# os.chdir("C:\\Users\\pletz\\OneDrive\\Desktop\\IU\\Y390\\Variant Model Files\\Stable Motifs Files")
 
 for i in range(len(stableMotifs)):
     # get base bnd file info
     nodeDict = getBNDdata()
 
     # load and parse base xml file
-    base_xml = open("C:\\Users\\pletz\\OneDrive\\Desktop\\IU\\Y390\\Variant Model Files\\base_model_file.xml")
+    base_xml = open("base_model_file.xml")
     tree = ET.parse(base_xml)
     xml_root = tree.getroot()
 
@@ -362,7 +362,7 @@ print("----------------------------------")
 # create bnd files for edgetic perturbations results
 
 # change directory --> EDIT TO BE THE PLACE YOU WANT TO STORE SINGLE EDGE PERTURBATION FILES
-os.chdir("C:\\Users\\pletz\\OneDrive\\Desktop\\IU\\Y390\\Variant Model Files\\Single Edge Perturbations Files")
+# os.chdir("C:\\Users\\pletz\\OneDrive\\Desktop\\IU\\Y390\\Variant Model Files\\Single Edge Perturbations Files")
 
 for i in range(len(edgetic)):
     # separate components of result
@@ -374,7 +374,7 @@ for i in range(len(edgetic)):
     nodeDict = getBNDdata()
 
     # load and parse base xml file
-    base_xml = open("C:\\Users\\pletz\\OneDrive\\Desktop\\IU\\Y390\\Variant Model Files\\base_model_file.xml")
+    base_xml = open("base_model_file.xml")
     tree = ET.parse(base_xml)
     xml_root = tree.getroot()
 

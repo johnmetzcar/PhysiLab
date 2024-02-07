@@ -3,7 +3,7 @@
     <cell_rules>
         <rulesets>
             <ruleset protocol="CBHG" version="2.0" format="csv" enabled="true">
-                <folder>/Users/JohnMetzcar/Documents/GitHub/PhysiLab/config</folder>
+                <folder>config</folder>
                 <filename>rules_well_mixed.csv</filename>
             </ruleset>
         </rulesets>
@@ -62,7 +62,7 @@
     </options>
 
     <microenvironment_setup>
-        <variable name="anti_A20" units="dimensionless" ID="1">
+        <variable name="anti_A20" units="dimensionless" ID="0">
             <physical_parameter_set>
                 <diffusion_coefficient units="micron^2/min">0</diffusion_coefficient>
                 <decay_rate units="1/min">1</decay_rate>
@@ -213,7 +213,7 @@
                         <inheritance global="true" />
                     </settings>
                     <mapping>
-                        <input physicell_name="anti_A20" intracellular_name="anti_A20">
+                        <input physicell_name="anti_A20" intracellular_name="pro_A20">
                             <settings>
                                 <action>inhibition</action>
                                 <threshold>0.5</threshold>
