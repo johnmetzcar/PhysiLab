@@ -1,4 +1,4 @@
-# creates maboss (.bnd) AND PhysiCell (.xml and .cfg) files for controls imported from csv files
+# creates maboss (.bnd) AND PhysiCell (.xml) files for controls imported from csv files
 
 import os
 import sys
@@ -54,20 +54,6 @@ def addMappingInfo(root, status, physicellName):
         action.text = "inhibition"
     else:
         action.text = "activation"
-
-    # add mapping info
-    #mapping = ET.SubElement(intracellular, "mapping", {})
-    #input = ET.SubElement(mapping, "input", {"physicell_name": physicellName, "intracellular_name": physicellName})
-    #settings = ET.SubElement(input, "settings", {})
-    #action = ET.SubElement(settings, "action", {})
-    #if status == "0":
-    #    action.text = "inhibition"
-    #else:
-    #    action.text = "activation"
-    #threshold = ET.SubElement(settings, "threshold", {})
-    #threshold.text = "0.5"
-    #smoothing = ET.SubElement(settings, "smoothing", {})
-    #smoothing.text = "0"
 
 def createCFG(fileName):
     part1 = ["PDGF.istate = 0;\n", 
@@ -130,26 +116,23 @@ for i in range(len(ibmfa)):
         nodeOfInterest = s.split("-")[0]
         statusOfInterest = s.split("-")[1]
 
-        # create new node for intervention
-        newName = "pro_" + nodeOfInterest
-        nodeDict[newName] = "  logic = " + newName  
-
         # find node logic corresponding to node of interest
         newLogic = nodeDict.get(nodeOfInterest) + ")"
 
+        # create new node for intervention
         if(statusOfInterest == "0"):
             # suppression
-            newLogic = newLogic[:-1] + " & !" + newName
             physiName = "anti_" + nodeOfInterest
-            fileName += physiName
+            newLogic = newLogic[:-1] + " & !" + physiName
         else:
             # promotion
-            newLogic = newLogic[:-1] + " | " + newName
             physiName = "pro_" + nodeOfInterest
-            fileName += physiName
+            newLogic = newLogic[:-1] + " | " + physiName
 
         # edit logic for node of interest
+        nodeDict[physiName] = "  logic = " + physiName
         nodeDict[nodeOfInterest] = newLogic
+        fileName += physiName
 
     # add xml mapping data
     addMappingInfo(xml_root, statusOfInterest, fileName)
@@ -204,21 +187,6 @@ for i in range(len(ibmfa)):
     substrate_name = user_params.find("substrate_name")
     substrate_name.text = fileName
 
-    # add user parameters (dose_interval, drug_amount, add_compound, substrate_name)
-    #user_params = xml_root.find("user_parameters") 
-    #dose_interval = ET.SubElement(user_params, "dose_interval", {"type": "double", "units": "minutes", "description": "interval between doses of compound"})
-    #dose_interval.text = "1440.0"
-    #drug_amount = ET.SubElement(user_params, "drug_amount", {"type": "double", "units": "dimensionless", "description": "concentration/amount of compound to add at dosing interval"})
-    #drug_amount.text = "50.0"
-    #add_compound = ET.SubElement(user_params, "add_compound", {"type": "bool", "units": "", "description": ""})
-    #add_compound.text = "true"
-    #substrate_name = ET.SubElement(user_params, "substrate_name", {"type": "string", "units":"", "description": ""})
-    #substrate_name.text = fileName
-
-    #<dose_interval type="double" units="minutes" description="interval between doses of compound">1440.0</dose_interval>
-    #<drug_amount type="double" units="dimensionless" description="concentration/amount of compound to add at dosing interval">50.0</drug_amount>
-    #<add_compound type="bool" units="" description="">true</add_compound>
-
     # create new xml file
     tree.write(fileName + ".xml")
     print("Created file " + fileName + ".xml")
@@ -263,26 +231,23 @@ for i in range(len(stableMotifs)):
         nodeOfInterest = s.split("-")[0]
         statusOfInterest = s.split("-")[1]
 
-        # create new node for intervention
-        newName = "pro_" + nodeOfInterest
-        nodeDict[newName] = "  logic = " + newName  
-
         # find node logic corresponding to node of interest
         newLogic = nodeDict.get(nodeOfInterest) + ")"
 
+        # create new node for intervention
         if(statusOfInterest == "0"):
             # suppression
-            newLogic = newLogic[:-1] + " & !" + newName
             physiName = "anti_" + nodeOfInterest
-            fileName += physiName
+            newLogic = newLogic[:-1] + " & !" + physiName
         else:
             # promotion
-            newLogic = newLogic[:-1] + " | " + newName
             physiName = "pro_" + nodeOfInterest
-            fileName += physiName
+            newLogic = newLogic[:-1] + " | " + physiName
 
         # edit logic for node of interest
+        nodeDict[physiName] = "  logic = " + physiName
         nodeDict[nodeOfInterest] = newLogic
+        fileName += physiName
 
     # add xml mapping data
     addMappingInfo(xml_root, statusOfInterest, fileName)
@@ -327,17 +292,6 @@ for i in range(len(stableMotifs)):
     substrate_name = user_params.find("substrate_name")
     substrate_name.text = fileName
 
-    # add user parameters (dose_interval, drug_amount, and add_compound)
-    #user_params = xml_root.find("user_parameters")
-    #dose_interval = ET.SubElement(user_params, "dose_interval", {"type": "double", "units": "minutes", "description": "interval between doses of compound"})
-    #dose_interval.text = "1440.0"
-    #drug_amount = ET.SubElement(user_params, "drug_amount", {"type": "double", "units": "dimensionless", "description": "concentration/amount of compound to add at dosing interval"})
-    #drug_amount.text = "50.0"
-    #add_compound = ET.SubElement(user_params, "add_compound", {"type": "bool", "units": "", "description": ""})
-    #add_compound.text = "true"
-    #substrate_name = ET.SubElement(user_params, "substrate_name", {"type": "string", "units":"", "description": ""})
-    #substrate_name.text = fileName
-
     # create new xml file
     tree.write(fileName + ".xml")
     print("Created file " + fileName + ".xml")
@@ -379,16 +333,16 @@ for i in range(len(edgetic)):
     xml_root = tree.getroot()
 
     # update logic of nodes for intervention
-    # create a new node for pro_source
-    newName = "pro_" + source
-    nodeDict[newName] = "  logic = " + newName
-
     # update existing logic for target node
     if (action == "0"):
         # suppression
+        newName = "anti_" + source
+        nodeDict[newName] = "  logic = " + newName
         nodeDict[target] = nodeDict[target] + " & !" + newName
     else:
         # excitation
+        newName = "pro_" + source
+        nodeDict[newName] = "  logic = " + newName
         nodeDict[target] = nodeDict[target] + " | " + newName
     
     # add xml mapping data
@@ -434,17 +388,6 @@ for i in range(len(edgetic)):
     user_params = xml_root.find("user_parameters")
     substrate_name = user_params.find("substrate_name")
     substrate_name.text = physiName
-
-    # add user parameters (dose_interval, drug_amount, and add_compound)
-    #user_params = xml_root.find("user_parameters")
-    #dose_interval = ET.SubElement(user_params, "dose_interval", {"type": "double", "units": "minutes", "description": "interval between doses of compound"})
-    #dose_interval.text = "1440.0"
-    #drug_amount = ET.SubElement(user_params, "drug_amount", {"type": "double", "units": "dimensionless", "description": "concentration/amount of compound to add at dosing interval"})
-    #drug_amount.text = "50.0"
-    #add_compound = ET.SubElement(user_params, "add_compound", {"type": "bool", "units": "", "description": ""})
-    #add_compound.text = "true"
-    #substrate_name = ET.SubElement(user_params, "substrate_name", {"type": "string", "units":"", "description": ""})
-    #substrate_name.text = physiName
 
     # create new xml file
     tree.write(physiName + ".xml")

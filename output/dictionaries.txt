@@ -1,8 +1,20 @@
 Signals: 
 =======
+<<<<<<< Updated upstream
 0 : anti_A20
 1 : intracellular anti_A20
 2 : anti_A20 gradient
+=======
+<<<<<<< HEAD
+0 : anti_CREB
+1 : intracellular anti_CREB
+2 : anti_CREB gradient
+=======
+0 : anti_A20
+1 : intracellular anti_A20
+2 : anti_A20 gradient
+>>>>>>> 8bb85d6642b93ff82bd776a8722b11c6f5180acc
+>>>>>>> Stashed changes
 3 : pressure
 4 : volume
 5 : contact with TLGL
@@ -23,10 +35,23 @@ Signals:
 
 Behaviors: 
 =========
+<<<<<<< Updated upstream
+=======
+<<<<<<< HEAD
+0 : anti_CREB secretion
+1 : anti_CREB secretion target
+2 : anti_CREB uptake
+3 : anti_CREB export
+=======
+>>>>>>> Stashed changes
 0 : anti_A20 secretion
 1 : anti_A20 secretion target
 2 : anti_A20 uptake
 3 : anti_A20 export
+<<<<<<< Updated upstream
+=======
+>>>>>>> 8bb85d6642b93ff82bd776a8722b11c6f5180acc
+>>>>>>> Stashed changes
 4 : cycle entry
 5 : exit from cycle phase 1
 6 : exit from cycle phase 2
@@ -38,7 +63,15 @@ Behaviors:
 12 : migration speed
 13 : migration bias
 14 : migration persistence time
+<<<<<<< Updated upstream
 15 : chemotactic response to anti_A20
+=======
+<<<<<<< HEAD
+15 : chemotactic response to anti_CREB
+=======
+15 : chemotactic response to anti_A20
+>>>>>>> 8bb85d6642b93ff82bd776a8722b11c6f5180acc
+>>>>>>> Stashed changes
 16 : cell-cell adhesion
 17 : cell-cell adhesion elastic constant
 18 : adhesive affinity to TLGL
