@@ -1,13 +1,12 @@
-# from mpi4py import MPI 
+from mpi4py import MPI 
 import numpy as np
-import sys
-import os
+import os, sys, subprocess
 import math, os, sys, re
 # from HPC_exploration import model, args_run_simulations
 
-# comm = MPI.COMM_WORLD
-# size = comm.Get_size()
-# rank = comm.Get_rank()
+comm = MPI.COMM_WORLD
+size = comm.Get_size()
+rank = comm.Get_rank()
 
 # Overall quick notes - 
 
@@ -93,13 +92,24 @@ if __name__ == '__main__':
             # also need to chagne the seed. 
             # I THINK samples is indexless. 
     NumSimulationsPerRank  = int(NumSimulations/size)
+
+    # print(NumSimulationsPerRank)
     
     print(f"Total number of simulations: {NumSimulations} Simulations per rank: {NumSimulationsPerRank}")
 
     data = np.array_split(np.arange(NumSimulations),size, axis=0) # split [0,1,...,NumSimulations-1] in size arrays equally (or +1 in some ranks)
 
+    print(data)
+
+    ## We won't hae "replicates" in the sense that its here - this will all be managed prior to running by number of config files generated
+
     for ind_sim in data[rank]:
         sampleID = Samples[ind_sim]
-        replicateID = Replicates[ind_sim]
-        print('Rank: ',rank, ', Simulation: ', ind_sim, ', Sample: ', sampleID,', Replicate: ', replicateID)
-        model(PhysiCell_Model.get_configFilePath(sampleID, replicateID), PhysiCell_Model.executable)
+        print(sampleID)
+        # replicateID = Replicates[ind_sim]
+        # print('Rank: ',rank, ', Simulation: ', ind_sim, ', Sample: ', sampleID,', Replicate: ', replicateID)
+        print('Rank: ',rank, ', Simulation: ', ind_sim, ', Sample: ', sampleID)
+        # model(PhysiCell_Model.get_configFilePath(sampleID, replicateID), PhysiCell_Model.executable)
+        # in the original setup, this (ths python file) would have been called with several arguments. Here, we only need to call it with the directory with the config
+        # files in them. And the executable is currently hard coded. 
+        model(sampleID, './PhysiBoSS_Cell_Lines')
