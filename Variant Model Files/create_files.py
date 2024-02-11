@@ -8,7 +8,7 @@ import xml.etree.ElementTree as ET
 # function for reading bnd file
 def getBNDdata():
     # open original bnd  --> EDIT TO BE LOCATION OF ORIGINAL BND FILE
-    baseBND = open("TLGL.bnd", "r+")
+    baseBND = open("C:\\Users\\pletz\\OneDrive\\Desktop\\IU\\Y390\\Variant Model Files\\TLGL.bnd", "r+")
     bndText = baseBND.readlines()
 
     # create one big long string of the entire bnd file
@@ -32,28 +32,93 @@ def getBNDdata():
 
     return nodeDict
 
-# function for adding new layers for xml file
-# doesn't return anything, just modifies the tree data
-def addMappingInfo(root, status, physicellName):
+# def modifyXML(fileName, status, decayID, replicateID):
+def createXML(fileName, status, decayID, replicateID):
+    # load and parse base xml file
+    base_xml = open("C:\\Users\\pletz\\OneDrive\\Desktop\\IU\\Y390\\Variant Model Files\\base_model_file.xml")
+    tree = ET.parse(base_xml)
+    xml_root = tree.getroot()
 
-    # locate intracellular layer
-    cell_defs = root.find("cell_definitions")
+    # locate intracellular layer in xml tree
+    cell_defs = xml_root.find("cell_definitions")
     cell_def = cell_defs.find("cell_definition")
     phenotype = cell_def.find("phenotype")
     intracellular = phenotype.find("intracellular")
+
+    # modify mapping info
     mapping = intracellular.find("mapping")
     input = mapping.find("input")
-
-    # modify physicell_name and intracellular_name
-    input.attrib = {"physicell_name": physicellName, "intracellular_name": physicellName}
-
-    # modify action
+    input.attrib = {"physicell_name": fileName, "intracellular_name": fileName}
     settings = input.find("settings")
     action = settings.find("action")
     if status == "0":
         action.text = "inhibition"
     else:
         action.text = "activation"
+
+    # modify bnd_filename, cfg_filename parameters
+    bnd_filename = intracellular.find("bnd_filename")
+    bnd_filename.text = "config/" + fileName + ".bnd"
+    cfg_filename = intracellular.find("cfg_filename")
+    cfg_filename.text = "config/" + fileName + ".cfg"
+
+    # modify substrate name (variable)
+    microenvironment = xml_root.find("microenvironment_setup")
+    variable = microenvironment.find("variable")
+    variable.attrib = {"name": fileName, "units": "dimensionless", "ID" : "1"}
+
+    # modify decay rate
+    physical_parameter_set = variable.find("physical_parameter_set")
+    decay_rate = physical_parameter_set.find("decay_rate")
+    if decayID == "1":
+        decay_rate.text = "1"
+    elif decayID == "2":
+        decay_rate.text = "0.1"
+    else:
+        decay_rate.text = "0.01"
+
+    # modify substrate name (in save)
+    save = xml_root.find("save")
+    svg = save.find("SVG")
+    plot_substrate = svg.find("plot_substrate")
+    substrate = plot_substrate.find("substrate")
+    substrate.text = fileName
+
+    # modify substrate name (in motility)
+    motility = phenotype.find("motility")
+    options = motility.find("options")
+    chemotaxis = options.find("chemotaxis")
+    substrate = chemotaxis.find("substrate")
+    substrate.text = fileName   
+    advanced_chemotaxis = options.find("advanced_chemotaxis")
+    chemotactic_sensitivities = advanced_chemotaxis.find("chemotactic_sensitivities")
+    chemotactic_sensitivity = chemotactic_sensitivities.find("chemotactic_sensitivity")
+    chemotactic_sensitivity.attrib = {"substrate": fileName}
+
+    # modify substrate name (in secretion)
+    secretion = phenotype.find("secretion")
+    substrate = secretion.find("substrate")
+    substrate.attrib = {"name" : fileName}
+
+    # modify substrate name (in user parameters)
+    user_params = xml_root.find("user_parameters")
+    substrate_name = user_params.find("substrate_name")
+    substrate_name.text = fileName
+
+    # create serial number
+    modelID = decayID + replicateID
+
+    # modify output file
+    folder = save.find("folder")
+    folder.text = fileName + "_" + modelID
+
+    # change seed value
+    random_seed = user_params.find("random_seed")
+    random_seed.text = modelID
+
+    # create new xml file
+    tree.write(fileName + "_" + modelID + ".xml")
+    print("Created file " + fileName + modelID + ".xml")
 
 def createCFG(fileName):
     part1 = ["PDGF.istate = 0;\n", 
@@ -86,7 +151,7 @@ def createCFG(fileName):
     cfgfile.writelines(part2)
 
 # set working directory --> EDIT TO BE LOCATION OF YOUR CSV FILES
-os.chdir(".")
+os.chdir("C:\\Users\\pletz\\OneDrive\\Desktop\\IU\\Y390\\Variant Model Files")
 
 # import csv files
 ibmfa = pandas.read_csv("IBMFA_top_interventions.csv")
@@ -96,16 +161,11 @@ edgetic = pandas.read_csv("single_edge_perturbations_top_interventions.csv")
 # create files for IBMFA results
 
 # change directory --> EDIT TO BE THE LOCATION YOU WANT TO STORE IBMFA FILES
-# os.chdir("C:\\Users\\pletz\\OneDrive\\Desktop\\IU\\Y390\\Variant Model Files\\IBMFA Files")
+os.chdir("C:\\Users\\pletz\\OneDrive\\Desktop\\IU\\Y390\\Variant Model Files\\IBMFA Files")
 
 for i in range(len(ibmfa)):
     # get base bnd file info
     nodeDict = getBNDdata()
-
-    # load and parse base xml file
-    base_xml = open("base_model_file.xml")
-    tree = ET.parse(base_xml)
-    xml_root = tree.getroot()
 
     # get node(s) of interest and desired state (from csv)
     intervention = (ibmfa.iloc[i, 0]).replace(" ", "")
@@ -134,62 +194,12 @@ for i in range(len(ibmfa)):
         nodeDict[nodeOfInterest] = newLogic
         fileName += physiName
 
-    # add xml mapping data
-    addMappingInfo(xml_root, statusOfInterest, fileName)
-
-    # locate intracellular layer in xml tree
-    cell_defs = xml_root.find("cell_definitions")
-    cell_def = cell_defs.find("cell_definition")
-    phenotype = cell_def.find("phenotype")
-    intracellular = phenotype.find("intracellular")
-
-    # modify xml bnd_filename, cfg_filename parameters
-    bnd_filename = intracellular.find("bnd_filename")
-    bnd_filename.text = "config/" + fileName + ".bnd"
-    cfg_filename = intracellular.find("cfg_filename")
-    cfg_filename.text = "config/" + fileName + ".cfg"
-
-    # modify variable name
-    microenvironment = xml_root.find("microenvironment_setup")
-    compound = microenvironment.find("variable")
-    compound.attrib = {"name": fileName, "units": "dimensionless", "ID": "1"}
-    
-    # modify decay rate
-    #physical_parameter_set = compound.find("physical_parameter_set")
-    #decay_rate = physical_parameter_set("decay_rate")
-    # MODIFY DECAY RATE HERE
-
-    # modify substrate name (in save)
-    save = xml_root.find("save")
-    svg = save.find("SVG")
-    plot_substrate = svg.find("plot_substrate")
-    substrate = plot_substrate.find("substrate")
-    substrate.text = fileName
-
-    # modify substrate name (in motility)
-    motility = phenotype.find("motility")
-    options = motility.find("options")
-    chemotaxis = options.find("chemotaxis")
-    substrate = chemotaxis.find("substrate")
-    substrate.text = fileName
-    advanced_chemotaxis = options.find("advanced_chemotaxis")
-    chemotactic_sensitivities = advanced_chemotaxis.find("chemotactic_sensitivities")
-    chemotactic_sensitivity = chemotactic_sensitivities.find("chemotactic_sensitivity")
-    chemotactic_sensitivity.attrib = {"substrate": fileName}
-
-    # modify substrate name (in secretion)
-    secretion = phenotype.find("secretion")
-    substrate = secretion.find("substrate")
-    substrate.attrib = {"name": fileName}
-
-    # modify substrate_name (in user parameters)
-    user_params = xml_root.find("user_parameters")
-    substrate_name = user_params.find("substrate_name")
-    substrate_name.text = fileName
-
-    # create new xml file
-    tree.write(fileName + ".xml")
-    print("Created file " + fileName + ".xml")
+    # create new xml files
+    for d in range(3):
+        for r in range(3):
+            decay = str(d + 1)
+            replicate = str(r + 1)
+            createXML(fileName, statusOfInterest, decay, replicate)
 
     # create new BND file
     newFileName  = fileName + ".bnd"
@@ -211,16 +221,11 @@ print("--------------------------")
 # create files for Stable Motifs results
 
 # change directory --> EDIT TO BE THE LOCATION YOU WANT TO STORE STABLE MOTIFS FILES
-# os.chdir("C:\\Users\\pletz\\OneDrive\\Desktop\\IU\\Y390\\Variant Model Files\\Stable Motifs Files")
+os.chdir("C:\\Users\\pletz\\OneDrive\\Desktop\\IU\\Y390\\Variant Model Files\\Stable Motifs Files")
 
 for i in range(len(stableMotifs)):
     # get base bnd file info
     nodeDict = getBNDdata()
-
-    # load and parse base xml file
-    base_xml = open("base_model_file.xml")
-    tree = ET.parse(base_xml)
-    xml_root = tree.getroot()
 
     # get node(s) of interest and desired state (from csv)
     intervention = (stableMotifs.iloc[i, 0]).replace(" ", "")
@@ -249,52 +254,12 @@ for i in range(len(stableMotifs)):
         nodeDict[nodeOfInterest] = newLogic
         fileName += physiName
 
-    # add xml mapping data
-    addMappingInfo(xml_root, statusOfInterest, fileName)
-
-    # locate intracellular layer in xml tree
-    cell_defs = xml_root.find("cell_definitions")
-    cell_def = cell_defs.find("cell_definition")
-    phenotype = cell_def.find("phenotype")
-    intracellular = phenotype.find("intracellular")
-
-    # modify xml bnd_filename, cfg_filename parameters
-    bnd_filename = intracellular.find("bnd_filename")
-    bnd_filename.text = "config/" + fileName + ".bnd"
-    cfg_filename = intracellular.find("cfg_filename")
-    cfg_filename.text = "config/" + fileName + ".cfg"
-
-    # modify variable name
-    microenvironment = xml_root.find("microenvironment_setup")
-    compound = microenvironment.find("variable")
-    compound.attrib = {"name": fileName, "units": "dimensionless", "ID": "1"}
-
-    # modify decay rate
-    #physical_parameter_set = compound.find("physical_parameter_set")
-    #decay_rate = physical_parameter_set("decay_rate")
-    # MODIFY DECAY RATE HERE
-
-    # modify substrate name (in motility)
-    motility = phenotype.find("motility")
-    options = motility.find("options")
-    advanced_chemotaxis = options.find("advanced_chemotaxis")
-    chemotactic_sensitivities = advanced_chemotaxis.find("chemotactic_sensitivities")
-    chemotactic_sensitivity = chemotactic_sensitivities.find("chemotactic_sensitivity")
-    chemotactic_sensitivity.attrib = {"substrate": fileName}
-
-    # modify substrate name (in secretion)
-    secretion = phenotype.find("secretion")
-    substrate = secretion.find("substrate")
-    substrate.attrib = {"name": fileName}
-
-    # modify substrate name (in user parameters)
-    user_params = xml_root.find("user_parameters")
-    substrate_name = user_params.find("substrate_name")
-    substrate_name.text = fileName
-
-    # create new xml file
-    tree.write(fileName + ".xml")
-    print("Created file " + fileName + ".xml")
+    # create new xml files
+    for d in range(3):
+        for r in range(3):
+            decay = str(d + 1)
+            replicate = str(r + 1)
+            createXML(fileName, statusOfInterest, decay, replicate)
 
     # create new BND file
     newFileName  = fileName + ".bnd"
@@ -316,7 +281,7 @@ print("----------------------------------")
 # create bnd files for edgetic perturbations results
 
 # change directory --> EDIT TO BE THE PLACE YOU WANT TO STORE SINGLE EDGE PERTURBATION FILES
-# os.chdir("C:\\Users\\pletz\\OneDrive\\Desktop\\IU\\Y390\\Variant Model Files\\Single Edge Perturbations Files")
+os.chdir("C:\\Users\\pletz\\OneDrive\\Desktop\\IU\\Y390\\Variant Model Files\\Single Edge Perturbations Files")
 
 for i in range(len(edgetic)):
     # separate components of result
@@ -327,74 +292,38 @@ for i in range(len(edgetic)):
     # get base bnd file info
     nodeDict = getBNDdata()
 
-    # load and parse base xml file
-    base_xml = open("base_model_file.xml")
-    tree = ET.parse(base_xml)
-    xml_root = tree.getroot()
-
     # update logic of nodes for intervention
     # update existing logic for target node
     if (action == "0"):
         # suppression
-        newName = "anti_" + source
+        newName = "anti_" + source + "_" + target
         nodeDict[newName] = "  logic = " + newName
-        nodeDict[target] = nodeDict[target] + " & !" + newName
+        #nodeDict[target] = nodeDict[target] + " & !" + newName
+        oldLogic = nodeDict[target]
+        modified = "(" + source + " & !" + newName + ")"
+        newLogic = oldLogic.replace(source, modified)
+        nodeDict[target] = newLogic
     else:
         # excitation
-        newName = "pro_" + source
+        newName = "pro_" + source + "_" + target
         nodeDict[newName] = "  logic = " + newName
-        nodeDict[target] = nodeDict[target] + " | " + newName
+        #nodeDict[target] = nodeDict[target] + " | " + newName
+        oldLogic = nodeDict[target]
+        modified = "(" + source + " | " + newName + ")"
+        newLogic = oldLogic.replace(source, modified)
+        nodeDict[target] = newLogic
     
-    # add xml mapping data
-    physiName = source + "_" + target + "_" + action
-    addMappingInfo(xml_root, action, physiName)
+    fileName = source + "_" + target + "_" + action
 
-    # locate intracellular layer in xml tree
-    cell_defs = xml_root.find("cell_definitions")
-    cell_def = cell_defs.find("cell_definition")
-    phenotype = cell_def.find("phenotype")
-    intracellular = phenotype.find("intracellular")
-
-    # modify xml bnd_filename, cfg_filename parameters
-    bnd_filename = intracellular.find("bnd_filename")
-    bnd_filename.text = "config/" + physiName + ".bnd"
-    cfg_filename = intracellular.find("cfg_filename")
-    cfg_filename.text = "config/" + physiName + ".cfg"
-
-    # modify variable name
-    microenvironment = xml_root.find("microenvironment_setup")
-    compound = microenvironment.find("variable")
-    compound.attrib = {"name": physiName, "units": "dimensionless", "ID": "1"}
-
-    # modify decay rate
-    #physical_parameter_set = compound.find("physical_parameter_set")
-    #decay_rate = physical_parameter_set("decay_rate")
-    # MODIFY DECAY RATE HERE
-
-    # modify substrate name (in motility)
-    motility = phenotype.find("motility")
-    options = motility.find("options")
-    advanced_chemotaxis = options.find("advanced_chemotaxis")
-    chemotactic_sensitivities = advanced_chemotaxis.find("chemotactic_sensitivities")
-    chemotactic_sensitivity = chemotactic_sensitivities.find("chemotactic_sensitivity")
-    chemotactic_sensitivity.attrib = {"substrate": physiName}
-
-    # modify substrate name (in secretion)
-    secretion = phenotype.find("secretion")
-    substrate = secretion.find("substrate")
-    substrate.attrib = {"name": physiName}
-
-    # modify substrate name (in user parameters)
-    user_params = xml_root.find("user_parameters")
-    substrate_name = user_params.find("substrate_name")
-    substrate_name.text = physiName
-
-    # create new xml file
-    tree.write(physiName + ".xml")
-    print("Created file " + physiName + ".xml")
+    # create new xml files
+    for d in range(3):
+        for r in range(3):
+            decay = str(d + 1)
+            replicate = str(r + 1)
+            createXML(fileName, statusOfInterest, decay, replicate)
 
     # create new BND file
-    newFileName = physiName + ".bnd"
+    newFileName = fileName + ".bnd"
     newFile = open(newFileName, "w")
     for n in nodeDict:
         nodeString = "Node " + n + " {\n" + nodeDict.get(n) + ";\n  rate_up = @logic ? $time_scale: 0;\n  rate_down = @logic ? 0 : $time_scale;\n}"
@@ -403,8 +332,8 @@ for i in range(len(edgetic)):
     print("Created file " + newFileName)
 
     # create cfg file
-    createCFG(physiName)
-    print("Created file " + physiName + ".cfg")
+    createCFG(fileName)
+    print("Created file " + fileName + ".cfg")
 
 print("----------------------------------------------")
 print("Finished with Single Edge Perturbations Files.")
