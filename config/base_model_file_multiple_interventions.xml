@@ -308,6 +308,6 @@
         <substrate_name1 type="string" units="" description="name of intervention">pro_GAP1</substrate_name1>
         <substrate_name2 type="string" units="" description="name of intervention">pro_GAP2</substrate_name2>
         <substrate_name3 type="string" units="" description="name of intervention">pro_GAP3</substrate_name3>
-        <num_substrates>3</num_substrates>
+        <num_substrates type="int" units="dimensionless" description="Number of compounds in intervention">3</num_substrates>
     </user_parameters>
 </PhysiCell_settings>

@@ -245,6 +245,7 @@
         <dose_interval type="double" units="minutes" description="interval between doses of compound">1440.0</dose_interval>
         <drug_amount type="double" units="dimensionless" description="concentration/amount of compound to add at dosing interval">50.0</drug_amount>
         <add_compound type="bool" units="" description="">true</add_compound>
-        <substrate_name type="string" units="" description="name of intervention">pro_GAP</substrate_name>
+        <substrate_name1 type="string" units="" description="name of intervention">pro_GAP</substrate_name1>
+        <num_substrates type="int" units="dimensionless" description="Number of compounds in intervention">1</num_substrates>
     </user_parameters>
 </PhysiCell_settings>
