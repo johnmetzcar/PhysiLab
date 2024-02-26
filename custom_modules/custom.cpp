@@ -178,13 +178,18 @@ void post_update_intracellular_drug_effect(Cell* pCell, Phenotype& phenotype, do
 	bool Apoptosis = pCell->phenotype.intracellular->get_boolean_variable_value("Apoptosis"); // ? 1.0 : 0.0;
 	bool Proliferation = pCell->phenotype.intracellular->get_boolean_variable_value("Proliferation"); // ? 1.0 : 0.0;
 
-	// if(pCell->ID=1)
-	// {
-	// 	std::cout<<"Time: " << PhysiCell_globals.current_time <<std::endl;
+	// phenotype.intracellular. 
 
-	// 	std::cout<<"cell: " << pCell->type_name << " " << pCell->ID <<std::endl;
-	// 	// std::getchar();
-	// }
+	if(pCell->ID=1)
+	{
+		std::cout<<"Time: " << PhysiCell_globals.current_time <<std::endl;
+
+		std::cout<<"cell: " << pCell->type_name << " " << pCell->ID <<std::endl;
+
+		phenotype.intracellular->display(std::cout);
+		// std::cout<<"Intracellular dt"<<phenotype.intracellular.intracellular_dt <<std::endl;
+		std::getchar();
+	}
 	
 
 	if(Apoptosis == true)
