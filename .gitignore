@@ -24,4 +24,5 @@ initial*.mat
 out*.txt
 final*.txt
 initial*.txt
-Variant Model Files/*
+Variant Model Files/*.bnd
+Variant Model Files/*.cfg
