@@ -37,7 +37,7 @@ def getBNDdata():
 #def createXML(fileName, status, decayID, replicateID):
 def createXML(intervention, substrateNames, numInterventions, decayID, replicateID):
     # load and parse base xml file
-    base_xml = open("C:\\Users\\pletz\\OneDrive\\Desktop\\IU\\Y390\\Variant Model Files\\base_model_file_two_interventions.xml")
+    base_xml = open("C:\\Users\\pletz\\OneDrive\\Desktop\\IU\\Y390\\Variant Model Files\\base_model_file_multiple_interventions.xml")
     tree = ET.parse(base_xml)
     xml_root = tree.getroot()
 

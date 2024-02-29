@@ -26,3 +26,6 @@ final*.txt
 initial*.txt
 Variant Model Files/*.bnd
 Variant Model Files/*.cfg
+Variant Model Files/*.xml
+!Variant Model Files/base_model_file_multiple_interventions.xml
+!Variant Model Files/base_model_file.xml
