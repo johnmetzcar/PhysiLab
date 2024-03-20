@@ -13,6 +13,7 @@ output/rules.txt
 *.DS_store
 **./DS_store
 PhysiBoSS_Cell_Lines
+PhysiBoSS_Cell_Lines.exe
 .vscode
 addons/PhysiBoSS/MaBoSS-env-2.0/*
 out*.xml
@@ -29,3 +30,5 @@ Variant Model Files/*.cfg
 Variant Model Files/*.xml
 !Variant Model Files/base_model_file_multiple_interventions.xml
 !Variant Model Files/base_model_file.xml
+!Variant Model Files/TLGL.bnd
+!Variant Model Files/TLGL.cfg
