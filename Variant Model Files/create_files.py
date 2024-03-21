@@ -1,14 +1,111 @@
+# for help with ElementTree: https://docs.python.org/3/library/xml.etree.elementtree.html
 # creates maboss (.bnd) AND PhysiCell (.xml) files for controls imported from csv files
+# Work led by Katie Pletz with contributions from John Metzcar
+# Katie Pletz and John Metzcar 2023-2024. 
+
 
 import os
+import os.path
 import sys
-import pandas
+import pandas as pd
 import xml.etree.ElementTree as ET
+
+###################### EDIT THESE VARIABLES ######################
+### Note - eventually will put this in a config file (.ini) or something similar
+
+######################## Base Model Files ########################
+
+# MaBoSS files
+# EDIT TO BE NAME OF ORIGINAL BND FILE (MaBoSS model)
+MaBoSS_file = "TLGL.bnd"
+# EDIT TO BE NAME OF ORIGINAL CFG FILE (MaBoSS model)
+MaBoSS_config = "TLGL.cfg"
+
+# PhysiCell files
+# EDIT TO BE NAME OF ORIGINAL XML FILE (PhysiCell model)
+PhysiCell_file = "base_model_file_multiple_interventions.xml"
+print("CURRENTLY OTHER PHYSICELL CONFIG FILES ARE ASSUMED TO BE IN CONFIG (rules, cell initialization, Dirichelet nodes, and substrate initializaiton)" )
+
+#################### Intervention Files ########################
+
+stable_motifs_interventions_file = 'FormattedInternalMergeResults.csv'
+ibmfa_interventions_file = 'IBMFA_top_interventions.csv'
+edgetic_interventions_file = 'single_edge_perturbations_top_interventions.csv'
+
+################### Pathing Variables ########################
+
+# relative path to input directory
+# EDIT TO BE LOCATION OF ORIGINAL MODEL FILES
+rel_input_dir = 'Variant Model Files/'
+
+# relative path to output directory
+# EDIT TO BE LOCATION OF WHERE YOU WANT TO STORE THE NEW MODEL FILES
+rel_output_dir = 'leukemia_model_files/'
+
+rel_simulation_output_dir = 'leukemia_output/'
+
+########################### PATHING ###########################
+# move to PhysiCell root directory - this assumes this script is one folder below the root
+os.chdir("../")
+full_path = os.getcwd()
+print(full_path)
+
+# INPUTS
+input_dir = os.path.join(full_path, rel_input_dir)
+print("Input directory: ")
+print(input_dir)
+input_MaBoSS_file = os.path.join(input_dir, MaBoSS_file)
+
+# MODELS
+print('Base model files:')
+print("Input BND file: ")
+print(input_MaBoSS_file)
+
+input_PC_file = os.path.join(input_dir, PhysiCell_file)
+print("Input XML file: ")
+print(input_PC_file)
+
+# Interventions 
+print("Interventions Files:")
+stable_motifs_file_and_path = os.path.join(input_dir, stable_motifs_interventions_file)
+print("Stable Motifs File: ")
+print(stable_motifs_file_and_path)
+
+print("IBMFA File: ")
+ibmfa_file_and_path = os.path.join(input_dir, ibmfa_interventions_file)
+print(ibmfa_file_and_path)
+
+print("Edgetic File: ")
+edgetic_file_and_path = os.path.join(input_dir, edgetic_interventions_file)
+print(edgetic_file_and_path)
+
+# OUTPUTS
+output_dir = os.path.join(full_path, rel_output_dir)
+print("Output directory: ")
+print(output_dir)
+
+simulation_output_dir = os.path.join(full_path, rel_simulation_output_dir)
+print("Simulation output directory: ")
+print(simulation_output_dir)
+
+input("Press Enter to continue...\n Press Ctrl + C to exit...")
+
+# make sure the output directory exists
+if not os.path.exists(output_dir):
+    os.makedirs(output_dir)
+
+# make sure the simulation output directory exists
+if not os.path.exists(simulation_output_dir):
+    os.makedirs(simulation_output_dir)
+    
+# move to the output directory
+os.chdir(output_dir)
+
 
 # function for reading bnd file
 def getBNDdata():
-    # open original bnd  --> EDIT TO BE LOCATION OF ORIGINAL BND FILE
-    baseBND = open("C:\\Users\\pletz\\OneDrive\\Desktop\\IU\\Y390\\Variant Model Files\\TLGL.bnd", "r+")
+    # open original bnd  --> location and name set in INPUT section above
+    baseBND = open(input_MaBoSS_file, "r+")
     bndText = baseBND.readlines()
 
     # create one big long string of the entire bnd file
@@ -32,9 +129,14 @@ def getBNDdata():
 
     return nodeDict
 
+
+## May eventually have this function take xml file as input and modify it
 def createXML(intervention, substrateNames, numInterventions, decayID, replicateID):
-    # load and parse base xml file
-    base_xml = open("C:\\Users\\pletz\\OneDrive\\Desktop\\IU\\Y390\\Variant Model Files\\base_model_file_two_interventions.xml")
+    # THIS FUNCTION ALSO MAKES THE OUTPUT DIRECTORIES!!!!!!!!!
+    # lets add doc strings eventually ... 
+
+    # load and parse base xml file --> location and name set in INPUT section above
+    base_xml = open(input_PC_file)
     tree = ET.parse(base_xml)
     xml_root = tree.getroot()
 
@@ -138,9 +240,10 @@ def createXML(intervention, substrateNames, numInterventions, decayID, replicate
     # change filenames
     intracellular = phenotype.find("intracellular")
     bndfile = intracellular.find("bnd_filename")
-    bndfile.text = "config/" + intervention + ".bnd"
+    
+    bndfile.text = rel_output_dir + intervention + ".bnd"
     cfgfile = intracellular.find("cfg_filename")
-    cfgfile.text = "config/" + intervention + ".cfg"
+    cfgfile.text = rel_output_dir  + intervention + ".cfg"
 
     # modify mapping info
     mapping = intracellular.find("mapping")
@@ -208,16 +311,22 @@ def createXML(intervention, substrateNames, numInterventions, decayID, replicate
 
     # modify output file
     folder = save.find("folder")
-    folder.text = intervention + "_" + modelID
+    folder.text = rel_simulation_output_dir + intervention + "_" + modelID
 
     # change seed value
     random_seed = user_params.find("random_seed")
     random_seed.text = modelID
 
     # create new xml file
+    # output directory given above in the OUTPUT section (unless changed in MAIN script)
     fileName = intervention + "_" + modelID + ".xml"
     tree.write(fileName)
     print("Created file " + fileName)
+
+    # make the output directory
+    output_dir = os.path.join(simulation_output_dir, intervention + "_" + modelID)
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
 
 def createCFG(intervention, substrateNames):
     part1 = ["PDGF.istate = 0;\n", 
@@ -241,6 +350,7 @@ def createCFG(intervention, substrateNames):
                 "thread_count = 1;"]
 
     cfgName = intervention + ".cfg"
+    # output directory given above in the OUTPUT section (unless changed in MAIN script)
     cfgfile = open(cfgName, "w")
     cfgfile.writelines(part1)
     for s in substrateNames:
@@ -250,18 +360,28 @@ def createCFG(intervention, substrateNames):
 
     print("Created file " + intervention + ".cfg")
 
-# set working directory --> EDIT TO BE LOCATION OF YOUR CSV FILES
-os.chdir("C:\\Users\\pletz\\OneDrive\\Desktop\\IU\\Y390\\Variant Model Files")
 
-# import csv files
-ibmfa = pandas.read_csv("IBMFA_top_interventions.csv")
-stableMotifs = pandas.read_csv("FormattedInternalMergeResults.csv", header = None)
-edgetic = pandas.read_csv("single_edge_perturbations_top_interventions.csv")
+###################################################
+############## END FUNCTIONS ######################
+    
+############# START OF MAIN SCRIPT ################
+    
+# import interventions files
+ibmfa = pd.read_csv(ibmfa_file_and_path)
+stableMotifs = pd.read_csv(stable_motifs_file_and_path, header = None)
+edgetic = pd.read_csv(edgetic_file_and_path)
 
-# create files for IBMFA results
+###################################################
+############## IBMFA Interventions ################
+###################################################
 
-# change directory --> EDIT TO BE THE LOCATION YOU WANT TO STORE IBMFA FILES
-os.chdir("C:\\Users\\pletz\\OneDrive\\Desktop\\IU\\Y390\\Variant Model Files\\IBMFA Files")
+# if you want to store the IBMFA files in the same directory as the other files, comment out the next lines (NOT TESTED)
+    
+# rel_output_dir_IBMFA = 'leukemia_model_files/IBMFA_files/'
+# output_dir_IBMFA = os.path.join(full_path, rel_output_dir_IBMFA)
+# print("Output directory: ")
+# print(output_dir_IBMFA)
+# os.chdir(output_dir_IBMFA)
 
 ibmfaDict = {}
 for i in range(len(ibmfa)):
@@ -302,6 +422,9 @@ for intervention in ibmfaDict:
 
     ibmfaDict[intervention] = substrateNames
 
+    # add algorithm name to intervention name
+    interventionName = "IB_" + interventionName
+
     # create bnd file
     fileName = interventionName + ".bnd"
     newFile = open(fileName, "w")
@@ -324,13 +447,25 @@ print("--------------------------")
 print("Finished with IBMFA files.")
 print("--------------------------")
 
-# create files for Stable Motifs results
+###################################################
+############ Stable Motif Interventions ############
+###################################################
 
-# change directory --> EDIT TO BE THE LOCATION YOU WANT TO STORE STABLE MOTIFS FILES
-os.chdir("C:\\Users\\pletz\\OneDrive\\Desktop\\IU\\Y390\\Variant Model Files\\Stable Motifs Files")
 
+
+# if you want to store the SM files in the same directory as the other files, comment out the next lines (NOT TESTED)
+    
+# rel_output_dir_SM = 'leukemia_model_files/SM_files/'
+# output_dir_SM = os.path.join(full_path, rel_output_dir_SM)
+# print("Output directory: ")
+# print(output_dir_SM)
+# os.chdir(output_dir_SM)
+
+## Can this go into a function???
+# split into interventions and subinterventions
 stableMotifDict = {}
 for i in range(len(stableMotifs)):
+    # create dictionary entries with keys = intervention, values = subinterventions
     intervention = (stableMotifs.iloc[i, 0]).replace(" ", "")
     subinterventions = intervention.split("&")
     stableMotifDict[intervention] = subinterventions
@@ -367,8 +502,12 @@ for intervention in stableMotifDict:
         nodeDict[nodeOfInterest] = newLogic
 
     stableMotifDict[intervention] = substrateNames
+    
+    # add algorithm name to intervention name
+    interventionName = "SM_" + interventionName
 
     # create bnd file
+    # for each subintervention, add the corresponding input node and update logic
     fileName = interventionName + ".bnd"
     newFile = open(fileName, "w")
     for n in nodeDict:
@@ -390,10 +529,20 @@ print("----------------------------------")
 print("Finished with Stable Motifs files.")
 print("----------------------------------")
 
+
+###################################################
+############ Single Edge Perturbations ############
+###################################################
+
 # create bnd files for edgetic perturbations results
 
-# change directory --> EDIT TO BE THE PLACE YOU WANT TO STORE SINGLE EDGE PERTURBATION FILES
-os.chdir("C:\\Users\\pletz\\OneDrive\\Desktop\\IU\\Y390\\Variant Model Files\\Single Edge Perturbations Files")
+# if you want to store the edgetic perturbation files in the same directory as the other files, comment out the next lines (NOT TESTED)
+    
+# rel_output_dir_EG = 'leukemia_model_files/EG_files/'
+# output_dir_EG = os.path.join(full_path, rel_output_dir_EG)
+# print("Output directory: ")
+# print(output_dir)
+# os.chdir(output_dir_EG)
 
 for i in range(len(edgetic)):
     # separate components of result
@@ -427,15 +576,17 @@ for i in range(len(edgetic)):
     
     fileName = source + "_" + target + "_" + action
 
+    # add algorithm name to intervention name
+    fileName = "EG_" + fileName
+
     # create new xml files
     # def createXML(intervention, substrateNames, numInterventions, decayID, replicateID):
     for d in range(3):
         for r in range(3):
             decay = str(d + 1)
             replicate = str(r + 1)
-            #createXML(fileName, statusOfInterest, decay, replicate)
             createXML(fileName, [newName], 1, decay, replicate)
-
+            
     # create new BND file
     newFileName = fileName + ".bnd"
     newFile = open(newFileName, "w")
@@ -452,3 +603,4 @@ for i in range(len(edgetic)):
 print("----------------------------------------------")
 print("Finished with Single Edge Perturbations Files.")
 print("----------------------------------------------")
+
