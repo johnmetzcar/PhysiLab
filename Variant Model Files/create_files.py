@@ -1,4 +1,4 @@
-# for help with ElementTree: https://docs.python.org/3/library/xml.etree.elementtree.html
+# creates maboss (.bnd) AND PhysiCell (.xml) files for controls imported from csv files
 
 import os
 import sys
@@ -32,12 +32,9 @@ def getBNDdata():
 
     return nodeDict
 
-# def modifyXML(fileName, status, decayID, replicateID):
-#createXML(intervention, substrateNames, statusOfInterest, decay, replicate, num_interventions)
-#def createXML(fileName, status, decayID, replicateID):
 def createXML(intervention, substrateNames, numInterventions, decayID, replicateID):
     # load and parse base xml file
-    base_xml = open("C:\\Users\\pletz\\OneDrive\\Desktop\\IU\\Y390\\Variant Model Files\\base_model_file_multiple_interventions.xml")
+    base_xml = open("C:\\Users\\pletz\\OneDrive\\Desktop\\IU\\Y390\\Variant Model Files\\base_model_file_two_interventions.xml")
     tree = ET.parse(base_xml)
     xml_root = tree.getroot()
 
@@ -253,27 +250,97 @@ def createCFG(intervention, substrateNames):
 
     print("Created file " + intervention + ".cfg")
 
-# load list of stable motifs interventions
-results = pandas.read_csv("C:\\Users\\pletz\\OneDrive\\Desktop\\IU\\Y390\\Variant Model Files\\FormattedInternalMergeResults.csv")
+# set working directory --> EDIT TO BE LOCATION OF YOUR CSV FILES
+os.chdir("C:\\Users\\pletz\\OneDrive\\Desktop\\IU\\Y390\\Variant Model Files")
 
-# change directory to the folder you want to store stable motifs files
-os.chdir("C:\\Users\\pletz\\OneDrive\\Desktop\\IU\\Y390\\Variant Model Files\\Stable Motifs Test Files")
+# import csv files
+ibmfa = pandas.read_csv("IBMFA_top_interventions.csv")
+stableMotifs = pandas.read_csv("FormattedInternalMergeResults.csv", header = None)
+edgetic = pandas.read_csv("single_edge_perturbations_top_interventions.csv")
 
-# split into interventions and subinterventions
-stablemotifs = {}
-for i in range(len(results)):
+# create files for IBMFA results
+
+# change directory --> EDIT TO BE THE LOCATION YOU WANT TO STORE IBMFA FILES
+os.chdir("C:\\Users\\pletz\\OneDrive\\Desktop\\IU\\Y390\\Variant Model Files\\IBMFA Files")
+
+ibmfaDict = {}
+for i in range(len(ibmfa)):
     # create dictionary entries with keys = intervention, values = subinterventions
-    intervention = (results.iloc[i, 0]).replace(" ", "")
+    intervention = (ibmfa.iloc[i, 0]).replace(" ", "")
     subinterventions = intervention.split("&")
-    stablemotifs[intervention] = subinterventions
+    ibmfaDict[intervention] = subinterventions
 
-for intervention in stablemotifs:
+for intervention in ibmfaDict:
     nodeDict = getBNDdata()
-    numInterventions = len(stablemotifs[intervention])
+    numInterventions = len(ibmfaDict[intervention])
     substrateNames = []
     interventionName = ""
-    for subintervention in stablemotifs[intervention]:
-        # create names for each substrate (modify dictionary entries???)
+    for subintervention in ibmfaDict[intervention]:
+        nodeOfInterest = subintervention.split("-")[0]
+        statusOfInterest = subintervention.split("-")[1]
+
+        if(statusOfInterest == "0"):
+            substrate = "anti_" + nodeOfInterest
+        else:
+            substrate = "pro_" + nodeOfInterest
+        substrateNames.append(substrate)
+        interventionName += substrate
+
+        newLogic = nodeDict.get(nodeOfInterest) + ")"
+        if (statusOfInterest == "0"):
+            # suppression
+            physiName = "anti_" + nodeOfInterest
+            newLogic = newLogic[:-1] + " & !" + physiName
+        else:
+            # promotion
+            physiName = "pro_" + nodeOfInterest
+            newLogic = newLogic[:-1] + " | " + physiName
+        
+        # edit logic for node of interest
+        nodeDict[physiName] = "  logic = " + physiName
+        nodeDict[nodeOfInterest] = newLogic
+
+    ibmfaDict[intervention] = substrateNames
+
+    # create bnd file
+    fileName = interventionName + ".bnd"
+    newFile = open(fileName, "w")
+    for n in nodeDict:
+        nodeString = "Node " + n + " {\n" + nodeDict.get(n) + ";\n  rate_up = @logic ? $time_scale: 0;\n  rate_down = @logic ? 0 : $time_scale;\n}"
+        newFile.write(nodeString + "\n\n")
+    print("Created file " + fileName)
+
+    # create cfg file
+    createCFG(interventionName, ibmfaDict[intervention])
+
+    # create xml files
+    for d in range(3):
+        for r in range(3):
+            decay = str(d + 1)
+            replicate = str(r + 1)
+            createXML(interventionName, substrateNames, numInterventions, decay, replicate)
+
+print("--------------------------")
+print("Finished with IBMFA files.")
+print("--------------------------")
+
+# create files for Stable Motifs results
+
+# change directory --> EDIT TO BE THE LOCATION YOU WANT TO STORE STABLE MOTIFS FILES
+os.chdir("C:\\Users\\pletz\\OneDrive\\Desktop\\IU\\Y390\\Variant Model Files\\Stable Motifs Files")
+
+stableMotifDict = {}
+for i in range(len(stableMotifs)):
+    intervention = (stableMotifs.iloc[i, 0]).replace(" ", "")
+    subinterventions = intervention.split("&")
+    stableMotifDict[intervention] = subinterventions
+
+for intervention in stableMotifDict:
+    nodeDict = getBNDdata()
+    numInterventions = len(stableMotifDict[intervention])
+    substrateNames = []
+    interventionName = ""
+    for subintervention in stableMotifDict[intervention]:
         nodeOfInterest = subintervention.split("-")[0]
         statusOfInterest = subintervention.split("-")[1]
 
@@ -294,25 +361,23 @@ for intervention in stablemotifs:
             # promotion
             physiName = "pro_" + nodeOfInterest
             newLogic = newLogic[:-1] + " | " + physiName
-        
-        # edit logic for node of interest
+
+        # update logic for node of interest
         nodeDict[physiName] = "  logic = " + physiName
         nodeDict[nodeOfInterest] = newLogic
-    
-    stablemotifs[intervention] = substrateNames 
-    #print(interventionName)   
+
+    stableMotifDict[intervention] = substrateNames
 
     # create bnd file
-    # for each subintervention, add the corresponding input node and update logic
     fileName = interventionName + ".bnd"
     newFile = open(fileName, "w")
     for n in nodeDict:
-        nodeString = "Node " + n+ " {\n" + nodeDict.get(n) + ";\n  rate_up = @logic ? $time_scale: 0;\n  rate_down = @logic ? 0 : $time_scale;\n}"
+        nodeString = "Node " + n + " {\n" + nodeDict.get(n) + ";\n  rate_up = @logic ? $time_scale: 0;\n  rate_down = @logic ? 0 : $time_scale;\n}"
         newFile.write(nodeString + "\n\n")
     print("Created file " + fileName)
 
     # create cfg file
-    createCFG(interventionName, stablemotifs[intervention])
+    createCFG(interventionName, stableMotifDict[intervention])
 
     # create xml files
     for d in range(3):
@@ -320,3 +385,70 @@ for intervention in stablemotifs:
             decay = str(d + 1)
             replicate = str(r + 1)
             createXML(interventionName, substrateNames, numInterventions, decay, replicate)
+
+print("----------------------------------")
+print("Finished with Stable Motifs files.")
+print("----------------------------------")
+
+# create bnd files for edgetic perturbations results
+
+# change directory --> EDIT TO BE THE PLACE YOU WANT TO STORE SINGLE EDGE PERTURBATION FILES
+os.chdir("C:\\Users\\pletz\\OneDrive\\Desktop\\IU\\Y390\\Variant Model Files\\Single Edge Perturbations Files")
+
+for i in range(len(edgetic)):
+    # separate components of result
+    source = edgetic.iloc[i, 0].split("-->")[0]
+    target = (edgetic.iloc[i, 0].split("-->")[1]).split(",")[0]
+    action = (edgetic.iloc[i, 0].split("-->")[1]).split(",")[3]
+
+    # get base bnd file info
+    nodeDict = getBNDdata()
+
+    # update logic of nodes for intervention
+    # update existing logic for target node
+    if (action == "0"):
+        # suppression
+        newName = "anti_" + source + "_" + target
+        nodeDict[newName] = "  logic = " + newName
+        #nodeDict[target] = nodeDict[target] + " & !" + newName
+        oldLogic = nodeDict[target]
+        modified = "(" + source + " & !" + newName + ")"
+        newLogic = oldLogic.replace(source, modified)
+        nodeDict[target] = newLogic
+    else:
+        # excitation
+        newName = "pro_" + source + "_" + target
+        nodeDict[newName] = "  logic = " + newName
+        #nodeDict[target] = nodeDict[target] + " | " + newName
+        oldLogic = nodeDict[target]
+        modified = "(" + source + " | " + newName + ")"
+        newLogic = oldLogic.replace(source, modified)
+        nodeDict[target] = newLogic
+    
+    fileName = source + "_" + target + "_" + action
+
+    # create new xml files
+    # def createXML(intervention, substrateNames, numInterventions, decayID, replicateID):
+    for d in range(3):
+        for r in range(3):
+            decay = str(d + 1)
+            replicate = str(r + 1)
+            #createXML(fileName, statusOfInterest, decay, replicate)
+            createXML(fileName, [newName], 1, decay, replicate)
+
+    # create new BND file
+    newFileName = fileName + ".bnd"
+    newFile = open(newFileName, "w")
+    for n in nodeDict:
+        nodeString = "Node " + n + " {\n" + nodeDict.get(n) + ";\n  rate_up = @logic ? $time_scale: 0;\n  rate_down = @logic ? 0 : $time_scale;\n}"
+        newFile.write(nodeString + "\n\n")
+
+    print("Created file " + newFileName)
+
+    # create cfg file
+    createCFG(fileName, [newName])
+    print("Created file " + fileName + ".cfg")
+
+print("----------------------------------------------")
+print("Finished with Single Edge Perturbations Files.")
+print("----------------------------------------------")
