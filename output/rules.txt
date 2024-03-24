@@ -1,5 +1,0 @@
-Cell Hypothesis Rules
-
-In TLGL cells:
-pressure decreases cycle entry
-

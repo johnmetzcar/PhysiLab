@@ -61,16 +61,16 @@ def generate_list_of_config_files(path_to_config_files: str):
 #         folder = self.get_outputPath(sampleID, replicateID)
 #         return folder+self.configFile_name%(sampleID,replicateID)
 
-def make_output_directories(list_of_PC_configs):
-    for file_name in list_of_PC_configs:
-        # note - will work to get the aboslute path at some point
-        # os.makedirs(os.path.dirname(file_name), exist_ok=True)
+# def make_output_directories(list_of_PC_configs): --> in create files now
+#     for file_name in list_of_PC_configs:
+#         # note - will work to get the aboslute path at some point
+#         # os.makedirs(os.path.dirname(file_name), exist_ok=True)
 
-        subdirectory_name = file_name.split('.')[0] # make sure you don't get fanacy with putting `.` in the file name OR path!!!!!!
-        # print(subdirectory_name)
-        subdirectory_name = subdirectory_name.split('/')[1] # will have to be updated for full path!!!
-        # print(subdirectory_name)        
-        os.makedirs('output_HTC/' + subdirectory_name, exist_ok=True)
+#         subdirectory_name = file_name.split('.')[0] # make sure you don't get fanacy with putting `.` in the file name OR path!!!!!!
+#         # print(subdirectory_name)
+#         subdirectory_name = subdirectory_name.split('/')[1] # will have to be updated for full path!!!
+#         # print(subdirectory_name)        
+#         os.makedirs('output_HTC/' + subdirectory_name, exist_ok=True)
 
 # Define the PhysiCell execution            
 def model(ConfigFile, Executable):
@@ -85,7 +85,7 @@ if __name__ == '__main__':
     # PhysiCell_Model, Samples, Replicates = args_run_simulations(sys.argv[1:]) 
 
     Samples = generate_list_of_config_files(sys.argv[1])
-    make_output_directories(Samples)
+    # make_output_directories(Samples) --> in create_files.py now
 
     NumSimulations = len(Samples) # - which is a list of strings number of samples - this is in fact the number of simulations your run - 
             # ID of each aparmaeter set. Would need the right folder for storage and EVERYTHING is ready to run. And the physicell executable is in the right place.
