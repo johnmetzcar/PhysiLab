@@ -2,6 +2,8 @@
 output/*.xml
 output/*.csv
 output/*.html
+output/*.txt
+!output/empty.txt
 output/detailed_rules.html
 output/detailed_rules.txt
 output/dictionaries.txt
@@ -18,6 +20,8 @@ PhysiBoSS_Cell_Lines.exe
 addons/PhysiBoSS/MaBoSS-env-2.0/*
 out*.xml
 out*.mat
+output*.txt
+states*.csv
 final*.xml
 final*.mat
 initial*.xml
@@ -25,6 +29,7 @@ initial*.mat
 out*.txt
 final*.txt
 initial*.txt
+leukemia_model_files/*
 Variant Model Files/*.bnd
 Variant Model Files/*.cfg
 Variant Model Files/*.xml
