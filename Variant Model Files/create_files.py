@@ -429,7 +429,7 @@ for intervention in ibmfaDict:
     fileName = interventionName + ".bnd"
     newFile = open(fileName, "w")
     for n in nodeDict:
-        nodeString = "Node " + n + " {\n" + nodeDict.get(n) + ";\n  rate_up = @logic ? $time_scale: 0;\n  rate_down = @logic ? 0 : $time_scale;\n}"
+        nodeString = "Node " + n + " {\n" + nodeDict.get(n) + ";\n  rate_up = @logic ? 1.0 : 0;\n  rate_down = @logic ? 0 : 1.0 ;\n}"
         newFile.write(nodeString + "\n\n")
     print("Created file " + fileName)
 
@@ -511,7 +511,7 @@ for intervention in stableMotifDict:
     fileName = interventionName + ".bnd"
     newFile = open(fileName, "w")
     for n in nodeDict:
-        nodeString = "Node " + n + " {\n" + nodeDict.get(n) + ";\n  rate_up = @logic ? $time_scale: 0;\n  rate_down = @logic ? 0 : $time_scale;\n}"
+        nodeString = "Node " + n + " {\n" + nodeDict.get(n) + ";\n  rate_up = @logic ? 1.0 : 0;\n  rate_down = @logic ? 0 : 1.0 ;\n}"
         newFile.write(nodeString + "\n\n")
     print("Created file " + fileName)
 
@@ -591,7 +591,7 @@ for i in range(len(edgetic)):
     newFileName = fileName + ".bnd"
     newFile = open(newFileName, "w")
     for n in nodeDict:
-        nodeString = "Node " + n + " {\n" + nodeDict.get(n) + ";\n  rate_up = @logic ? $time_scale: 0;\n  rate_down = @logic ? 0 : $time_scale;\n}"
+        nodeString = "Node " + n + " {\n" + nodeDict.get(n) + ";\n  rate_up = @logic ? 1.0 : 0;\n  rate_down = @logic ? 0 : 1.0 ;\n}"
         newFile.write(nodeString + "\n\n")
 
     print("Created file " + newFileName)
