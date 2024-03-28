@@ -255,19 +255,13 @@ def createXML(intervention, substrateNames, numInterventions, decayID, replicate
     input1.attrib = {"physicell_name": substrateNames[0], "intracellular_name": substrateNames[0]}
     settings = input1.find("settings")
     action = settings.find("action")
-    if substrateNames[0].startswith("pro"):
-        action.text = "activation"
-    else:
-        action.text = "inhibition"
+    action.text = "activation"
 
     if numInterventions > 1:
         input2.attrib = {"physicell_name": substrateNames[1], "intracellular_name": substrateNames[1]}
         settings = input2.find("settings")
         action = settings.find("action")
-        if substrateNames[1].startswith("pro"):
-            action.text = "activation"
-        else:
-            action.text = "inhibition"
+        action.text = "activation"
     else:
         # remove input 2
         mapping.remove(input2)
@@ -276,10 +270,7 @@ def createXML(intervention, substrateNames, numInterventions, decayID, replicate
         input3.attrib = {"physicell_name": substrateNames[2], "intracellular_name": substrateNames[2]}
         settings = input3.find("settings")
         action = settings.find("action")
-        if substrateNames[2].startswith("pro"):
-            action.text = "activation"
-        else:
-            action.text = "inhibition"
+        action.text = "activation"
     else:
         # remove substrate 3
         mapping.remove(input3)
