@@ -249,7 +249,7 @@ int main( int argc, char* argv[] )
 			if( fabs( PhysiCell_globals.current_time - PhysiCell_globals.next_full_save_time ) < 0.01 * diffusion_dt )
 			{
 				// For debugging/monitoring purposes
-				std::cout<< parameters.strings("substrate_name1") << microenvironment.density_vector(0)[1]<<std::endl;
+				// std::cout<< parameters.strings("substrate_name1") << microenvironment.density_vector(0)[1]<<std::endl;
 
 				display_simulation_status( std::cout ); 
 				if( PhysiCell_settings.enable_legacy_saves == true )

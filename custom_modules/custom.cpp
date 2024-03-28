@@ -259,7 +259,7 @@ void add_compound( double drug_amount, double dose_interval, std::string substra
 
 	// std::cout<<number_of_voxels<<" voxels"<<std::endl;
 	
-	static int substrate_index = BioFVM::microenvironment.find_density_index( substrate_name ); 
+	int substrate_index = BioFVM::microenvironment.find_density_index( substrate_name ); 
 	if (substrate_index < 0) 
     {
         // std::cout << "        static int << pro_GAP_index = " <<substrate_index << std::endl;
