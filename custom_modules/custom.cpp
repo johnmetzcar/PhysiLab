@@ -143,8 +143,8 @@ void create_cell_types( void )
 	   This is a good place to set custom functions. 
 	*/ 
 
-	Cell_Definition* TLGL = find_cell_definition("TLGL");
-	Cell_Definition* TLGL_resistant = find_cell_definition("TLGL_resistant");
+	// Cell_Definition* TLGL = find_cell_definition("TLGL");
+	// Cell_Definition* TLGL_resistant = find_cell_definition("TLGL_resistant");
 	// TLGL->functions.update_phenotype = transition_to_resistant_cell_type;
 	// TLGL_resistant->functions.update_phenotype = transition_to_post_resistant_cell_type;
 	display_cell_definitions( std::cout ); 
@@ -178,6 +178,8 @@ void post_update_intracellular_drug_effect(Cell* pCell, Phenotype& phenotype, do
 	bool Apoptosis = pCell->phenotype.intracellular->get_boolean_variable_value("Apoptosis"); // ? 1.0 : 0.0;
 	bool Proliferation = pCell->phenotype.intracellular->get_boolean_variable_value("Proliferation"); // ? 1.0 : 0.0;
 
+	// std::cout<<"Apoptosis = "<<Apoptosis<<std::endl;
+
 	// if(pCell->ID=1)
 	// {
 	// 	std::cout<<"Time: " << PhysiCell_globals.current_time <<std::endl;
@@ -186,21 +188,29 @@ void post_update_intracellular_drug_effect(Cell* pCell, Phenotype& phenotype, do
 	// 	// std::getchar();
 	// }
 	
-
-	if(Apoptosis == true)
+	// was using the logical test - not sure if I should use the value of the variable instead??? 
+	// and why isn't the set single behavior working as expected?
+	if(Apoptosis)
 	{
+		// std::cout<<"apoptosis = true"<<std::endl;
 		// double base_cycle_entry = get_single_base_behavior(pCell, "cycle entry");
 		// std::cout<<"base_cycle_entry = "<<base_cycle_entry<<std::endl;
 		// set_single_behavior( pCell , "cycle entry" , base_cycle_entry  ); 
 
 		double base_apoptosis = get_single_base_behavior(pCell, "apoptosis");
 		// std::cout<<"base_apoptosis = "<<base_apoptosis<<std::endl;
-		set_single_behavior( pCell , "apoptosis" , base_apoptosis * pCell->custom_data["apoptosis_multiplier"]  );
+
+		double total_apoptosis_rate = base_apoptosis + pCell->custom_data["intervention_induced_apoptosis"];
+		// std::cout<<"total_apoptosis_rate = "<<total_apoptosis_rate<<std::endl;
+
+		set_single_behavior( pCell , "apoptosis" , total_apoptosis_rate  );
+		// std::cout<<"adjusted_apoptosis = "<<get_single_behavior(pCell, "apoptosis") <<std::endl;
 	}
 
 	else
 	{
 		set_single_behavior( pCell , "apoptosis" , 0  );
+		// std::cout<<"apoptosis = false"<<std::endl;
 	}
 
 

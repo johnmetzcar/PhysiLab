@@ -9,3 +9,4 @@ Intervention,Apoptosis
 "Ceramide-->S1P,0,inf,1",0.99358
 "S1P-->PDGFR,0,inf,0",0.992935
 "IL15-->GAP,0,inf,0",0.988741
+"GAP-->RAS,0,inf,1",0.9656
