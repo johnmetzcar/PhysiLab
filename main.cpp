@@ -89,10 +89,14 @@ int main( int argc, char* argv[] )
 	
 	bool XML_status = false; 
 	char copy_command [1024]; 
+	char copy_command2 [1024];
+	char move_command [1024];
 	if( argc > 1 )
 	{
 		XML_status = load_PhysiCell_config_file( argv[1] ); 
 		sprintf( copy_command , "cp %s %s" , argv[1] , PhysiCell_settings.folder.c_str() ); 
+		sprintf( copy_command2 , "cp %s PhysiCell_settings.xml" , argv[1]);
+		sprintf( move_command , "mv PhysiCell_settings.xml %s" , PhysiCell_settings.folder.c_str() );
 	}
 	else
 	{
@@ -104,6 +108,8 @@ int main( int argc, char* argv[] )
 	
 	// copy config file to output directry 
 	system( copy_command ); 
+	system( copy_command2 ); 
+	system( move_command ); 
 	
 	// OpenMP setup
 	omp_set_num_threads(PhysiCell_settings.omp_num_threads);
