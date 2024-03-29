@@ -2,7 +2,9 @@ name: Tests Windows
 
 on:
   push:
+    branches: [ main, dev ] 
   pull_request:
+    branches: [ main, dev ] 
   workflow_dispatch:
 
 jobs:
@@ -27,4 +29,4 @@ jobs:
         
     - name: Run model
       run: |
-        .\\PhysiBoSS_Cell_Lines config/TLGL_pro_GAP_well_mixed.xml
+        .\\PhysiBoSS_Cell_Lines Variant\ Model\ Files/base_model_file_multiple_interventions.xml

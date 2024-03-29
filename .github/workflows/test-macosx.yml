@@ -2,7 +2,10 @@ name: Tests MacOSX
 
 on:
   push:
+    branches: [ main, dev ] 
   pull_request:
+    branches: [ main, dev ] 
+  workflow_dispatch:
     
 jobs:
   build:
@@ -21,4 +24,4 @@ jobs:
         
     - name: Run PhysiBoSS cell lines project
       run: |
-        ./PhysiBoSS_Cell_Lines config/TLGL_pro_GAP_well_mixed.xml
+        ./PhysiBoSS_Cell_Lines Variant\ Model\ Files/base_model_file_multiple_interventions.xml

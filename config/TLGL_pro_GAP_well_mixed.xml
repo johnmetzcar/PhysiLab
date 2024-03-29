@@ -203,8 +203,8 @@
                     </transformation_rates>
                 </cell_transformations>
                 <intracellular type="maboss">
-                    <bnd_filename>config/TLGL_pro_GAP.bnd</bnd_filename>
-                    <cfg_filename>config/TLGL_pro_GAP.cfg</cfg_filename>
+                    <bnd_filename>config/TLGL_pro_GAP_test.bnd</bnd_filename>
+                    <cfg_filename>config/TLGL_pro_GAP_test.cfg</cfg_filename>
                     <settings>
                         <intracellular_dt>6.0</intracellular_dt>
                         <time_stochasticity>0.0</time_stochasticity>
