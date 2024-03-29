@@ -328,17 +328,13 @@ def createCFG(intervention, substrateNames):
                 "TAX.istate = 0;\n"]
 
     part2 = ["Apoptosis.istate = 0;\n",
-                "Proliferation.istate = 0;\n\n",
-                "$time_scale = 0.1;\n",
-                "$oxygen_concentration = 0.0;\n",
-                "$glucose_concentration = 0.0;\n\n",
-                "discrete_time = 1;\n",
+                "discrete_time = 0;\n",
                 "use_physrandgen = FALSE;\n",
                 "// seed_pseudorandom = 100;\n",
-                "sample_count = 1;\n\n",
-                "max_time = 1.0;\n",
-                "time_tick = 0.0004;\n\n",
-                "thread_count = 1;"]
+                "sample_count = 100000;\n\n",
+                "max_time = 2000.0;\n",
+                "time_tick = 1.0;\n\n",
+                "thread_count = 8;"]
 
     cfgName = intervention + ".cfg"
     # output directory given above in the OUTPUT section (unless changed in MAIN script)
