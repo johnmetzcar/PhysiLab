@@ -255,19 +255,13 @@ def createXML(intervention, substrateNames, numInterventions, decayID, replicate
     input1.attrib = {"physicell_name": substrateNames[0], "intracellular_name": substrateNames[0]}
     settings = input1.find("settings")
     action = settings.find("action")
-    if substrateNames[0].startswith("pro"):
-        action.text = "activation"
-    else:
-        action.text = "inhibition"
+    action.text = "activation"
 
     if numInterventions > 1:
         input2.attrib = {"physicell_name": substrateNames[1], "intracellular_name": substrateNames[1]}
         settings = input2.find("settings")
         action = settings.find("action")
-        if substrateNames[1].startswith("pro"):
-            action.text = "activation"
-        else:
-            action.text = "inhibition"
+        action.text = "activation"
     else:
         # remove input 2
         mapping.remove(input2)
@@ -276,10 +270,7 @@ def createXML(intervention, substrateNames, numInterventions, decayID, replicate
         input3.attrib = {"physicell_name": substrateNames[2], "intracellular_name": substrateNames[2]}
         settings = input3.find("settings")
         action = settings.find("action")
-        if substrateNames[2].startswith("pro"):
-            action.text = "activation"
-        else:
-            action.text = "inhibition"
+        action.text = "activation"
     else:
         # remove substrate 3
         mapping.remove(input3)
@@ -337,17 +328,13 @@ def createCFG(intervention, substrateNames):
                 "TAX.istate = 0;\n"]
 
     part2 = ["Apoptosis.istate = 0;\n",
-                "Proliferation.istate = 0;\n\n",
-                "$time_scale = 0.1;\n",
-                "$oxygen_concentration = 0.0;\n",
-                "$glucose_concentration = 0.0;\n\n",
-                "discrete_time = 1;\n",
+                "discrete_time = 0;\n",
                 "use_physrandgen = FALSE;\n",
                 "// seed_pseudorandom = 100;\n",
-                "sample_count = 1;\n\n",
-                "max_time = 1.0;\n",
-                "time_tick = 0.0004;\n\n",
-                "thread_count = 1;"]
+                "sample_count = 100000;\n\n",
+                "max_time = 2000.0;\n",
+                "time_tick = 1.0;\n\n",
+                "thread_count = 8;"]
 
     cfgName = intervention + ".cfg"
     # output directory given above in the OUTPUT section (unless changed in MAIN script)
@@ -429,7 +416,7 @@ for intervention in ibmfaDict:
     fileName = interventionName + ".bnd"
     newFile = open(fileName, "w")
     for n in nodeDict:
-        nodeString = "Node " + n + " {\n" + nodeDict.get(n) + ";\n  rate_up = @logic ? $time_scale: 0;\n  rate_down = @logic ? 0 : $time_scale;\n}"
+        nodeString = "Node " + n + " {\n" + nodeDict.get(n) + ";\n  rate_up = @logic ? 1.0 : 0;\n  rate_down = @logic ? 0 : 1.0 ;\n}"
         newFile.write(nodeString + "\n\n")
     print("Created file " + fileName)
 
@@ -511,7 +498,7 @@ for intervention in stableMotifDict:
     fileName = interventionName + ".bnd"
     newFile = open(fileName, "w")
     for n in nodeDict:
-        nodeString = "Node " + n + " {\n" + nodeDict.get(n) + ";\n  rate_up = @logic ? $time_scale: 0;\n  rate_down = @logic ? 0 : $time_scale;\n}"
+        nodeString = "Node " + n + " {\n" + nodeDict.get(n) + ";\n  rate_up = @logic ? 1.0 : 0;\n  rate_down = @logic ? 0 : 1.0 ;\n}"
         newFile.write(nodeString + "\n\n")
     print("Created file " + fileName)
 
@@ -591,7 +578,7 @@ for i in range(len(edgetic)):
     newFileName = fileName + ".bnd"
     newFile = open(newFileName, "w")
     for n in nodeDict:
-        nodeString = "Node " + n + " {\n" + nodeDict.get(n) + ";\n  rate_up = @logic ? $time_scale: 0;\n  rate_down = @logic ? 0 : $time_scale;\n}"
+        nodeString = "Node " + n + " {\n" + nodeDict.get(n) + ";\n  rate_up = @logic ? 1.0 : 0;\n  rate_down = @logic ? 0 : 1.0 ;\n}"
         newFile.write(nodeString + "\n\n")
 
     print("Created file " + newFileName)

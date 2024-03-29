@@ -256,7 +256,7 @@
                         <time_stochasticity>0.5</time_stochasticity>
                         <scaling>0.72</scaling>
                         <start_time>0.0</start_time>
-                        <inheritance global="true" />
+                        <inheritance global="True" />
                     </settings>
                     <mapping>
                         <input physicell_name="pro_GAP1" intracellular_name="pro_GAP1">
