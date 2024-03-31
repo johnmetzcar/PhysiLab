@@ -250,10 +250,10 @@
                 </cell_transformations>
                 <intracellular type="maboss">
                     <bnd_filename>config/TLGL_pro_GAP_base_model_test.bnd</bnd_filename>
-                    <cfg_filename>config/TLGL_pro_GAP_survival_attractors.cfg</cfg_filename>
+                    <cfg_filename>config/TLGL_pro_GAP_base_model_test_survival_attractors.cfg</cfg_filename>
                     <settings>
                         <intracellular_dt>6</intracellular_dt>
-                        <time_stochasticity>0.5</time_stochasticity>
+                        <time_stochasticity>0.0</time_stochasticity>
                         <scaling>0.72</scaling>
                         <start_time>0.0</start_time>
                         <inheritance global="True" />
