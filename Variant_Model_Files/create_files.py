@@ -36,7 +36,7 @@ edgetic_interventions_file = 'single_edge_perturbations_top_interventions.csv'
 
 # relative path to input directory
 # EDIT TO BE LOCATION OF ORIGINAL MODEL FILES
-rel_input_dir = 'Variant Model Files/'
+rel_input_dir = 'Variant_Model_Files/'
 
 # relative path to output directory
 # EDIT TO BE LOCATION OF WHERE YOU WANT TO STORE THE NEW MODEL FILES
