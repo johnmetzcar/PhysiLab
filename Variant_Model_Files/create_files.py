@@ -17,9 +17,9 @@ import xml.etree.ElementTree as ET
 
 # MaBoSS files
 # EDIT TO BE NAME OF ORIGINAL BND FILE (MaBoSS model)
-MaBoSS_file = "TLGL.bnd"
+MaBoSS_file = "TLGL_base.bnd"
 # EDIT TO BE NAME OF ORIGINAL CFG FILE (MaBoSS model)
-MaBoSS_config = "TLGL.cfg"
+MaBoSS_config = "TLGL_base_survival_attractors.cfg"
 
 # PhysiCell files
 # EDIT TO BE NAME OF ORIGINAL XML FILE (PhysiCell model)
@@ -55,11 +55,14 @@ input_dir = os.path.join(full_path, rel_input_dir)
 print("Input directory: ")
 print(input_dir)
 input_MaBoSS_file = os.path.join(input_dir, MaBoSS_file)
+input_MaBoSS_config = os.path.join(input_dir, MaBoSS_config)
 
 # MODELS
 print('Base model files:')
 print("Input BND file: ")
 print(input_MaBoSS_file)
+print("Input CFG file: ")
+print(input_MaBoSS_config)
 
 input_PC_file = os.path.join(input_dir, PhysiCell_file)
 print("Input XML file: ")
@@ -128,6 +131,13 @@ def getBNDdata():
         nodeDict[nodename] = nodelogic
 
     return nodeDict
+
+def getCFG():
+    # open original cfg  --> location and name set in INPUT section above
+    baseCFG = open(input_MaBoSS_config, "r+")
+    cfgText = baseCFG.readlines()
+
+    return cfgText
 
 
 ## May eventually have this function take xml file as input and modify it
@@ -320,21 +330,23 @@ def createXML(intervention, substrateNames, numInterventions, decayID, replicate
         os.makedirs(output_dir)
 
 def createCFG(intervention, substrateNames):
-    part1 = ["PDGF.istate = 0;\n", 
-                "IL15.istate = 1;\n", 
-                "Stimuli.istate = 1;\n",
-                "Stimuli2.istate = 0;\n",
-                "CD45.istate = 0;\n",
-                "TAX.istate = 0;\n"]
+    # part1 = ["PDGF.istate = 0;\n", 
+    #             "IL15.istate = 1;\n", 
+    #             "Stimuli.istate = 1;\n",
+    #             "Stimuli2.istate = 0;\n",
+    #             "CD45.istate = 0;\n",
+    #             "TAX.istate = 0;\n"]
 
-    part2 = ["Apoptosis.istate = 0;\n",
-                "discrete_time = 0;\n",
-                "use_physrandgen = FALSE;\n",
-                "// seed_pseudorandom = 100;\n",
-                "sample_count = 100000;\n\n",
-                "max_time = 2000.0;\n",
-                "time_tick = 1.0;\n\n",
-                "thread_count = 8;"]
+    # part2 = ["Apoptosis.istate = 0;\n",
+    #             "discrete_time = 0;\n",
+    #             "use_physrandgen = FALSE;\n",
+    #             "// seed_pseudorandom = 100;\n",
+    #             "sample_count = 100000;\n\n",
+    #             "max_time = 2000.0;\n",
+    #             "time_tick = 1.0;\n\n",
+    #             "thread_count = 8;"]
+
+    part1 = getCFG()
 
     cfgName = intervention + ".cfg"
     # output directory given above in the OUTPUT section (unless changed in MAIN script)
@@ -343,7 +355,7 @@ def createCFG(intervention, substrateNames):
     for s in substrateNames:
         newNode = s + ".istate = 0;\n"
         cfgfile.write(newNode)
-    cfgfile.writelines(part2)
+    # cfgfile.writelines(part2)
 
     print("Created file " + intervention + ".cfg")
 

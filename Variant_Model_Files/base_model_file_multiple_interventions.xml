@@ -23,7 +23,7 @@
     </domain>
 
     <overall>
-        <max_time units="min">7920.0</max_time>
+        <max_time units="min">1440</max_time>
         <time_units>min</time_units>
         <space_units>micron</space_units>
         <dt_diffusion units="min">0.02</dt_diffusion>
@@ -65,7 +65,7 @@
         <variable name="pro_GAP1" units="dimensionless" ID="0">
             <physical_parameter_set>
                 <diffusion_coefficient units="micron^2/min">0</diffusion_coefficient>
-                <decay_rate units="1/min">1</decay_rate>
+                <decay_rate units="1/min">1.0</decay_rate>
             </physical_parameter_set>
             <initial_condition units="dimensionless">0</initial_condition>
             <Dirichlet_boundary_condition units="dimensionless" enabled="False">1</Dirichlet_boundary_condition>
@@ -127,7 +127,7 @@
             <phenotype>
                 <cycle code="5" name="live">
                     <phase_transition_rates units="1/min">
-                        <rate start_index="0" end_index="0" fixed_duration="false">0.00072</rate>
+                        <rate start_index="0" end_index="0" fixed_duration="false">0.000</rate>
                     </phase_transition_rates>
                 </cycle>
                 <death>
@@ -249,10 +249,10 @@
                     </transformation_rates>
                 </cell_transformations>
                 <intracellular type="maboss">
-                    <bnd_filename>config/TLGL_pro_GAP_test.bnd</bnd_filename>
-                    <cfg_filename>config/TLGL_pro_GAP_test.cfg</cfg_filename>
+                    <bnd_filename>config/TLGL_pro_GAP_base_model_test.bnd</bnd_filename>
+                    <cfg_filename>config/TLGL_pro_GAP_survival_attractors.cfg</cfg_filename>
                     <settings>
-                        <intracellular_dt>60</intracellular_dt>
+                        <intracellular_dt>6</intracellular_dt>
                         <time_stochasticity>0.5</time_stochasticity>
                         <scaling>0.72</scaling>
                         <start_time>0.0</start_time>
@@ -286,7 +286,7 @@
             <custom_data>
                 <drug_threshold conserved="false" units="" description="">0.5</drug_threshold>
                 <proliferation_multiplier conserved="false" units="" description="">10.0</proliferation_multiplier>
-                <intervention_induced_apoptosis conserved="false" units="" description="">100000000.0</intervention_induced_apoptosis>
+                <intervention_induced_apoptosis conserved="false" units="" description="">0.01</intervention_induced_apoptosis>
             </custom_data>
         </cell_definition>
     </cell_definitions>
@@ -301,7 +301,7 @@
     <user_parameters>
         <random_seed type="int" units="dimensionless" description="">100</random_seed>
         <node_to_visualize type="string" units="" description="">Apoptosis</node_to_visualize>
-        <dose_interval type="double" units="minutes" description="interval between doses of compound">1440</dose_interval>
+        <dose_interval type="double" units="minutes" description="interval between doses of compound">240</dose_interval>
         <drug_amount type="double" units="dimensionless" description="concentration/amount of compound to add at dosing interval">50.0</drug_amount>
         <add_compound type="bool" units="" description="">true</add_compound>
         <substrate_name1 type="string" units="" description="name of intervention">pro_GAP1</substrate_name1>

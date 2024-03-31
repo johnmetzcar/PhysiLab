@@ -53,13 +53,31 @@ Node PLCG1 {
 }
 
 Node RAS {
-  logic = ((GRB2 | PLCG1) & ! GAP);
+  logic = ((GRB2 | PLCG1) & !(GAP | pro_GAP1 ));
   rate_up = @logic ? 1.0 : 0.0;
   rate_down = @logic ? 0.0 : 1.0;
 }
 
 Node GAP {
-  logic = ((RAS | (PDGFR & GAP)) & ! (IL15 | IL2));
+  logic = ((RAS | (PDGFR & GAP)) & !(IL15 | IL2));
+  rate_up = @logic ? 1.0 : 0.0;
+  rate_down = @logic ? 0.0 : 1.0;
+}
+
+Node pro_GAP1 {
+  logic = (pro_GAP1);
+  rate_up = @logic ? 1.0 : 0.0;
+  rate_down = @logic ? 0.0 : 1.0;
+}
+
+Node pro_GAP2 {
+  logic = (pro_GAP2);
+  rate_up = @logic ? 1.0 : 0.0;
+  rate_down = @logic ? 0.0 : 1.0;
+}
+
+Node pro_GAP3 {
+  logic = (pro_GAP3);
   rate_up = @logic ? 1.0 : 0.0;
   rate_down = @logic ? 0.0 : 1.0;
 }
