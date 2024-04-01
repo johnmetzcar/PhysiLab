@@ -293,7 +293,7 @@
 
     <initial_conditions>
         <cell_positions enabled="true" type="csv">
-            <folder>/Users/JohnMetzcar/Documents/GitHub/PhysiLab/config</folder>
+            <folder>./config</folder>
             <filename>cells_well_mixed_1000.csv</filename>
         </cell_positions>
     </initial_conditions>
