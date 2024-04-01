@@ -168,22 +168,22 @@ def createXML(intervention, substrateNames, numInterventions, decayID, replicate
     physical_parameter_set = variable1.find("physical_parameter_set")
     decay_rate = physical_parameter_set.find("decay_rate")
     if decayID == "1":
-        decay_rate.text = "1"
+        decay_rate.text = "0.0116" # 1 hour above 0.5 - current threshold
     elif decayID == "2":
-        decay_rate.text = "0.1"
+        decay_rate.text = "0.00192" # 6 hours above 0.5 - current threshold 
     else:
-        decay_rate.text = "0.01"
+        decay_rate.text = "0.000963" # 12 hours above 0.5 - current threshold
 
     if numInterventions > 1:
         variable2.attrib = {"name": substrateNames[1], "units": "dimensionless", "ID": "0"}
         physical_parameter_set = variable2.find("physical_parameter_set")
         decay_rate = physical_parameter_set.find("decay_rate")
         if decayID == "1":
-            decay_rate.text = "1"
+            decay_rate.text = "0.0116" # 1 hour above 0.5 - current threshold
         elif decayID == "2":
-            decay_rate.text = "0.1"
+            decay_rate.text = "0.00192" # 6 hours above 0.5 - current threshold 
         else:
-            decay_rate.text = "0.01"
+            decay_rate.text = "0.01" "0.000963" # 12 hours above 0.5 - current threshold
     else:
         microenvironment.remove(variable2)
 
@@ -192,11 +192,11 @@ def createXML(intervention, substrateNames, numInterventions, decayID, replicate
         physical_parameter_set = variable3.find("physical_parameter_set")
         decay_rate = physical_parameter_set.find("decay_rate")
         if decayID == "1":
-            decay_rate.text = "1"
+            decay_rate.text = "0.0116" # 1 hour above 0.5 - current threshold
         elif decayID == "2":
-            decay_rate.text = "0.1"
+            decay_rate.text = "0.00192" # 6 hours above 0.5 - current threshold 
         else:
-            decay_rate.text = "0.01"
+            decay_rate.text = "0.01" "0.000963" # 12 hours above 0.5 - current threshold
     else:
         microenvironment.remove(variable3)
 
