@@ -1,0 +1,12 @@
+Intervention,Apoptosis
+"JAK-->STAT3,0,inf,0",0.999391
+"IL2RB-->MCL1,0,inf,0",0.9988
+"IL2RBT-->IL2RB,0,inf,0",0.998723
+"MCL1-->BID,0,inf,0",0.998019
+"PI3K-->ERK,0,inf,0",0.997597
+"RAS-->MEK,0,inf,0",0.9964
+"PDGFR-->SPHK1,0,inf,0",0.994776
+"Ceramide-->S1P,0,inf,1",0.99358
+"S1P-->PDGFR,0,inf,0",0.992935
+"IL15-->GAP,0,inf,0",0.988741
+"GAP-->RAS,0,inf,1",0.9656

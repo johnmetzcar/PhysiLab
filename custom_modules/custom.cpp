@@ -143,8 +143,8 @@ void create_cell_types( void )
 	   This is a good place to set custom functions. 
 	*/ 
 
-	Cell_Definition* TLGL = find_cell_definition("TLGL");
-	Cell_Definition* TLGL_resistant = find_cell_definition("TLGL_resistant");
+	// Cell_Definition* TLGL = find_cell_definition("TLGL");
+	// Cell_Definition* TLGL_resistant = find_cell_definition("TLGL_resistant");
 	// TLGL->functions.update_phenotype = transition_to_resistant_cell_type;
 	// TLGL_resistant->functions.update_phenotype = transition_to_post_resistant_cell_type;
 	display_cell_definitions( std::cout ); 
@@ -173,46 +173,44 @@ void setup_tissue( void )
 	load_cells_from_pugixml(); 	
 }
 
-// Old - not using this anymore - 02.04.24 - replaced with XML (but probably chould have just used this instead of changing to XML....)
-void pre_update_intracellular_drug_effect(Cell* pCell, Phenotype& phenotype, double dt)
-{
-	Cell_Definition* pCD = find_cell_definition(pCell->type_name);	
-
-	double drug_conc = get_single_signal(pCell, parameters.strings("substrate_name"));
-	// std::cout<<"drug_conc = "<<drug_conc<<std::endl;
-	if(drug_conc > pCell->custom_data["drug_threshold"])
-	{
-		pCell->phenotype.intracellular->set_boolean_variable_value(parameters.strings("substrate_name"), true);
-	}
-	else
-	{
-		pCell->phenotype.intracellular->set_boolean_variable_value(parameters.strings("substrate_name"), false);
-	}
-	
-	// Without doing something with the accumulating substrate, internal values rises without end. So - skipping for now 
-	// and assuming uptake is just proportional to the external concentration. I could do something fancy 
-	// like slowing the rate of uptake as the internal concentration rises, but I don't think that's merited at this time.
-}
-
 void post_update_intracellular_drug_effect(Cell* pCell, Phenotype& phenotype, double dt)
 {
 	bool Apoptosis = pCell->phenotype.intracellular->get_boolean_variable_value("Apoptosis"); // ? 1.0 : 0.0;
 	bool Proliferation = pCell->phenotype.intracellular->get_boolean_variable_value("Proliferation"); // ? 1.0 : 0.0;
 
-	if(Apoptosis == true)
+	// std::cout<<"Apoptosis = "<<Apoptosis<<std::endl;
+
+	// if(pCell->ID=1)
+	// {
+	// 	std::cout<<"Time: " << PhysiCell_globals.current_time <<std::endl;
+
+	// 	std::cout<<"cell: " << pCell->type_name << " " << pCell->ID <<std::endl;
+	// 	// std::getchar();
+	// }
+	
+	// was using the logical test - not sure if I should use the value of the variable instead??? 
+	// and why isn't the set single behavior working as expected?
+	if(Apoptosis)
 	{
+		// std::cout<<"apoptosis = true"<<std::endl;
 		// double base_cycle_entry = get_single_base_behavior(pCell, "cycle entry");
 		// std::cout<<"base_cycle_entry = "<<base_cycle_entry<<std::endl;
 		// set_single_behavior( pCell , "cycle entry" , base_cycle_entry  ); 
 
 		double base_apoptosis = get_single_base_behavior(pCell, "apoptosis");
 		// std::cout<<"base_apoptosis = "<<base_apoptosis<<std::endl;
-		set_single_behavior( pCell , "apoptosis" , base_apoptosis * pCell->custom_data["apoptosis_multiplier"]  );
+
+		double total_apoptosis_rate = base_apoptosis + pCell->custom_data["intervention_induced_apoptosis"];
+		// std::cout<<"total_apoptosis_rate = "<<total_apoptosis_rate<<std::endl;
+
+		set_single_behavior( pCell , "apoptosis" , total_apoptosis_rate  );
+		// std::cout<<"adjusted_apoptosis = "<<get_single_behavior(pCell, "apoptosis") <<std::endl;
 	}
 
 	else
 	{
 		set_single_behavior( pCell , "apoptosis" , 0  );
+		// std::cout<<"apoptosis = false"<<std::endl;
 	}
 
 
@@ -261,7 +259,7 @@ void add_compound( double drug_amount, double dose_interval, std::string substra
 
 	// std::cout<<number_of_voxels<<" voxels"<<std::endl;
 	
-	static int substrate_index = BioFVM::microenvironment.find_density_index( substrate_name ); 
+	int substrate_index = BioFVM::microenvironment.find_density_index( substrate_name ); 
 	if (substrate_index < 0) 
     {
         // std::cout << "        static int << pro_GAP_index = " <<substrate_index << std::endl;
@@ -269,9 +267,11 @@ void add_compound( double drug_amount, double dose_interval, std::string substra
         std::exit(-1);  //rwh: should really do these for each
     }
 
+	std::cout<<"concentration in voxel 0 = "<<BioFVM::microenvironment.density_vector(0)[substrate_index]<<std::endl;
+
     for( int n=0; n < number_of_voxels ; n++ )
     {
-		BioFVM::microenvironment.density_vector(n)[substrate_index] = drug_amount;
+		BioFVM::microenvironment.density_vector(n)[substrate_index] += drug_amount;
 		// (*p_density_vectors)[n][ECM_density_index] = ecm.ecm_voxels[n].density;
 		// std::cout<<BioFVM::microenvironment.density_vector(n)[ECM_anisotropy_index]<<std::endl;
 		// std::cout<<&BioFVM::microenvironment.density_vector(n)[ECM_anisotropy_index]<<std::endl;
@@ -284,10 +284,38 @@ void add_compound( double drug_amount, double dose_interval, std::string substra
 	
         // BioFVM::microenvironment.voxels[i].density_vector[ECM_density_index] = ecm.ecm_voxels[i].density;
     }
+
+
+	std::cout<<"After addition concentration in voxel 0 = "<<BioFVM::microenvironment.density_vector(0)[substrate_index]<<std::endl;
+
     return;
 
 }
 
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+// Old - not using this anymore - 02.04.24 - replaced with XML (but probably chould have just used this instead of changing to XML....)
+void pre_update_intracellular_drug_effect(Cell* pCell, Phenotype& phenotype, double dt)
+{
+	Cell_Definition* pCD = find_cell_definition(pCell->type_name);	
+
+	double drug_conc = get_single_signal(pCell, parameters.strings("substrate_name"));
+	// std::cout<<"drug_conc = "<<drug_conc<<std::endl;
+	if(drug_conc > pCell->custom_data["drug_threshold"])
+	{
+		pCell->phenotype.intracellular->set_boolean_variable_value(parameters.strings("substrate_name"), true);
+	}
+	else
+	{
+		pCell->phenotype.intracellular->set_boolean_variable_value(parameters.strings("substrate_name"), false);
+	}
+	
+	// Without doing something with the accumulating substrate, internal values rises without end. So - skipping for now 
+	// and assuming uptake is just proportional to the external concentration. I could do something fancy 
+	// like slowing the rate of uptake as the internal concentration rises, but I don't think that's merited at this time.
+}
 
 // Old - not using this anymore - 02.04.24
 void transition_to_resistant_cell_type(Cell* pCell, Phenotype& phenotype, double dt)

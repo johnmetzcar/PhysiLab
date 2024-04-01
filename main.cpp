@@ -89,10 +89,14 @@ int main( int argc, char* argv[] )
 	
 	bool XML_status = false; 
 	char copy_command [1024]; 
+	char copy_command2 [1024];
+	char move_command [1024];
 	if( argc > 1 )
 	{
 		XML_status = load_PhysiCell_config_file( argv[1] ); 
 		sprintf( copy_command , "cp %s %s" , argv[1] , PhysiCell_settings.folder.c_str() ); 
+		sprintf( copy_command2 , "cp %s PhysiCell_settings.xml" , argv[1]);
+		sprintf( move_command , "mv PhysiCell_settings.xml %s" , PhysiCell_settings.folder.c_str() );
 	}
 	else
 	{
@@ -104,6 +108,8 @@ int main( int argc, char* argv[] )
 	
 	// copy config file to output directry 
 	system( copy_command ); 
+	system( copy_command2 ); 
+	system( move_command ); 
 	
 	// OpenMP setup
 	omp_set_num_threads(PhysiCell_settings.omp_num_threads);
@@ -191,10 +197,7 @@ int main( int argc, char* argv[] )
 	{		
 		while( PhysiCell_globals.current_time < PhysiCell_settings.max_time + 0.1*diffusion_dt )
 		{
-			// save data if it's time. 
-			if( fabs( PhysiCell_globals.current_time - PhysiCell_globals.next_full_save_time ) < 0.01 * diffusion_dt )
-			{
-			
+
 			// Adds compounds uniformly to the microenvironment at concentration/amount "drug_amount" and every "drug_interval" minutes. Place AFTER? (or should it be before to record it???) diffusion/decay/souce/sink calculations - so it takes effect in this time step. 
 
 			if(fabs(PhysiCell_globals.current_time - (dosing_counter * parameters.doubles("dose_interval"))) < 0.01*diffusion_dt && parameters.bools("add_compound") == true)
@@ -206,17 +209,53 @@ int main( int argc, char* argv[] )
 
 				else if(dosing_counter > 0)
 				{
-					add_compound( parameters.doubles("drug_amount"), parameters.doubles("dose_interval"), parameters.strings("substrate_name") ); 
-					std::cout<<"adding compound "<<fabs(PhysiCell_globals.current_time - (dosing_counter * parameters.doubles("dose_interval")))<<std::endl;
-					std::cout<<"current time "<<PhysiCell_globals.current_time<<std::endl;
-					std::cout<<"dosing counter "<<dosing_counter<<std::endl;
-					dosing_counter++;
+					// Add compounds to the microenvironment
+					if (parameters.ints("num_substrates") == 1)
+					{
+						add_compound( parameters.doubles("drug_amount"), parameters.doubles("dose_interval"), parameters.strings("substrate_name1") ); 
+						std::cout<<"current time "<<PhysiCell_globals.current_time<<std::endl;
+						std::cout<<"dosing counter "<<dosing_counter<<std::endl;
+						dosing_counter++;
+					}
+
+					else if (parameters.ints("num_substrates") == 2)
+					{
+						
+						add_compound( parameters.doubles("drug_amount"), parameters.doubles("dose_interval"), parameters.strings("substrate_name1") ); 
+						add_compound( parameters.doubles("drug_amount"), parameters.doubles("dose_interval"), parameters.strings("substrate_name2") ); 
+						std::cout<<"current time "<<PhysiCell_globals.current_time<<std::endl;
+						std::cout<<"dosing counter "<<dosing_counter<<std::endl;
+						dosing_counter++;
+					}
+
+					else if (parameters.ints("num_substrates") == 3)
+					{
+						
+						add_compound( parameters.doubles("drug_amount"), parameters.doubles("dose_interval"), parameters.strings("substrate_name1") ); 
+						add_compound( parameters.doubles("drug_amount"), parameters.doubles("dose_interval"), parameters.strings("substrate_name2") ); 
+						add_compound( parameters.doubles("drug_amount"), parameters.doubles("dose_interval"), parameters.strings("substrate_name3") ); 
+						std::cout<<"current time "<<PhysiCell_globals.current_time<<std::endl;
+						std::cout<<"dosing counter "<<dosing_counter<<std::endl;
+						dosing_counter++;
+					}
+
+					else
+					{
+						std::cout<<"Error: We only support up to 3 compound interventions at this time!!!"<<std::endl;
+						std::cout<<"Please check your parameters file (specifically num_substrates) and try again."<<std::endl;
+						std::cout<<"Exiting simulation..."<<std::endl;
+						std::exit(1);
+					}
+
 
 				}
 			}
-			
-			std::cout<< parameters.strings("substrate_name") << microenvironment.density_vector(0)[1]<<std::endl;
-			//std::cout<<"pro_GAP = "<<microenvironment.density_vector(0)[1]<<std::endl;				
+
+			// save data if it's time. 
+			if( fabs( PhysiCell_globals.current_time - PhysiCell_globals.next_full_save_time ) < 0.01 * diffusion_dt )
+			{
+				// For debugging/monitoring purposes
+				// std::cout<< parameters.strings("substrate_name1") << microenvironment.density_vector(0)[1]<<std::endl;
 
 				display_simulation_status( std::cout ); 
 				if( PhysiCell_settings.enable_legacy_saves == true )

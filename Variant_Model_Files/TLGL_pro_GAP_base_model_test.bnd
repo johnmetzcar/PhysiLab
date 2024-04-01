@@ -1,0 +1,378 @@
+Node CTLA4 {
+  logic = (TCR);
+  rate_up = @logic ? 1.0 : 0.0;
+  rate_down = @logic ? 0.0 : 1.0;
+}
+
+Node TCR {
+  logic = (Stimuli & ! CTLA4);
+  rate_up = @logic ? 1.0 : 0.0;
+  rate_down = @logic ? 0.0 : 1.0;
+}
+
+Node PDGFR {
+  logic = (S1P | PDGF);
+  rate_up = @logic ? 1.0 : 0.0;
+  rate_down = @logic ? 0.0 : 1.0;
+}
+
+Node FYN {
+  logic = (TCR | IL2RB);
+  rate_up = @logic ? 1.0 : 0.0;
+  rate_down = @logic ? 0.0 : 1.0;
+}
+
+Node Cytoskeleton_signaling {
+  logic = (FYN);
+  rate_up = @logic ? 1.0 : 0.0;
+  rate_down = @logic ? 0.0 : 1.0;
+}
+
+Node LCK {
+  logic = (CD45 | ((TCR | IL2RB) & ! ZAP70));
+  rate_up = @logic ? 1.0 : 0.0;
+  rate_down = @logic ? 0.0 : 1.0;
+}
+
+Node ZAP70 {
+  logic = (LCK & ! FYN);
+  rate_up = @logic ? 1.0 : 0.0;
+  rate_down = @logic ? 0.0 : 1.0;
+}
+
+Node GRB2 {
+  logic = (IL2RB | ZAP70);
+  rate_up = @logic ? 1.0 : 0.0;
+  rate_down = @logic ? 0.0 : 1.0;
+}
+
+Node PLCG1 {
+  logic = (GRB2 | PDGFR);
+  rate_up = @logic ? 1.0 : 0.0;
+  rate_down = @logic ? 0.0 : 1.0;
+}
+
+Node RAS {
+  logic = ((GRB2 | PLCG1) & !(GAP | pro_GAP1 ));
+  rate_up = @logic ? 1.0 : 0.0;
+  rate_down = @logic ? 0.0 : 1.0;
+}
+
+Node GAP {
+  logic = ((RAS | (PDGFR & GAP)) & !(IL15 | IL2));
+  rate_up = @logic ? 1.0 : 0.0;
+  rate_down = @logic ? 0.0 : 1.0;
+}
+
+Node pro_GAP1 {
+  logic = (pro_GAP1);
+  rate_up = @logic ? 1.0 : 0.0;
+  rate_down = @logic ? 0.0 : 1.0;
+}
+
+Node pro_GAP2 {
+  logic = (pro_GAP2);
+  rate_up = @logic ? 1.0 : 0.0;
+  rate_down = @logic ? 0.0 : 1.0;
+}
+
+Node pro_GAP3 {
+  logic = (pro_GAP3);
+  rate_up = @logic ? 1.0 : 0.0;
+  rate_down = @logic ? 0.0 : 1.0;
+}
+
+Node MEK {
+  logic = (RAS);
+  rate_up = @logic ? 1.0 : 0.0;
+  rate_down = @logic ? 0.0 : 1.0;
+}
+
+Node ERK {
+  logic = (MEK & PI3K);
+  rate_up = @logic ? 1.0 : 0.0;
+  rate_down = @logic ? 0.0 : 1.0;
+}
+
+Node PI3K {
+  logic = (PDGFR | RAS);
+  rate_up = @logic ? 1.0 : 0.0;
+  rate_down = @logic ? 0.0 : 1.0;
+}
+
+Node NFKB {
+  logic = ((TPL2 | PI3K) | (FLIP & TRADD & IAP));
+  rate_up = @logic ? 1.0 : 0.0;
+  rate_down = @logic ? 0.0 : 1.0;
+}
+
+Node NFAT {
+  logic = (PI3K);
+  rate_up = @logic ? 1.0 : 0.0;
+  rate_down = @logic ? 0.0 : 1.0;
+}
+
+Node RANTES {
+  logic = (NFKB);
+  rate_up = @logic ? 1.0 : 0.0;
+  rate_down = @logic ? 0.0 : 1.0;
+}
+
+Node IL2 {
+  logic = ((NFKB | STAT3 | NFAT) & ! TBET);
+  rate_up = @logic ? 1.0 : 0.0;
+  rate_down = @logic ? 0.0 : 1.0;
+}
+
+Node IL2RBT {
+  logic = (ERK & TBET);
+  rate_up = @logic ? 1.0 : 0.0;
+  rate_down = @logic ? 0.0 : 1.0;
+}
+
+Node IL2RB {
+  logic = (IL2RBT & (IL2 | IL15));
+  rate_up = @logic ? 1.0 : 0.0;
+  rate_down = @logic ? 0.0 : 1.0;
+}
+
+Node IL2RAT {
+  logic = (IL2 & (STAT3 | NFKB));
+  rate_up = @logic ? 1.0 : 0.0;
+  rate_down = @logic ? 0.0 : 1.0;
+}
+
+Node IL2RA {
+  logic = ((IL2 & IL2RAT) & ! IL2RA);
+  rate_up = @logic ? 1.0 : 0.0;
+  rate_down = @logic ? 0.0 : 1.0;
+}
+
+Node JAK {
+  logic = ((IL2RA | IL2RB | RANTES | IFNG) & ! (SOCS | CD45));
+  rate_up = @logic ? 1.0 : 0.0;
+  rate_down = @logic ? 0.0 : 1.0;
+}
+
+Node SOCS {
+  logic = (JAK & ! (IL2 | IL15));
+  rate_up = @logic ? 1.0 : 0.0;
+  rate_down = @logic ? 0.0 : 1.0;
+}
+
+Node STAT3 {
+  logic = (JAK);
+  rate_up = @logic ? 1.0 : 0.0;
+  rate_down = @logic ? 0.0 : 1.0;
+}
+
+Node P27 {
+  logic = (STAT3);
+  rate_up = @logic ? 1.0 : 0.0;
+  rate_down = @logic ? 0.0 : 1.0;
+}
+
+Node Proliferation {
+  logic = (STAT3 & ! P27);
+  rate_up = @logic ? 1.0 : 0.0;
+  rate_down = @logic ? 0.0 : 1.0;
+}
+
+Node TBET {
+  logic = (JAK | TBET);
+  rate_up = @logic ? 1.0 : 0.0;
+  rate_down = @logic ? 0.0 : 1.0;
+}
+
+Node CREB {
+  logic = (ERK & IFNG);
+  rate_up = @logic ? 1.0 : 0.0;
+  rate_down = @logic ? 0.0 : 1.0;
+}
+
+Node IFNGT {
+  logic = (TBET | STAT3 | NFAT);
+  rate_up = @logic ? 1.0 : 0.0;
+  rate_down = @logic ? 0.0 : 1.0;
+}
+
+Node IFNG {
+  logic = (((IL2 | IL15 | Stimuli) & IFNGT) & ! (SMAD | P2));
+  rate_up = @logic ? 1.0 : 0.0;
+  rate_down = @logic ? 0.0 : 1.0;
+}
+
+Node P2 {
+  logic = ((IFNG | P2) & ! Stimuli2);
+  rate_up = @logic ? 1.0 : 0.0;
+  rate_down = @logic ? 0.0 : 1.0;
+}
+
+Node GZMB {
+  logic = ((CREB & IFNG) | TBET);
+  rate_up = @logic ? 1.0 : 0.0;
+  rate_down = @logic ? 0.0 : 1.0;
+}
+
+Node TPL2 {
+  logic = (TAX | (PI3K & TNF));
+  rate_up = @logic ? 1.0 : 0.0;
+  rate_down = @logic ? 0.0 : 1.0;
+}
+
+Node TNF {
+  logic = (NFKB);
+  rate_up = @logic ? 1.0 : 0.0;
+  rate_down = @logic ? 0.0 : 1.0;
+}
+
+Node TRADD {
+  logic = (TNF & ! (IAP | A20));
+  rate_up = @logic ? 1.0 : 0.0;
+  rate_down = @logic ? 0.0 : 1.0;
+}
+
+Node FasL {
+  logic = (STAT3 | NFKB | NFAT | ERK);
+  rate_up = @logic ? 1.0 : 0.0;
+  rate_down = @logic ? 0.0 : 1.0;
+}
+
+Node FasT {
+  logic = (NFKB);
+  rate_up = @logic ? 1.0 : 0.0;
+  rate_down = @logic ? 0.0 : 1.0;
+}
+
+Node Fas {
+  logic = ((FasT & FasL) & ! sFas);
+  rate_up = @logic ? 1.0 : 0.0;
+  rate_down = @logic ? 0.0 : 1.0;
+}
+
+Node sFas {
+  logic = (FasT & S1P);
+  rate_up = @logic ? 1.0 : 0.0;
+  rate_down = @logic ? 0.0 : 1.0;
+}
+
+Node Ceramide {
+  logic = (Fas & ! S1P);
+  rate_up = @logic ? 1.0 : 0.0;
+  rate_down = @logic ? 0.0 : 1.0;
+}
+
+Node DISC {
+  logic = (FasT & ((Fas & IL2) | Ceramide | (Fas & ! FLIP)));
+  rate_up = @logic ? 1.0 : 0.0;
+  rate_down = @logic ? 0.0 : 1.0;
+}
+
+Node Caspase {
+  logic = ((((TRADD | GZMB) & BID) & ! IAP) | DISC);
+  rate_up = @logic ? 1.0 : 0.0;
+  rate_down = @logic ? 0.0 : 1.0;
+}
+
+Node FLIP {
+  logic = ((NFKB | (CREB & IFNG)) & ! DISC);
+  rate_up = @logic ? 1.0 : 0.0;
+  rate_down = @logic ? 0.0 : 1.0;
+}
+
+Node A20 {
+  logic = (NFKB);
+  rate_up = @logic ? 1.0 : 0.0;
+  rate_down = @logic ? 0.0 : 1.0;
+}
+
+Node BID {
+  logic = ((Caspase | GZMB) & ! (BclxL | MCL1));
+  rate_up = @logic ? 1.0 : 0.0;
+  rate_down = @logic ? 0.0 : 1.0;
+}
+
+Node IAP {
+  logic = (NFKB & ! BID);
+  rate_up = @logic ? 1.0 : 0.0;
+  rate_down = @logic ? 0.0 : 1.0;
+}
+
+Node BclxL {
+  logic = ((NFKB | STAT3) & ! (BID | GZMB | DISC));
+  rate_up = @logic ? 1.0 : 0.0;
+  rate_down = @logic ? 0.0 : 1.0;
+}
+
+Node MCL1 {
+  logic = ((IL2RB & STAT3 & NFKB & PI3K) & ! DISC);
+  rate_up = @logic ? 1.0 : 0.0;
+  rate_down = @logic ? 0.0 : 1.0;
+}
+
+Node Apoptosis {
+  logic = (Caspase);
+  rate_up = @logic ? 1.0 : 0.0;
+  rate_down = @logic ? 0.0 : 1.0;
+}
+
+Node GPCR {
+  logic = (S1P);
+  rate_up = @logic ? 1.0 : 0.0;
+  rate_down = @logic ? 0.0 : 1.0;
+}
+
+Node SMAD {
+  logic = (GPCR);
+  rate_up = @logic ? 1.0 : 0.0;
+  rate_down = @logic ? 0.0 : 1.0;
+}
+
+Node SPHK1 {
+  logic = (PDGFR);
+  rate_up = @logic ? 1.0 : 0.0;
+  rate_down = @logic ? 0.0 : 1.0;
+}
+
+Node S1P {
+  logic = (SPHK1 & ! Ceramide);
+  rate_up = @logic ? 1.0 : 0.0;
+  rate_down = @logic ? 0.0 : 1.0;
+}
+
+Node PDGF {
+  logic = (PDGF);
+  rate_up = @logic ? 1.0 : 0.0;
+  rate_down = @logic ? 0.0 : 1.0;
+}
+
+Node IL15 {
+  logic = (IL15);
+  rate_up = @logic ? 1.0 : 0.0;
+  rate_down = @logic ? 0.0 : 1.0;
+}
+
+Node Stimuli {
+  logic = (Stimuli);
+  rate_up = @logic ? 1.0 : 0.0;
+  rate_down = @logic ? 0.0 : 1.0;
+}
+
+Node Stimuli2 {
+  logic = (Stimuli2);
+  rate_up = @logic ? 1.0 : 0.0;
+  rate_down = @logic ? 0.0 : 1.0;
+}
+
+Node CD45 {
+  logic = (CD45);
+  rate_up = @logic ? 1.0 : 0.0;
+  rate_down = @logic ? 0.0 : 1.0;
+}
+
+Node TAX {
+  logic = (TAX);
+  rate_up = @logic ? 1.0 : 0.0;
+  rate_down = @logic ? 0.0 : 1.0;
+}
+
