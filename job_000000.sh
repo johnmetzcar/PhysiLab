@@ -16,6 +16,6 @@
 module load python/3.9.8
 export OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK
 
-srun -A r00241 --ntasks=96 --cpus-per-task=8 --cpu-bind=sockets python RunSimulations_testing.py leukemia_model_files
++srun -A r00241 --cpu-bind=sockets python RunSimulations_testing.py leukemia_model_files
 
 #SBATCH --mem=240G
