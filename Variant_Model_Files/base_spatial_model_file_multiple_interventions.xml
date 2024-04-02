@@ -12,8 +12,8 @@
     <domain>
         <x_min>-400</x_min>
         <x_max>400</x_max>
-        <y_min>-400</y_min>
-        <y_max>400</y_max>
+        <y_min>-200</y_min>
+        <y_max>200</y_max>
         <z_min>-10</z_min>
         <z_max>10</z_max>
         <dx>20</dx>
@@ -127,7 +127,7 @@
             <phenotype>
                 <cycle code="5" name="live">
                     <phase_transition_rates units="1/min">
-                        <rate start_index="0" end_index="0" fixed_duration="false">0.00072</rate>
+                        <rate start_index="0" end_index="0" fixed_duration="false">0.00009625</rate>
                     </phase_transition_rates>
                 </cycle>
                 <death>
@@ -254,7 +254,7 @@
                     <settings>
                         <intracellular_dt>6</intracellular_dt>
                         <time_stochasticity>0.0</time_stochasticity>
-                        <scaling>0.72</scaling>
+                        <scaling>60</scaling>
                         <start_time>0.0</start_time>
                         <inheritance global="True" />
                     </settings>
@@ -286,7 +286,7 @@
             <custom_data>
                 <drug_threshold conserved="false" units="" description="">0.5</drug_threshold>
                 <proliferation_multiplier conserved="false" units="" description="">10.0</proliferation_multiplier>
-                <intervention_induced_apoptosis conserved="false" units="" description="">0.001</intervention_induced_apoptosis>
+                <intervention_induced_apoptosis conserved="false" units="" description="">0.01</intervention_induced_apoptosis>
             </custom_data>
         </cell_definition>
     </cell_definitions>
