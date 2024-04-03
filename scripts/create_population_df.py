@@ -4,7 +4,7 @@
 import pandas as pd                 # for manipulating data
 import pcdl                         # physicell data loader library
 # import os, sys, subprocess
-import math, os, sys, re, 
+import math, os, sys, re
 import os.path
 
 ################## Pathing Variables ########################
@@ -40,15 +40,14 @@ if not os.path.exists(output_dir):
     os.makedirs(output_dir)
 
 # list of intervention names
-interventions = [os.walk(input_dir)]
-
-# change to be the directory containing your output folders
-masterPath = "C:\\Users\\pletz\\OneDrive\\Desktop\\IU\Y390\\PhysiLab Test Copy\\leukemia_output\\"
+# https://stackoverflow.com/questions/800197/how-to-get-all-of-the-immediate-subdirectories-in-python
+interventions = [f.name for f in os.scandir(input_dir) if f.is_dir()] 
+interventions = sorted(interventions)
 
 # for each intervention
-for i in range(len(interventions)):
+for i, intervention in enumerate(interventions):
     # create filepath
-    path = masterPath + interventions[i]
+    path = input_dir + intervention
 
     # create a timeseries object
     mcds_ts = pcdl.TimeSeries(path)
@@ -63,3 +62,7 @@ for i in range(len(interventions)):
     
     if (i == 0): df = pd.DataFrame([data])  # create the dataframe
     else: df.loc[len(df)] = data            # append the dictionary to the dataframe
+
+    df.to_csv(output_dir + 'live_cells.csv', index=False)  # save the dataframe to a csv file
+
+    pd.read_csv(output_dir + 'live_cells.csv')  # read the csv file to check that it saved correctly
