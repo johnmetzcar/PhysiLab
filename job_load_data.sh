@@ -9,13 +9,13 @@
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=8
-#SBATCH --time=04:00:00
+#SBATCH --time=24:00:00
 #SBATCH -A r00241
 
 
 module load python/3.9.8
 export OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK
 
-srun -A r00241 --cpu-bind=sockets python scripts/create_population_df.py
+srun -A r00241 --cpu-bind=sockets python scripts/create_population_df_nonMPI.py
 
 #SBATCH --mem=240G

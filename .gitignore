@@ -1,4 +1,9 @@
 *.svg
+*.err
+load_data*.txt
+Template*.txt
+base_model*.txt
+spatial_model*.txt
 output/*.xml
 output/*.csv
 output/*.html

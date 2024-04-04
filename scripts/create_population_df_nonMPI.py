@@ -67,6 +67,7 @@ for i, intervention in enumerate(interventions):
     
     if (i == 0): df = pd.DataFrame([data])  # create the dataframe
     else: df.loc[len(df)] = data            # append the dictionary to the dataframe
+    df.to_csv(output_dir + 'live_cells.csv', index=False)  # save the dataframe to a csv file (save each time - in case process fails)
     print("total time taken this iteration: ", time.time() - start_time_in_loop)
 
 print("total time taken this loop: ", time.time() - start)

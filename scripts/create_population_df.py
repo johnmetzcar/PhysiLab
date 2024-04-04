@@ -27,7 +27,7 @@ rel_input_dir = 'leukemia_output/'
 
 # relative path to output directory
 # EDIT TO BE LOCATION OF WHERE YOU WANT TO STORE THE NEW MODEL FILES
-rel_output_dir = 'dataframes/'
+rel_output_dir = 'dataframes_test/'
 
 ########################### PATHING ###########################
 # move to PhysiCell root directory - this assumes this script is one folder below the root
@@ -48,8 +48,8 @@ print(output_dir)
 # input("Press Enter to continue...\n Press Ctrl + C to exit...")
 
 # make sure the output directory exists
-if not os.path.exists(output_dir):
-    os.makedirs(output_dir)
+# if not os.path.exists(output_dir):
+#     os.makedirs(output_dir)
 
 # list of intervention names
 # https://stackoverflow.com/questions/800197/how-to-get-all-of-the-immediate-subdirectories-in-python
