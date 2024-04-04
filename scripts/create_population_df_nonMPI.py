@@ -8,17 +8,6 @@ import math, os, sys, re
 import os.path
 import time
 
-
-# MPI stuff
-from mpi4py import MPI 
-import numpy as np
-import os, sys, subprocess
-# from HPC_exploration import model, args_run_simulations
-
-comm = MPI.COMM_WORLD
-size = comm.Get_size()
-rank = comm.Get_rank()
-
 ################## Pathing Variables ########################
 
 # relative path to input directory
@@ -86,25 +75,10 @@ df.to_csv(output_dir + 'live_cells.csv', index=False)  # save the dataframe to a
 
 pd.read_csv(output_dir + 'live_cells.csv')  # read the csv file to check that it saved correctly
 
-########################### ABOVE is OLD/SERIAL ##############################
+#     /N/project/pc_patterns/PhysiLab/scripts
 
-##########################  BELOW IS THE BEGINNIGN OF Paralilizing ###########
-def startprocesses(interventions):
-    # Write input for simulation & execute
-    callingModel = [Executable, ConfigFile]
-    cache = subprocess.run( loadmodel, universal_newlines=True, capture_output=True) # stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-    if ( cache.returncode != 0):
-        print(f"Error: model output error! Executable: {Executable} ConfigFile {ConfigFile}. returned: \n{str(cache.returncode)}")
-        print(cache.stdout[-200])
+#       WARNING: The script f2py is installed in '/N/u/jpmetzca/BigRed200/.local/bin' which is not on PATH.
+#   Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.
 
-
-for ind_sim in data[rank]:
-    sampleID = Samples[ind_sim]
-    print(sampleID)
-    # replicateID = Replicates[ind_sim]
-    # print('Rank: ',rank, ', Simulation: ', ind_sim, ', Sample: ', sampleID,', Replicate: ', replicateID)
-    print('Rank: ',rank, ', Simulation: ', ind_sim, ', Sample: ', sampleID)
-    # model(PhysiCell_Model.get_configFilePath(sampleID, replicateID), PhysiCell_Model.executable)
-    # in the original setup, this (ths python file) would have been called with several arguments. Here, we only need to call it with the directory with the config
-    # files in them. And the executable is currently hard coded. 
-    loaddata(sampleID, './PhysiBoSS_Cell_Lines')
+#     WARNING: The script natsort is installed in '/N/u/jpmetzca/BigRed200/.local/bin' which is not on PATH.
+#   Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.
