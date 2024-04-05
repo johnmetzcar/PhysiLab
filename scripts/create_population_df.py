@@ -93,28 +93,36 @@ interventions = sorted(interventions)
 
 ##########################  BELOW IS THE BEGINNIGN OF Paralilizing ###########
 
-def loadData(intervention):
-    path = input_dir + intervention
-    print("Path: "+ path)
-    print("Intervention: " + str(i))
+    # def loadData(intervention):
+    #     path = input_dir + intervention
+    #     print("Path: "+ path)
+    #     print("Intervention: " + intervention)
 
-    # create a timeseries object
-    mcds_ts = pcdl.TimeSeries(path, microenv=False,  settingxml=None, graph=False, verbose=False)
+    #     # create a timeseries object
+    #     mcds_ts = pcdl.TimeSeries(path, microenv=False,  settingxml=None, graph=False, verbose=False)
 
-    # create dictionary for this intervention
-    # keys = time t; values = # live cells at time t
-    data = {'intervention': interventions[i]}
-    for mcds in mcds_ts.get_mcds_list():
-        df_cell = mcds.get_cell_df()
-        live_cells =len(df_cell[(df_cell['dead'] == False)])
-        data[mcds.get_time()] = live_cells
+    #     # create dictionary for this intervention
+    #     # keys = time t; values = # live cells at time t
+    #     data = {'intervention': intervention}
+    #     for mcds in mcds_ts.get_mcds_list():
+    #         df_cell = mcds.get_cell_df()
+    #         live_cells =len(df_cell[(df_cell['dead'] == False)])
+    #         data[mcds.get_time()] = live_cells
 
-        data.to_csv(path + 'live_cells.csv', index=False)  # save the dataframe to a csv file
+    #         df = pd.DataFrame([data]) # will end up having to remove the time - but this would allow us to plot each one if we want!!
 
-def startprocesses(intervention):
+    #         df.to_csv(path + 'live_cells.csv', index=False)  # save the dataframe to a csv file
+
+def startprocesses(intervention, path):
     # Write input for simulation & execute
-    # callingModel = [Executable, ConfigFile]
-    cache = subprocess.run( loadData(intervention), universal_newlines=True, capture_output=True) # stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    print("Working directory: ")
+    cwd = os.getcwd()
+    loadData = 'python '+ cwd + '/scripts/loadData.py' 
+    # loadData = 'loadData.py' 
+    print(loadData)
+    # os.chdir('scripts')
+    loadingdata = [loadData, intervention, path] # trying this - may be thats how this works - you need an iterable perhaps and perhaps its the call and the arguments?
+    cache = subprocess.run( loadingdata, universal_newlines=True, capture_output=True) # stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     if ( cache.returncode != 0):
         print(f"Error: model output error! Executable: {Executable} ConfigFile {ConfigFile}. returned: \n{str(cache.returncode)}")
         print(cache.stdout[-200])
@@ -138,15 +146,16 @@ print(data)
 
 
 for ind_sim in data[rank]:
-    sampleID = interventions[ind_sim]
-    print(sampleID)
+    intervention = interventions[ind_sim]
+    path = input_dir + intervention
+    print(intervention)
     # replicateID = Replicates[ind_sim]
     # print('Rank: ',rank, ', Simulation: ', ind_sim, ', Sample: ', sampleID,', Replicate: ', replicateID)
-    print('Rank: ',rank, ', Simulation: ', ind_sim, ', Sample: ', sampleID)
+    print('Rank: ',rank, ', Simulation: ', ind_sim, ', Sample: ', intervention)
     # model(PhysiCell_Model.get_configFilePath(sampleID, replicateID), PhysiCell_Model.executable)
     # in the original setup, this (ths python file) would have been called with several arguments. Here, we only need to call it with the directory with the config
     # files in them. And the executable is currently hard coded. 
-    startprocesses(sampleID)
+    startprocesses(intervention, path)
 
 # Needs fixed .. but closeish here I think ... 
 
