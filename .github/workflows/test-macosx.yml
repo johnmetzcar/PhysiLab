@@ -2,7 +2,7 @@ name: Tests MacOSX
 
 on:
   push:
-    branches: [ main, dev ] 
+    branches: [ main] 
   pull_request:
     branches: [ main, dev ] 
   workflow_dispatch:
@@ -24,4 +24,4 @@ jobs:
         
     - name: Run PhysiBoSS cell lines project
       run: |
-        ./PhysiBoSS_Cell_Lines Variant\ Model\ Files/base_model_file_multiple_interventions.xml
+        ./PhysiBoSS_Cell_Lines Variant_Model_Files/base_model_file_multiple_interventions.xml

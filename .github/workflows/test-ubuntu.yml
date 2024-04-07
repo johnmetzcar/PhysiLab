@@ -1,8 +1,8 @@
-name: Create model files Ubuntu
+name: Tests Ubuntu
 
 on:
   push:
-    branches: [ main, dev ] 
+    branches: [ main] 
   pull_request:
     branches: [ main, dev ] 
   workflow_dispatch:
@@ -19,7 +19,7 @@ jobs:
       with:
         script: |
           import os
-          os.system("cd Variant\ Model\ Files/")
+          os.system("cd Variant_Model_Files/")
           os.system("python create_files.py")
 
 # jobs:
