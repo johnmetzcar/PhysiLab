@@ -10,24 +10,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
     - uses: actions/checkout@v3
-    - uses: actions/setup-python@v4
-      with:
-        python-version: '3.x'
-    - uses: run-python-script-action@v1
-      with:
-        script: |
-          import os
-          os.system("cd Variant_Model_Files/")
-          os.system("python create_files.py")
-
-# jobs:
-#   build:
-#     runs-on: ubuntu-latest
-
-#     steps:
-#     - uses: actions/checkout@v3
     
     - name: Build model
       run: |
@@ -39,7 +24,50 @@ jobs:
         
     - name: Run PhysiBoSS cell lines project
       run: |
-        ./PhysiBoSS_Cell_Lines leukemia_model_files/SM_pro_Ceramidepro_PI3Kpro_ERK_11.xml
+        ./PhysiBoSS_Cell_Lines Variant_Model_Files/base_model_file_multiple_interventions.xml
+
+# on:
+#   push:
+#     branches: [ main] 
+#   pull_request:
+#     branches: [ main, dev ] 
+#   workflow_dispatch:
+
+# jobs:
+#   build:
+
+#     runs-on: ubuntu-latest
+
+#     steps:
+#     - uses: actions/checkout@v3
+    # - uses: actions/setup-python@v4
+    #   with:
+    #     python-version: '3.x'
+    # - uses: run-python-script-action@v1
+    #   with:
+    #     script: |
+    #       import os
+    #       os.system("cd Variant_Model_Files/")
+    #       os.system("python create_files.py")
+
+# jobs:
+#   build:
+#     runs-on: ubuntu-latest
+
+#     steps:
+#     - uses: actions/checkout@v3
+    
+    # - name: Build model
+    #   run: |
+    #     make
+        
+    # - name: Build PhysiBoSS cell lines project
+    #   run: |
+    #     make
+        
+    # - name: Run PhysiBoSS cell lines project
+    #   run: |
+    #     ./PhysiBoSS_Cell_Lines leukemia_model_files/SM_pro_Ceramidepro_PI3Kpro_ERK_11.xml
 
 # name: Tests Ubuntu
 
@@ -50,21 +78,3 @@ jobs:
 #     branches: [ main, dev ] 
 #   workflow_dispatch:
 
-# jobs:
-#   build:
-#     runs-on: ubuntu-latest
-
-#     steps:
-#     - uses: actions/checkout@v3
-    
-#     - name: Build model
-#       run: |
-#         make
-        
-#     - name: Build PhysiBoSS cell lines project
-#       run: |
-#         make
-        
-#     - name: Run PhysiBoSS cell lines project
-#       run: |
-#         ./PhysiBoSS_Cell_Lines config/TLGL_pro_GAP_well_mixed.xml
