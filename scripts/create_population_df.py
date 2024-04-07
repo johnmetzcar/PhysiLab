@@ -1,6 +1,9 @@
 # creates dataframe of population data from PhysiBoSS outputs and exports to csv
 # Katie Pletz and John Metzcar 2023-2024. 
 
+# NEVER GOT THIS WORKING!!!! Went with multiprocessing instead. See "loadDataParallel.py" for a working version!!!
+# This seemed to cause the nodes to crash or something. Am reporting it. 
+
 import pandas as pd                 # for manipulating data
 import pcdl                         # physicell data loader library
 # import os, sys, subprocess

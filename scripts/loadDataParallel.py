@@ -1,3 +1,10 @@
+## Loads population data from PhysiCell outputs and exports to csv
+## Runs quickly did 250 directories in less than 20 minutes on Big Red login node. 
+## Would be nice to have it take CLI arguments - input and output directories and final file name.
+# BE CAREFUL WITH USE - could overwrite files. 
+## Copy write Katie Pletz and John Metzcar 2024.
+
+
 import os
 import multiprocessing
 import pcdl

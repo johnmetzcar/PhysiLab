@@ -1,6 +1,8 @@
 # creates dataframe of population data from PhysiBoSS outputs and exports to csv
 # Katie Pletz and John Metzcar 2023-2024. 
 
+# Takes a long time!!!! Took 6.5 hours to run serially on ~250 directories. See "loadDataParallel.py" for a faster version.
+
 import pandas as pd                 # for manipulating data
 import pcdl                         # physicell data loader library
 # import os, sys, subprocess
