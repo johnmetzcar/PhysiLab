@@ -64,51 +64,90 @@
     <microenvironment_setup>
         <variable name="pro_GAP1" units="dimensionless" ID="0">
             <physical_parameter_set>
-                <diffusion_coefficient units="micron^2/min">1000</diffusion_coefficient>
-                <decay_rate units="1/min">.0001</decay_rate>
+                <diffusion_coefficient units="micron^2/min">1025</diffusion_coefficient>
+                <decay_rate units="1/min">.00475</decay_rate>
             </physical_parameter_set>
             <initial_condition units="dimensionless">0</initial_condition>
             <Dirichlet_boundary_condition units="dimensionless" enabled="True">1</Dirichlet_boundary_condition>
             <Dirichlet_options>
                 <boundary_value ID="xmin" enabled="True">1</boundary_value>
-                <boundary_value ID="xmax" enabled="True">0</boundary_value>
+                <boundary_value ID="xmax" enabled="False">0</boundary_value>
                 <boundary_value ID="ymin" enabled="False">1</boundary_value>
                 <boundary_value ID="ymax" enabled="False">1</boundary_value>
                 <boundary_value ID="zmin" enabled="False">1</boundary_value>
                 <boundary_value ID="zmax" enabled="False">1</boundary_value>
             </Dirichlet_options>
+            <PK enabled="true">
+                <model>1C</model>
+                <schedule format="parameters">
+                    <total_doses>1</total_doses>
+                    <loading_doses>0</loading_doses>
+                    <first_dose_time units="days">0</first_dose_time>
+                    <dose_interval units="days">0</dose_interval>
+                    <regular_dose>1</regular_dose>
+                    <loading_dose>0</loading_dose>
+                </schedule>
+                <elimination_rate units="1/min">0.000</elimination_rate>
+                <biot_number>1</biot_number>
+            </PK>
         </variable>
         <variable name="pro_GAP2" units="dimensionless" ID="1">
             <physical_parameter_set>
-                <diffusion_coefficient units="micron^2/min">1000</diffusion_coefficient>
-                <decay_rate units="1/min">.0001</decay_rate>
+                <diffusion_coefficient units="micron^2/min">1025</diffusion_coefficient>
+                <decay_rate units="1/min">.00475</decay_rate>
             </physical_parameter_set>
             <initial_condition units="dimensionless">0</initial_condition>
             <Dirichlet_boundary_condition units="dimensionless" enabled="True">1</Dirichlet_boundary_condition>
             <Dirichlet_options>
                 <boundary_value ID="xmin" enabled="True">1</boundary_value>
-                <boundary_value ID="xmax" enabled="True">0</boundary_value>
+                <boundary_value ID="xmax" enabled="False">0</boundary_value>
                 <boundary_value ID="ymin" enabled="False">1</boundary_value>
                 <boundary_value ID="ymax" enabled="False">1</boundary_value>
                 <boundary_value ID="zmin" enabled="False">1</boundary_value>
                 <boundary_value ID="zmax" enabled="False">1</boundary_value>
             </Dirichlet_options>
+            <PK enabled="true">
+                <model>1C</model>
+                <schedule format="parameters">
+                    <total_doses>1</total_doses>
+                    <loading_doses>0</loading_doses>
+                    <first_dose_time units="days">0</first_dose_time>
+                    <dose_interval units="days">0</dose_interval>
+                    <regular_dose>1</regular_dose>
+                    <loading_dose>0</loading_dose>
+                </schedule>
+                <elimination_rate units="1/min">0</elimination_rate>
+                <biot_number>1</biot_number>
+            </PK>
         </variable>
         <variable name="pro_GAP3" units="dimensionless" ID="2">
             <physical_parameter_set>
-                <diffusion_coefficient units="micron^2/min">1000</diffusion_coefficient>
-                <decay_rate units="1/min">.0001</decay_rate>
+                <diffusion_coefficient units="micron^2/min">1025</diffusion_coefficient>
+                <decay_rate units="1/min">.00475</decay_rate>
             </physical_parameter_set>
             <initial_condition units="dimensionless">0</initial_condition>
             <Dirichlet_boundary_condition units="dimensionless" enabled="True">1</Dirichlet_boundary_condition>
             <Dirichlet_options>
                 <boundary_value ID="xmin" enabled="True">1</boundary_value>
-                <boundary_value ID="xmax" enabled="True">0</boundary_value>
+                <boundary_value ID="xmax" enabled="False">0</boundary_value>
                 <boundary_value ID="ymin" enabled="False">1</boundary_value>
                 <boundary_value ID="ymax" enabled="False">1</boundary_value>
                 <boundary_value ID="zmin" enabled="False">1</boundary_value>
                 <boundary_value ID="zmax" enabled="False">1</boundary_value>
             </Dirichlet_options>
+            <PK enabled="true">
+                <model>1C</model>
+                <schedule format="parameters">
+                    <total_doses>1</total_doses>
+                    <loading_doses>0</loading_doses>
+                    <first_dose_time units="days">0</first_dose_time>
+                    <dose_interval units="days">0</dose_interval>
+                    <regular_dose>1</regular_dose>
+                    <loading_dose>0</loading_dose>
+                </schedule>
+                <elimination_rate units="1/min">0</elimination_rate>
+                <biot_number>1</biot_number>
+            </PK>
         </variable>
         <options>
             <calculate_gradients>true</calculate_gradients>
@@ -293,7 +332,7 @@
 
     <initial_conditions>
         <cell_positions enabled="true" type="csv">
-            <folder>./config</folder>
+            <folder>config</folder>
             <filename>cells_spatial_1000.csv</filename>
         </cell_positions>
     </initial_conditions>
