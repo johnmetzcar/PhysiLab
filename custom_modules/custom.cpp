@@ -380,15 +380,15 @@ void from_nodes_to_cell(Cell* pCell, Phenotype& phenotype, double dt)
 }
 
 // Old - not using this anymore - 02.04.24
-void pre_update_intracellular( Cell* pCell, Phenotype& phenotype, double dt )
-{
-	if (PhysiCell::PhysiCell_globals.current_time >= 100.0 
-		&& pCell->phenotype.intracellular->get_parameter_value("$time_scale") == 0.0
-	){
-		pCell->phenotype.intracellular->set_parameter_value("$time_scale", 0.1);
-	}
+// void pre_update_intracellular( Cell* pCell, Phenotype& phenotype, double dt )
+// {
+// 	if (PhysiCell::PhysiCell_globals.current_time >= 100.0 
+// 		&& pCell->phenotype.intracellular->get_parameter_value("$time_scale") == 0.0
+// 	){
+// 		pCell->phenotype.intracellular->set_parameter_value("$time_scale", 0.1);
+// 	}
 
-}
+// }
 // Old - not using this anymore - 02.04.24
 void post_update_intracellular( Cell* pCell, Phenotype& phenotype, double dt )
 {
