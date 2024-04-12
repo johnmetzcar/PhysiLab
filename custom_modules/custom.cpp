@@ -178,7 +178,13 @@ void post_update_intracellular_drug_effect(Cell* pCell, Phenotype& phenotype, do
 	bool Apoptosis = pCell->phenotype.intracellular->get_boolean_variable_value("Apoptosis"); // ? 1.0 : 0.0;
 	bool Proliferation = pCell->phenotype.intracellular->get_boolean_variable_value("Proliferation"); // ? 1.0 : 0.0;
 
-	// std::cout<<"Apoptosis = "<<Apoptosis<<std::endl;
+	static int link_anisotropy_and_bias_index = pCell->custom_data.find_variable_index( "pro_GAP1_damage" );
+	if (link_anisotropy_and_bias_index > 0) 
+	{
+		std::cout<<"Damage = "<< pCell -> custom_data["pro_GAP1_damage"] <<std::endl;
+	}
+
+	
 
 	// if(pCell->ID=1)
 	// {
