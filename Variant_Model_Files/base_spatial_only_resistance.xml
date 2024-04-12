@@ -57,7 +57,7 @@
 
     <options>
         <legacy_random_points_on_sphere_in_divide>false</legacy_random_points_on_sphere_in_divide>
-        <virtual_wall_at_domain_edge>false</virtual_wall_at_domain_edge>
+        <virtual_wall_at_domain_edge>true</virtual_wall_at_domain_edge>
         <disable_automated_spring_adhesions>true</disable_automated_spring_adhesions>
     </options>
 
@@ -171,7 +171,7 @@
                 </cycle>
                 <death>
                     <model code="100" name="apoptosis">
-                        <death_rate units="1/min">0.00000</death_rate>
+                        <death_rate units="1/min">0.0000072</death_rate>
                         <phase_durations units="min">
                             <duration index="0" fixed_duration="true">516</duration>
                         </phase_durations>
@@ -303,31 +303,10 @@
                         <inheritance global="True" />
                     </settings>
                     <mapping>
-                        <input physicell_name="pro_GAP1" intracellular_name="pro_GAP1">
-                            <settings>
-                                <action>activation</action>
-                                <threshold>0.5</threshold>
-                                <smoothing>0</smoothing>
-                            </settings>
-                        </input>
-                        <input physicell_name="pro_GAP2" intracellular_name="pro_GAP2">
-                            <settings>
-                                <action>activation</action>
-                                <threshold>0.5</threshold>
-                                <smoothing>0</smoothing>
-                            </settings>
-                        </input>
-                        <input physicell_name="pro_GAP3" intracellular_name="pro_GAP3">
-                            <settings>
-                                <action>activation</action>
-                                <threshold>0.5</threshold>
-                                <smoothing>0</smoothing>
-                            </settings>
-                        </input>
                         <output physicell_name="transform to TLGLR1" intracellular_name="Apoptosis">
                             <settings>
                                 <action>activation</action>
-                                <value>0.000</value>
+                                <value>0.0001</value>
                                 <base_value>0.0</base_value>
                                 <smoothing>2</smoothing>
                             </settings>
@@ -335,7 +314,8 @@
                         <output physicell_name="apoptosis" intracellular_name="Apoptosis">
                             <settings>
                                 <action>activation</action>
-                                <value>0.0</value>
+                                <value>0.00</value>
+                                <base_value>0.0000</base_value>
                                 <smoothing>0</smoothing>
                             </settings>
                         </output>
@@ -355,8 +335,10 @@
             <custom_data>
                 <drug_threshold conserved="false" units="" description="">0.5</drug_threshold>
                 <proliferation_multiplier conserved="false" units="" description="">10.0</proliferation_multiplier>
-                <intervention_induced_apoptosis conserved="false" units="" description="">0.00</intervention_induced_apoptosis>
+                <intervention_induced_apoptosis conserved="false" units="" description="">0.001</intervention_induced_apoptosis>
                 <pro_GAP1_damage conserved="false" units="damage" description="Accumulated damage due to pro_GAP1">0.0</pro_GAP1_damage>
+                <exp_effect_hill_function conserved="false" units="" description="">8.0</exp_effect_hill_function>
+                <half_max_effect_hill_function conserved="false" units="" description="">0.5</half_max_effect_hill_function>
             </custom_data>
         </cell_definition>
         <cell_definition name="TLGLR1" ID="1">
@@ -451,7 +433,7 @@
                     <substrate name="pro_GAP1">
                         <secretion_rate units="1/min">0.0</secretion_rate>
                         <secretion_target units="substrate density">1.0</secretion_target>
-                        <uptake_rate units="1/min">0.01</uptake_rate>
+                        <uptake_rate units="1/min">0.005</uptake_rate>
                         <net_export_rate units="total substrate/min">0.0</net_export_rate>
                     </substrate>
                     <substrate name="pro_GAP2">
@@ -499,36 +481,15 @@
                         <start_time>0.0</start_time>
                         <inheritance global="True" />
                     </settings>
-                    <mapping>
-                        <input physicell_name="pro_GAP1" intracellular_name="pro_GAP1">
-                            <settings>
-                                <action>activation</action>
-                                <threshold>0.9</threshold>
-                                <smoothing>0</smoothing>
-                            </settings>
-                        </input>
-                        <input physicell_name="pro_GAP2" intracellular_name="pro_GAP2">
-                            <settings>
-                                <action>activation</action>
-                                <threshold>0.9</threshold>
-                                <smoothing>0</smoothing>
-                            </settings>
-                        </input>
-                        <input physicell_name="pro_GAP3" intracellular_name="pro_GAP3">
-                            <settings>
-                                <action>activation</action>
-                                <threshold>0.9</threshold>
-                                <smoothing>0</smoothing>
-                            </settings>
-                        </input>
-                    </mapping>
                 </intracellular>
             </phenotype>
             <custom_data>
                 <drug_threshold conserved="false" units="" description="">0.5</drug_threshold>
                 <proliferation_multiplier conserved="false" units="" description="">10.0</proliferation_multiplier>
-                <intervention_induced_apoptosis conserved="false" units="" description="">0.01</intervention_induced_apoptosis>
+                <intervention_induced_apoptosis conserved="false" units="" description="">0.001</intervention_induced_apoptosis>
                 <pro_GAP1_damage conserved="false" units="damage" description="Accumulated damage due to pro_GAP1">0.0</pro_GAP1_damage>
+                <exp_effect_hill_function conserved="false" units="" description="">0.0</exp_effect_hill_function>
+                <half_max_effect_hill_function conserved="false" units="" description="">0.0</half_max_effect_hill_function>
             </custom_data>
         </cell_definition>
     </cell_definitions>
