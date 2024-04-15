@@ -77,6 +77,7 @@
                 <boundary_value ID="zmin" enabled="False">1</boundary_value>
                 <boundary_value ID="zmax" enabled="False">1</boundary_value>
             </Dirichlet_options>
+            <PK enabled="false" />
         </variable>
         <variable name="pro_GAP2" units="dimensionless" ID="1">
             <physical_parameter_set>
@@ -93,6 +94,7 @@
                 <boundary_value ID="zmin" enabled="False">1</boundary_value>
                 <boundary_value ID="zmax" enabled="False">1</boundary_value>
             </Dirichlet_options>
+            <PK enabled="false" />
         </variable>
         <variable name="pro_GAP3" units="dimensionless" ID="2">
             <physical_parameter_set>
@@ -109,6 +111,7 @@
                 <boundary_value ID="zmin" enabled="False">1</boundary_value>
                 <boundary_value ID="zmax" enabled="False">1</boundary_value>
             </Dirichlet_options>
+            <PK enabled="false" />
         </variable>
         <options>
             <calculate_gradients>true</calculate_gradients>
@@ -308,5 +311,6 @@
         <substrate_name2 type="string" units="" description="name of intervention">pro_GAP2</substrate_name2>
         <substrate_name3 type="string" units="" description="name of intervention">pro_GAP3</substrate_name3>
         <num_substrates type="int" units="dimensionless" description="Number of compounds in intervention">3</num_substrates>
+        <use_damage_model type="bool" units="" description="Turns on damage model. DO NOT USE DAMAGE MODEL WITH XML BASED THRESHOLD interventions">false</use_damage_model>
     </user_parameters>
 </PhysiCell_settings>

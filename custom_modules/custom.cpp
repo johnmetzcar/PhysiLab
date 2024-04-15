@@ -92,7 +92,16 @@ void create_cell_types( void )
 	cell_defaults.functions.update_velocity = standard_update_cell_velocity;
 
 	// cell_defaults.functions.update_migration_bias = NULL; 
-	cell_defaults.functions.pre_update_intracellular = pre_update_intracellular_drug_effect; 
+
+	if (parameters.bools("use_damage_model") == true)
+	{
+		cell_defaults.functions.pre_update_intracellular = pre_update_intracellular_drug_effect;
+		std::cout<<"Using damage model"<<std::endl;
+	}
+	else
+	{
+		cell_defaults.functions.pre_update_intracellular = NULL;
+	} 
 	cell_defaults.functions.post_update_intracellular = post_update_intracellular_drug_effect; 
 	// cell_defaults.functions.custom_cell_rule = NULL; 
 	
@@ -224,12 +233,6 @@ void post_update_intracellular_drug_effect(Cell* pCell, Phenotype& phenotype, do
 {
 	bool Apoptosis = pCell->phenotype.intracellular->get_boolean_variable_value("Apoptosis"); // ? 1.0 : 0.0;
 	bool Proliferation = pCell->phenotype.intracellular->get_boolean_variable_value("Proliferation"); // ? 1.0 : 0.0;
-
-	static int link_anisotropy_and_bias_index = pCell->custom_data.find_variable_index( "pro_GAP1_damage" );
-	if (link_anisotropy_and_bias_index > 0) 
-	{
-		// std::cout<<"Damage = "<< pCell -> custom_data["pro_GAP1_damage"] <<std::endl;
-	}
 
 	
 	double base_apoptosis = get_single_base_behavior(pCell, "apoptosis");
