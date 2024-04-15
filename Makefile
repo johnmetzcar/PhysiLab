@@ -85,11 +85,14 @@ MaBoSS := ./addons/PhysiBoSS/MaBoSS-env-2.0/engine/src/BooleanNetwork.h
 
 PhysiBoSS_OBJECTS := maboss_network.o maboss_intracellular.o
 
+# PhysiPKPD
+PhysiPKPD_OBJECTS := PhysiPKPD_PK.o PhysiPKPD_PD.o
+
 PhysiCell_custom_module_OBJECTS := custom.o 
 
 pugixml_OBJECTS := pugixml.o
 
-PhysiCell_OBJECTS := $(BioFVM_OBJECTS)  $(pugixml_OBJECTS) $(PhysiCell_core_OBJECTS) $(PhysiCell_module_OBJECTS)
+PhysiCell_OBJECTS := $(BioFVM_OBJECTS)  $(pugixml_OBJECTS) $(PhysiCell_core_OBJECTS) $(PhysiCell_module_OBJECTS) $(PhysiPKPD_OBJECTS) # added PhysiPKPD
 ALL_OBJECTS := $(PhysiCell_OBJECTS) $(PhysiCell_custom_module_OBJECTS) $(PhysiBoSS_OBJECTS) $(PhysiBoSS_module_OBJECTS) 
 
 # compile the project 
@@ -212,6 +215,12 @@ maboss_network.o: ./addons/PhysiBoSS/src/maboss_network.cpp $(MaBoSS)
 
 maboss_intracellular.o: ./addons/PhysiBoSS/src/maboss_intracellular.cpp $(MaBoSS)
 	$(COMPILE_COMMAND) $(INC) -c ./addons/PhysiBoSS/src/maboss_intracellular.cpp
+
+PhysiPKPD_PK.o: ./addons/PhysiPKPD/src/PhysiPKPD_PK.cpp
+	$(COMPILE_COMMAND) -c ./addons/PhysiPKPD/src/PhysiPKPD_PK.cpp
+
+PhysiPKPD_PD.o: ./addons/PhysiPKPD/src/PhysiPKPD_PD.cpp
+	$(COMPILE_COMMAND) -c ./addons/PhysiPKPD/src/PhysiPKPD_PD.cpp
 
 custom.o: ./custom_modules/custom.cpp $(MaBoSS)
 	$(COMPILE_COMMAND) $(INC)  -c ./custom_modules/custom.cpp

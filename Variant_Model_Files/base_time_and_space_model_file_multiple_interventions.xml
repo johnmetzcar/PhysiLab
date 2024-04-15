@@ -23,7 +23,7 @@
     </domain>
 
     <overall>
-        <max_time units="min">4320.0</max_time>
+        <max_time units="min">8640.0</max_time>
         <time_units>min</time_units>
         <space_units>micron</space_units>
         <dt_diffusion units="min">0.02</dt_diffusion>
@@ -80,14 +80,14 @@
             <PK enabled="true">
                 <model>1C</model>
                 <schedule format="parameters">
-                    <total_doses>1</total_doses>
+                    <total_doses>6</total_doses>
                     <loading_doses>0</loading_doses>
                     <first_dose_time units="days">0</first_dose_time>
-                    <dose_interval units="days">0</dose_interval>
+                    <dose_interval units="days">1</dose_interval>
                     <regular_dose>1</regular_dose>
                     <loading_dose>0</loading_dose>
                 </schedule>
-                <elimination_rate units="1/min">0.000</elimination_rate>
+                <elimination_rate units="1/min">0.002888</elimination_rate>
                 <biot_number>1</biot_number>
             </PK>
         </variable>
@@ -109,14 +109,14 @@
             <PK enabled="true">
                 <model>1C</model>
                 <schedule format="parameters">
-                    <total_doses>1</total_doses>
+                    <total_doses>6</total_doses>
                     <loading_doses>0</loading_doses>
                     <first_dose_time units="days">0</first_dose_time>
-                    <dose_interval units="days">0</dose_interval>
+                    <dose_interval units="days">1</dose_interval>
                     <regular_dose>1</regular_dose>
                     <loading_dose>0</loading_dose>
                 </schedule>
-                <elimination_rate units="1/min">0</elimination_rate>
+                <elimination_rate units="1/min">0.002888</elimination_rate>
                 <biot_number>1</biot_number>
             </PK>
         </variable>
@@ -138,14 +138,14 @@
             <PK enabled="true">
                 <model>1C</model>
                 <schedule format="parameters">
-                    <total_doses>1</total_doses>
+                    <total_doses>6</total_doses>
                     <loading_doses>0</loading_doses>
                     <first_dose_time units="days">0</first_dose_time>
-                    <dose_interval units="days">0</dose_interval>
+                    <dose_interval units="days">1</dose_interval>
                     <regular_dose>1</regular_dose>
                     <loading_dose>0</loading_dose>
                 </schedule>
-                <elimination_rate units="1/min">0</elimination_rate>
+                <elimination_rate units="1/min">0.002888</elimination_rate>
                 <biot_number>1</biot_number>
             </PK>
         </variable>
@@ -332,7 +332,7 @@
 
     <initial_conditions>
         <cell_positions enabled="true" type="csv">
-            <folder>config</folder>
+            <folder>/Users/JohnMetzcar/Documents/GitHub/PhysiLab/config</folder>
             <filename>cells_spatial_1000.csv</filename>
         </cell_positions>
     </initial_conditions>

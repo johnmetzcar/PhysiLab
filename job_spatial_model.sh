@@ -6,7 +6,7 @@
 #SBATCH -p general
 #SBATCH -o spatial_model_%j.txt
 #SBATCH -e spatial_model_%j.err
-#SBATCH --nodes=2
+#SBATCH --nodes=1
 #SBATCH --ntasks-per-node=16
 #SBATCH --cpus-per-task=8
 #SBATCH --time=01:00:00

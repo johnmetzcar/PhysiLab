@@ -92,7 +92,13 @@ void create_cell_types( void )
 	cell_defaults.functions.update_velocity = standard_update_cell_velocity;
 
 	// cell_defaults.functions.update_migration_bias = NULL; 
-	// cell_defaults.functions.pre_update_intracellular = pre_update_intracellular_drug_effect; 
+
+	if (parameters.bools("use_damage_model") == true)
+	{
+		cell_defaults.functions.pre_update_intracellular = pre_update_intracellular_drug_effect;
+		std::cout<<"Using damage model"<<std::endl;
+	}
+
 	cell_defaults.functions.post_update_intracellular = post_update_intracellular_drug_effect; 
 	// cell_defaults.functions.custom_cell_rule = NULL; 
 	
@@ -173,13 +179,60 @@ void setup_tissue( void )
 	load_cells_from_pugixml(); 	
 }
 
+void pre_update_intracellular_drug_effect(Cell* pCell, Phenotype& phenotype, double dt)
+{
+	// Cell_Definition* pCD = find_cell_definition(pCell->type_name);	
+
+	// double drug_conc = get_single_signal(pCell, parameters.strings("substrate_name"));
+	// // std::cout<<"drug_conc = "<<drug_conc<<std::endl;
+	// if(drug_conc > pCell->custom_data["drug_threshold"])
+	// {
+	// 	pCell->phenotype.intracellular->set_boolean_variable_value(parameters.strings("substrate_name"), true);
+	// }
+	// else
+	// {
+	// 	pCell->phenotype.intracellular->set_boolean_variable_value(parameters.strings("substrate_name"), false);
+	// }
+	
+	// Without doing something with the accumulating substrate, internal values rises without end. So - skipping for now 
+	// and assuming uptake is just proportional to the external concentration. I could do something fancy 
+	// like slowing the rate of uptake as the internal concentration rises, but I don't think that's merited at this time.
+
+	double impact = pCell->custom_data["pro_GAP1_damage"];
+	// std::cout<<"pro_GAP1_damage = "<<impact<<std::endl;
+	double random = UniformRandom();
+	// std::cout<<"random = "<<random<<std::endl;
+
+	double half_max = pCell->custom_data["half_max_effect_hill_function"];;
+	double hill_power = pCell->custom_data["exp_effect_hill_function"];;
+	double hill_probability_response;
+	
+	hill_probability_response = Hill_response_function( impact, half_max, hill_power); 
+
+	// std::cout<<"hill_probability_response = "<<hill_probability_response<<std::endl;
+
+
+	if(hill_probability_response > random) // is this right??????
+	{
+		// std::cout<<"Hello!!!!!!!!"<<std::endl;
+		// std::cout<<"pro_GAP1_damage = "<<impact<<std::endl;
+		phenotype.intracellular->set_boolean_variable_value("pro_GAP1", true);
+	}
+	else
+	{
+		phenotype.intracellular->set_boolean_variable_value("pro_GAP1", false);
+	}
+
+}
+
+
 void post_update_intracellular_drug_effect(Cell* pCell, Phenotype& phenotype, double dt)
 {
 	bool Apoptosis = pCell->phenotype.intracellular->get_boolean_variable_value("Apoptosis"); // ? 1.0 : 0.0;
 	bool Proliferation = pCell->phenotype.intracellular->get_boolean_variable_value("Proliferation"); // ? 1.0 : 0.0;
 
-	// std::cout<<"Apoptosis = "<<Apoptosis<<std::endl;
-
+	
+	double base_apoptosis = get_single_base_behavior(pCell, "apoptosis");
 	// if(pCell->ID=1)
 	// {
 	// 	std::cout<<"Time: " << PhysiCell_globals.current_time <<std::endl;
@@ -197,7 +250,7 @@ void post_update_intracellular_drug_effect(Cell* pCell, Phenotype& phenotype, do
 		// std::cout<<"base_cycle_entry = "<<base_cycle_entry<<std::endl;
 		// set_single_behavior( pCell , "cycle entry" , base_cycle_entry  ); 
 
-		double base_apoptosis = get_single_base_behavior(pCell, "apoptosis");
+		// double base_apoptosis = get_single_base_behavior(pCell, "apoptosis");
 		// std::cout<<"base_apoptosis = "<<base_apoptosis<<std::endl;
 
 		double total_apoptosis_rate = base_apoptosis + pCell->custom_data["intervention_induced_apoptosis"];
@@ -209,7 +262,7 @@ void post_update_intracellular_drug_effect(Cell* pCell, Phenotype& phenotype, do
 
 	else
 	{
-		set_single_behavior( pCell , "apoptosis" , 0  );
+		set_single_behavior( pCell , "apoptosis" , base_apoptosis  );
 		// std::cout<<"apoptosis = false"<<std::endl;
 	}
 
@@ -297,25 +350,7 @@ void add_compound( double drug_amount, double dose_interval, std::string substra
 
 
 // Old - not using this anymore - 02.04.24 - replaced with XML (but probably chould have just used this instead of changing to XML....)
-void pre_update_intracellular_drug_effect(Cell* pCell, Phenotype& phenotype, double dt)
-{
-	Cell_Definition* pCD = find_cell_definition(pCell->type_name);	
 
-	double drug_conc = get_single_signal(pCell, parameters.strings("substrate_name"));
-	// std::cout<<"drug_conc = "<<drug_conc<<std::endl;
-	if(drug_conc > pCell->custom_data["drug_threshold"])
-	{
-		pCell->phenotype.intracellular->set_boolean_variable_value(parameters.strings("substrate_name"), true);
-	}
-	else
-	{
-		pCell->phenotype.intracellular->set_boolean_variable_value(parameters.strings("substrate_name"), false);
-	}
-	
-	// Without doing something with the accumulating substrate, internal values rises without end. So - skipping for now 
-	// and assuming uptake is just proportional to the external concentration. I could do something fancy 
-	// like slowing the rate of uptake as the internal concentration rises, but I don't think that's merited at this time.
-}
 
 // Old - not using this anymore - 02.04.24
 void transition_to_resistant_cell_type(Cell* pCell, Phenotype& phenotype, double dt)
@@ -380,15 +415,15 @@ void from_nodes_to_cell(Cell* pCell, Phenotype& phenotype, double dt)
 }
 
 // Old - not using this anymore - 02.04.24
-void pre_update_intracellular( Cell* pCell, Phenotype& phenotype, double dt )
-{
-	if (PhysiCell::PhysiCell_globals.current_time >= 100.0 
-		&& pCell->phenotype.intracellular->get_parameter_value("$time_scale") == 0.0
-	){
-		pCell->phenotype.intracellular->set_parameter_value("$time_scale", 0.1);
-	}
+// void pre_update_intracellular( Cell* pCell, Phenotype& phenotype, double dt )
+// {
+// 	if (PhysiCell::PhysiCell_globals.current_time >= 100.0 
+// 		&& pCell->phenotype.intracellular->get_parameter_value("$time_scale") == 0.0
+// 	){
+// 		pCell->phenotype.intracellular->set_parameter_value("$time_scale", 0.1);
+// 	}
 
-}
+// }
 // Old - not using this anymore - 02.04.24
 void post_update_intracellular( Cell* pCell, Phenotype& phenotype, double dt )
 {
