@@ -98,10 +98,7 @@ void create_cell_types( void )
 		cell_defaults.functions.pre_update_intracellular = pre_update_intracellular_drug_effect;
 		std::cout<<"Using damage model"<<std::endl;
 	}
-	else
-	{
-		cell_defaults.functions.pre_update_intracellular = NULL;
-	} 
+
 	cell_defaults.functions.post_update_intracellular = post_update_intracellular_drug_effect; 
 	// cell_defaults.functions.custom_cell_rule = NULL; 
 	
