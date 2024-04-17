@@ -183,7 +183,7 @@ def createXML(intervention, substrateNames, numInterventions, decayID, replicate
         elif decayID == "2":
             decay_rate.text = "0.00192" # 6 hours above 0.5 - current threshold 
         else:
-            decay_rate.text = "0.01" "0.000963" # 12 hours above 0.5 - current threshold
+            decay_rate.text = "0.000963" # 12 hours above 0.5 - current threshold
     else:
         microenvironment.remove(variable2)
 
@@ -196,12 +196,12 @@ def createXML(intervention, substrateNames, numInterventions, decayID, replicate
         elif decayID == "2":
             decay_rate.text = "0.00192" # 6 hours above 0.5 - current threshold 
         else:
-            decay_rate.text = "0.01" "0.000963" # 12 hours above 0.5 - current threshold
+            decay_rate.text = "0.000963" # 12 hours above 0.5 - current threshold
     else:
         microenvironment.remove(variable3)
 
     # modify chemotaxis
-    cell_defs = xml_root.find("cell_definitions")
+    cell_defs = xml_root.find("cell_definitions") # could we just loop over each cell definition???? Probably ... 
     cell_def = cell_defs.find("cell_definition")
     phenotype = cell_def.find("phenotype")
     motility = phenotype.find("motility")

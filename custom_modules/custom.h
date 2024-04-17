@@ -85,8 +85,11 @@ void setup_microenvironment( void );
 std::vector<std::string> my_coloring_function( Cell* );
 
 void test_function( Cell* pCell, Phenotype& phenotype, double dt );
+void evaluateEffect(double impact, double half_max, double hill_power, Phenotype& phenotype, std::string EffectNode);
 void pre_update_intracellular_drug_effect(Cell* pCell, Phenotype& phenotype, double dt);
 // void pre_update_intracellular_drug_effect(Cell* pCell, Phenotype& phenotype, double dt, string substrate_name);
+double update_value(double value, double previous_value, double smoothing);
+void evaluateResistance(Cell* pCell, Phenotype& phenotype, double dt);
 void post_update_intracellular_drug_effect(Cell* pCell, Phenotype& phenotype, double dt);
 void add_compound( double drug_amount, double dose_interval, std::string substrate_name ); 
 void transition_to_resistant_cell_type( Cell* pCell, Phenotype& phenotype, double dt);
