@@ -302,7 +302,7 @@ void post_update_intracellular_drug_effect(Cell* pCell, Phenotype& phenotype, do
 	// 	// std::getchar();
 	// }
 	// Evaluate to see if resistance likelihood should be increased
-	evaluateResistance(pCell, phenotype, dt);   
+	// evaluateResistance(pCell, phenotype, dt);   
 	
 	// was using the logical test - not sure if I should use the value of the variable instead??? 
 	// and why isn't the set single behavior working as expected?
