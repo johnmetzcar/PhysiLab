@@ -166,7 +166,7 @@
             <phenotype>
                 <cycle code="5" name="live">
                     <phase_transition_rates units="1/min">
-                        <rate start_index="0" end_index="0" fixed_duration="false">0.00072</rate>
+                        <rate start_index="0" end_index="0" fixed_duration="false">0.000</rate>
                     </phase_transition_rates>
                 </cycle>
                 <death>
@@ -260,13 +260,13 @@
                     <substrate name="pro_GAP2">
                         <secretion_rate units="1/min">0.0</secretion_rate>
                         <secretion_target units="substrate density">1.0</secretion_target>
-                        <uptake_rate units="1/min">0.00</uptake_rate>
+                        <uptake_rate units="1/min">0.01</uptake_rate>
                         <net_export_rate units="total substrate/min">0.0</net_export_rate>
                     </substrate>
                     <substrate name="pro_GAP3">
                         <secretion_rate units="1/min">0.0</secretion_rate>
                         <secretion_target units="substrate density">1.0</secretion_target>
-                        <uptake_rate units="1/min">0.00</uptake_rate>
+                        <uptake_rate units="1/min">0.01</uptake_rate>
                         <net_export_rate units="total substrate/min">0.0</net_export_rate>
                     </substrate>
                 </secretion>
@@ -331,21 +331,40 @@
                     <precompute>true</precompute>
                     <dt>0.02</dt>
                 </substrate>
+                <substrate name="pro_GAP2">
+                    <model>AUC</model>
+                    <metabolism_rate>0.5</metabolism_rate>
+                    <constant_repair_rate>0</constant_repair_rate>
+                    <linear_repair_rate>0.01</linear_repair_rate>
+                    <precompute>true</precompute>
+                    <dt>0.02</dt>
+                </substrate>
+                <substrate name="pro_GAP3">
+                    <model>AUC</model>
+                    <metabolism_rate>0.5</metabolism_rate>
+                    <constant_repair_rate>0</constant_repair_rate>
+                    <linear_repair_rate>0.01</linear_repair_rate>
+                    <precompute>true</precompute>
+                    <dt>0.02</dt>
+                </substrate>
             </PD>
             <custom_data>
                 <drug_threshold conserved="false" units="" description="">0.5</drug_threshold>
                 <proliferation_multiplier conserved="false" units="" description="">10.0</proliferation_multiplier>
-                <intervention_induced_apoptosis conserved="false" units="" description="">0.005</intervention_induced_apoptosis>
+                <intervention_induced_apoptosis conserved="false" units="" description="">0.00</intervention_induced_apoptosis>
                 <pro_GAP1_damage conserved="false" units="damage" description="Accumulated damage due to pro_GAP1">0.0</pro_GAP1_damage>
                 <exp_effect_hill_function conserved="false" units="" description="">8.0</exp_effect_hill_function>
                 <half_max_effect_hill_function conserved="false" units="" description="">0.5</half_max_effect_hill_function>
+                <pro_GAP2_damage conserved="false" units="damage" description="Accumulated damage due to pro_GAP2">0.0</pro_GAP2_damage>
+                <pro_GAP3_damage conserved="false" units="damage" description="Accumulated damage due to pro_GAP3">0.0</pro_GAP3_damage>
+                <resistance conserved="false" units="" description="">0.0</resistance>
             </custom_data>
         </cell_definition>
         <cell_definition name="TLGLR1" ID="1">
             <phenotype>
                 <cycle code="5" name="live">
                     <phase_transition_rates units="1/min">
-                        <rate start_index="0" end_index="0" fixed_duration="false">0.00072</rate>
+                        <rate start_index="0" end_index="0" fixed_duration="false">0.000</rate>
                     </phase_transition_rates>
                 </cycle>
                 <death>
@@ -496,10 +515,13 @@
             <custom_data>
                 <drug_threshold conserved="false" units="" description="">0.5</drug_threshold>
                 <proliferation_multiplier conserved="false" units="" description="">10.0</proliferation_multiplier>
-                <intervention_induced_apoptosis conserved="false" units="" description="">0.005</intervention_induced_apoptosis>
+                <intervention_induced_apoptosis conserved="false" units="" description="">0.00</intervention_induced_apoptosis>
                 <pro_GAP1_damage conserved="false" units="damage" description="Accumulated damage due to pro_GAP1">0.0</pro_GAP1_damage>
                 <exp_effect_hill_function conserved="false" units="" description="">0.0</exp_effect_hill_function>
                 <half_max_effect_hill_function conserved="false" units="" description="">0.0</half_max_effect_hill_function>
+                <pro_GAP2_damage conserved="false" units="damage" description="Accumulated damage due to pro_GAP2">0.0</pro_GAP2_damage>
+                <pro_GAP3_damage conserved="false" units="damage" description="Accumulated damage due to pro_GAP3">0.0</pro_GAP3_damage>
+                <resistance conserved="false" units="" description="">0.0</resistance>
             </custom_data>
         </cell_definition>
     </cell_definitions>
@@ -522,5 +544,8 @@
         <substrate_name3 type="string" units="" description="name of intervention">pro_GAP3</substrate_name3>
         <num_substrates type="int" units="dimensionless" description="Number of compounds in intervention">3</num_substrates>
         <use_damage_model type="bool" units="" description="Turns on damage model. DO NOT USE DAMAGE MODEL WITH XML BASED THRESHOLD interventions">true</use_damage_model>
+        <EffectNode1 type="string" units="" description="">pro_GAP1</EffectNode1>
+        <EffectNode2 type="string" units="" description="">pro_GAP2</EffectNode2>
+        <EffectNode3 type="string" units="" description="">pro_GAP3</EffectNode3>
     </user_parameters>
 </PhysiCell_settings>
