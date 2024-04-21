@@ -168,7 +168,7 @@ def createXML(intervention, substrateNames, numInterventions, decayID, replicate
     physical_parameter_set = variable1.find("physical_parameter_set")
     decay_rate = physical_parameter_set.find("decay_rate")
     if decayID == "1":
-        decay_rate.text = "0.0001" # 1 hour above 0.5 - current threshold
+        decay_rate.text = "0.00475" 
     # elif decayID == "2":
     #     decay_rate.text = "0.00192" # 6 hours above 0.5 - current threshold 
     # else:
@@ -179,7 +179,7 @@ def createXML(intervention, substrateNames, numInterventions, decayID, replicate
         physical_parameter_set = variable2.find("physical_parameter_set")
         decay_rate = physical_parameter_set.find("decay_rate")
         if decayID == "1":
-            decay_rate.text = "0.0001" # 1 hour above 0.5 - current threshold
+            decay_rate.text = "0.00475" 
             # elif decayID == "2":
             #     decay_rate.text = "0.00192" # 6 hours above 0.5 - current threshold 
             # else:
@@ -192,7 +192,7 @@ def createXML(intervention, substrateNames, numInterventions, decayID, replicate
         physical_parameter_set = variable3.find("physical_parameter_set")
         decay_rate = physical_parameter_set.find("decay_rate")
         if decayID == "1":
-            decay_rate.text = "0.0001" # 1 hour above 0.5 - current threshold
+            decay_rate.text = "0.00475" 
         # elif decayID == "2":
         #     decay_rate.text = "0.00192" # 6 hours above 0.5 - current threshold 
         # else:
