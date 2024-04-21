@@ -517,10 +517,10 @@
                 <proliferation_multiplier conserved="false" units="" description="">10.0</proliferation_multiplier>
                 <intervention_induced_apoptosis conserved="false" units="" description="">0.00</intervention_induced_apoptosis>
                 <pro_GAP1_damage conserved="false" units="damage" description="Accumulated damage due to pro_GAP1">0.0</pro_GAP1_damage>
-                <exp_effect_hill_function conserved="false" units="" description="">0.0</exp_effect_hill_function>
-                <half_max_effect_hill_function conserved="false" units="" description="">0.0</half_max_effect_hill_function>
                 <pro_GAP2_damage conserved="false" units="damage" description="Accumulated damage due to pro_GAP2">0.0</pro_GAP2_damage>
                 <pro_GAP3_damage conserved="false" units="damage" description="Accumulated damage due to pro_GAP3">0.0</pro_GAP3_damage>
+                <exp_effect_hill_function conserved="false" units="" description="">0.0</exp_effect_hill_function>
+                <half_max_effect_hill_function conserved="false" units="" description="">0.0</half_max_effect_hill_function>
                 <resistance conserved="false" units="" description="">0.0</resistance>
             </custom_data>
         </cell_definition>

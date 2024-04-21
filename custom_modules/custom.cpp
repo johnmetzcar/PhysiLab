@@ -259,13 +259,15 @@ void evaluateResistance(Cell* pCell, Phenotype& phenotype, double dt)
 		std::exit(-1);
 	}
 
-	double resitanceValue = pCell->custom_data["resistance"];
-	
-	// I think I can just autocast teh bool to a double
-	pCell->custom_data["resistance"] = update_value(Apoptosis, resitanceValue, 1);
-	std::cout<<"Resistance = "<<pCell->custom_data["resistance"]<<std::endl;
+	static int resistance_smoothing = pCell->custom_data.find_variable_index("resistance_smoothing");
+	if (resistance_smoothing < 0)
+	{
+		std::cout << "resistance_smoothing variable not found" << std::endl;
+		std::exit(-1);
+	}
 
-
+	double resistanceValue = pCell->custom_data["resistance"];
+	double resistanceSmoothing = pCell->custom_data["resistance_smoothing"];
 
 	// Then need to pass through hill funcction ... whats up there is more like 'update resistance likelyhood" - NEXT is evaluate (and thats where I'll have to figure out how to make it permanent)
 	// How will I make the resistance permanent????? Some extxr int?? (more and more complicated ... )
@@ -294,15 +296,9 @@ void post_update_intracellular_drug_effect(Cell* pCell, Phenotype& phenotype, do
 
 	
 	double base_apoptosis = get_single_base_behavior(pCell, "apoptosis");
-	// if(pCell->ID=1)
-	// {
-	// 	std::cout<<"Time: " << PhysiCell_globals.current_time <<std::endl;
 
-	// 	std::cout<<"cell: " << pCell->type_name << " " << pCell->ID <<std::endl;
-	// 	// std::getchar();
-	// }
 	// Evaluate to see if resistance likelihood should be increased
-	// evaluateResistance(pCell, phenotype, dt);   
+	// evaluateResistance(pCell, phenotype, dt); 
 	
 	// was using the logical test - not sure if I should use the value of the variable instead??? 
 	// and why isn't the set single behavior working as expected?
