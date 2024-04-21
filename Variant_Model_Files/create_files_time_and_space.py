@@ -175,7 +175,7 @@ def createXML(intervention, substrateNames, numInterventions, eliminationID, rep
         elimination_rate.text = "0.0009627" # 12 hours above 0.5 - current threshold
 
     if numInterventions > 1:
-        variable2.attrib = {"name": substrateNames[1], "units": "dimensionless", "ID": "0"}
+        variable2.attrib = {"name": substrateNames[1], "units": "dimensionless", "ID": "1"}
         PK_parameter_set = variable2.find("PK")
         elimination_rate = PK_parameter_set.find("elimination_rate")
         if eliminationID == "1":
@@ -188,7 +188,7 @@ def createXML(intervention, substrateNames, numInterventions, eliminationID, rep
         microenvironment.remove(variable2)
 
     if numInterventions == 3:
-        variable3.attrib = {"name": substrateNames[2], "units": "dimensionless", "ID": "0"}
+        variable3.attrib = {"name": substrateNames[2], "units": "dimensionless", "ID": "2"}
         PK_parameter_set = variable3.find("PK")
         elimination_rate = PK_parameter_set.find("elimination_rate")
         if eliminationID == "1":

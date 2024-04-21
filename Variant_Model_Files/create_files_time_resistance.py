@@ -175,7 +175,7 @@ def createXML(intervention, substrateNames, numInterventions, decayID, replicate
         decay_rate.text = "0.000963" # 12 hours above 0.5 - current threshold
 
     if numInterventions > 1:
-        variable2.attrib = {"name": substrateNames[1], "units": "dimensionless", "ID": "0"}
+        variable2.attrib = {"name": substrateNames[1], "units": "dimensionless", "ID": "1"}
         physical_parameter_set = variable2.find("physical_parameter_set")
         decay_rate = physical_parameter_set.find("decay_rate")
         if decayID == "1":
@@ -188,7 +188,7 @@ def createXML(intervention, substrateNames, numInterventions, decayID, replicate
         microenvironment.remove(variable2)
 
     if numInterventions == 3:
-        variable3.attrib = {"name": substrateNames[2], "units": "dimensionless", "ID": "0"}
+        variable3.attrib = {"name": substrateNames[2], "units": "dimensionless", "ID": "2"}
         physical_parameter_set = variable3.find("physical_parameter_set")
         decay_rate = physical_parameter_set.find("decay_rate")
         if decayID == "1":
