@@ -38,14 +38,14 @@ def aggregateResults(input_dir, output_dir, interventions):
             data = pd.read_csv(csv_path)
             aggregated_df = pd.concat([aggregated_df, data], ignore_index=True)
 
-    output_csv_path = os.path.join(output_dir, 'aggregated_live_cells_spatial.csv')
+    output_csv_path = os.path.join(output_dir, 'aggregated_live_cells_time_and_space.csv')
     aggregated_df.to_csv(output_csv_path, index=False)
     print("Aggregated results saved to:", {output_csv_path})
 
 def main():
     # Assuming the below directory adjustments and path listings are similar to your initial setup
-    rel_input_dir = 'leukemia_spatial_output/'
-    rel_output_dir = 'dataframes_test/'
+    rel_input_dir = 'leukemia_time_space_output/'
+    rel_output_dir = 'dataframes/'
 
     full_path = os.getcwd()
     print("Current Working Directory:", full_path)
@@ -55,6 +55,8 @@ def main():
 
     output_dir = os.path.join(full_path, rel_output_dir)
     print("Output Directory:", output_dir)
+
+    input("Press Enter to continue...\n Press Ctrl + C to exit...")
 
     # Ensure the output directory exists
     if not os.path.exists(output_dir):
