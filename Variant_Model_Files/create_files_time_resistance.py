@@ -23,7 +23,7 @@ MaBoSS_config = "TLGL_base_survival_attractors.cfg"
 
 # PhysiCell files
 # EDIT TO BE NAME OF ORIGINAL XML FILE (PhysiCell model)
-PhysiCell_file = "base_model_file_multiple_interventions.xml"
+PhysiCell_file = "base_time_only_resistance.xml"
 print("CURRENTLY OTHER PHYSICELL CONFIG FILES ARE ASSUMED TO BE IN CONFIG (rules, cell initialization, Dirichelet nodes, and substrate initializaiton)" )
 
 #################### Intervention Files ########################
@@ -40,7 +40,7 @@ rel_input_dir = 'Variant_Model_Files/'
 
 # relative path to output directory
 # EDIT TO BE LOCATION OF WHERE YOU WANT TO STORE THE NEW MODEL FILES
-rel_output_dir = 'leukemia_model_files/'
+rel_output_dir = 'leukemia_model_files_resistance/'
 
 rel_simulation_output_dir = 'leukemia_output/'
 
@@ -202,89 +202,129 @@ def createXML(intervention, substrateNames, numInterventions, decayID, replicate
 
     # modify chemotaxis
     cell_defs = xml_root.find("cell_definitions") # could we just loop over each cell definition???? Probably ... 
-    cell_def = cell_defs.find("cell_definition")
-    phenotype = cell_def.find("phenotype")
-    motility = phenotype.find("motility")
-    options = motility.find("options")
-    chemotaxis = options.find("chemotaxis")
-    substrate = chemotaxis.find("substrate")
-    substrate.text = substrateNames[0]
+    for cell_def in cell_defs:
+        # print(cell_def.text)
+        # cell_def = cell_defs.find("cell_definition")
+        phenotype = cell_def.find("phenotype")
+        motility = phenotype.find("motility")
+        options = motility.find("options")
+        chemotaxis = options.find("chemotaxis")
+        substrate = chemotaxis.find("substrate")
+        substrate.text = substrateNames[0]
 
-    # modify advanced chemotaxis
-    adv_chemotaxis = options.find("advanced_chemotaxis")
-    sensitivities = adv_chemotaxis.find("chemotactic_sensitivities")
-    sensitivity = sensitivities.findall("chemotactic_sensitivity")
-    sensitivity1 = sensitivity[0]
-    sensitivity2 = sensitivity[1]
-    sensitivity3 = sensitivity[2]
+        # modify advanced chemotaxis
+        adv_chemotaxis = options.find("advanced_chemotaxis")
+        sensitivities = adv_chemotaxis.find("chemotactic_sensitivities")
+        sensitivity = sensitivities.findall("chemotactic_sensitivity")
+        sensitivity1 = sensitivity[0]
+        sensitivity2 = sensitivity[1]
+        sensitivity3 = sensitivity[2]
 
-    sensitivity1.attrib = {"substrate": substrateNames[0]}
-    if numInterventions > 1:
-        sensitivity2.attrib = {"substrate": substrateNames[1]}
-    else:
-        sensitivities.remove(sensitivity2)
-    
-    if numInterventions == 3:
-        sensitivity3.attrib = {"substrate": substrateNames[2]}
-    else:
-        sensitivities.remove(sensitivity3)
+        sensitivity1.attrib = {"substrate": substrateNames[0]}
+        if numInterventions > 1:
+            sensitivity2.attrib = {"substrate": substrateNames[1]}
+        else:
+            sensitivities.remove(sensitivity2)
+        
+        if numInterventions == 3:
+            sensitivity3.attrib = {"substrate": substrateNames[2]}
+        else:
+            sensitivities.remove(sensitivity3)
 
-    # modify secretion
-    secretion = phenotype.find("secretion")
-    substrates = secretion.findall("substrate")
-    substrate1 = substrates[0]
-    substrate2 = substrates[1]
-    substrate3 = substrates[2]
+        # modify secretion
+        secretion = phenotype.find("secretion")
+        substrates = secretion.findall("substrate")
+        substrate1 = substrates[0]
+        substrate2 = substrates[1]
+        substrate3 = substrates[2]
 
-    substrate1.attrib = {"name": substrateNames[0]}
-    if numInterventions > 1:
-        substrate2.attrib = {"name": substrateNames[1]}
-    else:
-        secretion.remove(substrate2)
-    
-    if numInterventions == 3:
-        substrate3.attrib = {"name": substrateNames[2]}
-    else:
-        secretion.remove(substrate3)
+        substrate1.attrib = {"name": substrateNames[0]}
+        if numInterventions > 1:
+            substrate2.attrib = {"name": substrateNames[1]}
+        else:
+            secretion.remove(substrate2)
+        
+        if numInterventions == 3:
+            substrate3.attrib = {"name": substrateNames[2]}
+        else:
+            secretion.remove(substrate3)
 
-    # change filenames
-    intracellular = phenotype.find("intracellular")
-    bndfile = intracellular.find("bnd_filename")
-    
-    bndfile.text = rel_output_dir + intervention + ".bnd"
-    cfgfile = intracellular.find("cfg_filename")
-    cfgfile.text = rel_output_dir  + intervention + ".cfg"
+        # change filenames
+        intracellular = phenotype.find("intracellular")
+        bndfile = intracellular.find("bnd_filename")
+        
+        bndfile.text = rel_output_dir + intervention + ".bnd"
+        cfgfile = intracellular.find("cfg_filename")
+        cfgfile.text = rel_output_dir  + intervention + ".cfg"
 
-    # modify mapping info
-    mapping = intracellular.find("mapping")
-    inputs = mapping.findall("input")
-    input1 = inputs[0]
-    input2 = inputs[1]
-    input3 = inputs[2]
-    
-    input1.attrib = {"physicell_name": substrateNames[0], "intracellular_name": substrateNames[0]}
-    settings = input1.find("settings")
-    action = settings.find("action")
-    action.text = "activation"
+        # change PD
+        PD = cell_def.find("PD")
 
-    if numInterventions > 1:
-        input2.attrib = {"physicell_name": substrateNames[1], "intracellular_name": substrateNames[1]}
-        settings = input2.find("settings")
-        action = settings.find("action")
-        action.text = "activation"
-    else:
-        # remove input 2
-        mapping.remove(input2)
-    
-    if numInterventions == 3:
-        input3.attrib = {"physicell_name": substrateNames[2], "intracellular_name": substrateNames[2]}
-        settings = input3.find("settings")
-        action = settings.find("action")
-        action.text = "activation"
-    else:
-        # remove substrate 3
-        mapping.remove(input3)
-    
+        substrates1 = PD.findall("substrate")
+        substrate1 = substrates1[0]
+        substrate2 = substrates1[1]
+        substrate3 = substrates1[2]
+
+        substrate1.attrib = {"name": substrateNames[0]}
+        if numInterventions > 1:
+            substrate2.attrib = {"name": substrateNames[1]}
+        else:
+            PD.remove(substrate2)
+        
+        if numInterventions == 3:
+            substrate3.attrib = {"name": substrateNames[2]}
+        else:
+            PD.remove(substrate3)
+
+        # change custom data
+        custom_data = cell_def.find("custom_data")
+        damage1 = custom_data.find("pro_GAP1_damage")
+        damage2 = custom_data.find("pro_GAP2_damage")
+        damage3 = custom_data.find("pro_GAP3_damage")
+
+        damage1.tag = substrateNames[0] + "_damage"
+        if numInterventions > 1:
+            damage2.tag = substrateNames[1] + "_damage"
+        else:
+            custom_data.remove(damage2)
+        
+        if numInterventions == 3:
+            damage3.tag = substrateNames[2] + "_damage"
+        else:
+            custom_data.remove(damage3)
+
+
+        # note being used at this time - but just in case ... 
+        # # modify mapping info
+        # mapping = intracellular.find("mapping")
+        # inputs = mapping.findall("input")
+        # input1 = inputs[0]
+        # input2 = inputs[1]
+        # input3 = inputs[2]
+        
+        # input1.attrib = {"physicell_name": substrateNames[0], "intracellular_name": substrateNames[0]}
+        # settings = input1.find("settings")
+        # action = settings.find("action")
+        # action.text = "activation"
+
+        # if numInterventions > 1:
+        #     input2.attrib = {"physicell_name": substrateNames[1], "intracellular_name": substrateNames[1]}
+        #     settings = input2.find("settings")
+        #     action = settings.find("action")
+        #     action.text = "activation"
+        # else:
+        #     # remove input 2
+        #     mapping.remove(input2)
+        
+        # if numInterventions == 3:
+        #     input3.attrib = {"physicell_name": substrateNames[2], "intracellular_name": substrateNames[2]}
+        #     settings = input3.find("settings")
+        #     action = settings.find("action")
+        #     action.text = "activation"
+        # else:
+        #     # remove substrate 3
+        #     mapping.remove(input3)
+        
     # change user parameters
     user_params = xml_root.find("user_parameters")
     substrate1 = user_params.find("substrate_name1")
@@ -306,6 +346,25 @@ def createXML(intervention, substrateNames, numInterventions, decayID, replicate
     
     num_substrates = user_params.find("num_substrates")
     num_substrates.text = str(numInterventions)
+
+    # Change the effect nodes
+
+    effectNode1 = user_params.find("EffectNode1")
+    effectNode2 = user_params.find("EffectNode2")
+    effectNode3 = user_params.find("EffectNode3")
+    effectNode1.text = substrateNames[0]
+
+    if numInterventions > 1:
+        effectNode2.text = substrateNames[1]
+    else:
+        # remove substrate 2
+        user_params.remove(effectNode2)
+    
+    if numInterventions == 3:
+        effectNode3.text = substrateNames[2]
+    else:
+        # remove substrate 3
+        user_params.remove(effectNode3)
 
     # create serial number
     modelID = decayID + replicateID

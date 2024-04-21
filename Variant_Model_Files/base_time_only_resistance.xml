@@ -1,10 +1,10 @@
-    <PhysiCell_settings version="devel-version">
+<PhysiCell_settings version="devel-version">
 
     <cell_rules>
         <rulesets>
             <ruleset protocol="CBHG" version="2.0" format="csv" enabled="true">
                 <folder>config</folder>
-                <filename>rules_well_mixed.csv</filename>
+                <filename>rules_well_mixed_resistance.csv</filename>
             </ruleset>
         </rulesets>
     </cell_rules>
@@ -23,7 +23,7 @@
     </domain>
 
     <overall>
-        <max_time units="min">7200.0</max_time>
+        <max_time units="min">10080.0</max_time>
         <time_units>min</time_units>
         <space_units>micron</space_units>
         <dt_diffusion units="min">0.02</dt_diffusion>
@@ -38,11 +38,11 @@
     <save>
         <folder>output</folder>
         <full_data>
-            <interval units="min">12</interval>
+            <interval units="min">18</interval>
             <enable>true</enable>
         </full_data>
         <SVG>
-            <interval units="min">12</interval>
+            <interval units="min">18</interval>
             <enable>true</enable>
             <plot_substrate enabled="false" limits="false">
                 <substrate>pro_GAP1</substrate>
@@ -64,10 +64,10 @@
     <microenvironment_setup>
         <variable name="pro_GAP1" units="dimensionless" ID="0">
             <physical_parameter_set>
-                <diffusion_coefficient units="micron^2/min">0</diffusion_coefficient>
-                <decay_rate units="1/min">0.001933</decay_rate>
+                <diffusion_coefficient units="micron^2/min">10000</diffusion_coefficient>
+                <decay_rate units="1/min">0.0058</decay_rate>
             </physical_parameter_set>
-            <initial_condition units="dimensionless">1.0</initial_condition>
+            <initial_condition units="dimensionless">100</initial_condition>
             <Dirichlet_boundary_condition units="dimensionless" enabled="False">1</Dirichlet_boundary_condition>
             <Dirichlet_options>
                 <boundary_value ID="xmin" enabled="False">1</boundary_value>
@@ -81,10 +81,10 @@
         </variable>
         <variable name="pro_GAP2" units="dimensionless" ID="1">
             <physical_parameter_set>
-                <diffusion_coefficient units="micron^2/min">0</diffusion_coefficient>
-                <decay_rate units="1/min">0.0116</decay_rate>
+                <diffusion_coefficient units="micron^2/min">10000</diffusion_coefficient>
+                <decay_rate units="1/min">0.0058</decay_rate>
             </physical_parameter_set>
-            <initial_condition units="dimensionless">0</initial_condition>
+            <initial_condition units="dimensionless">100</initial_condition>
             <Dirichlet_boundary_condition units="dimensionless" enabled="False">1</Dirichlet_boundary_condition>
             <Dirichlet_options>
                 <boundary_value ID="xmin" enabled="False">1</boundary_value>
@@ -98,10 +98,10 @@
         </variable>
         <variable name="pro_GAP3" units="dimensionless" ID="2">
             <physical_parameter_set>
-                <diffusion_coefficient units="micron^2/min">0</diffusion_coefficient>
-                <decay_rate units="1/min">0.0116</decay_rate>
+                <diffusion_coefficient units="micron^2/min">10000</diffusion_coefficient>
+                <decay_rate units="1/min">0.0058</decay_rate>
             </physical_parameter_set>
-            <initial_condition units="dimensionless">0</initial_condition>
+            <initial_condition units="dimensionless">100</initial_condition>
             <Dirichlet_boundary_condition units="dimensionless" enabled="False">1</Dirichlet_boundary_condition>
             <Dirichlet_options>
                 <boundary_value ID="xmin" enabled="False">1</boundary_value>
@@ -130,7 +130,7 @@
             <phenotype>
                 <cycle code="5" name="live">
                     <phase_transition_rates units="1/min">
-                        <rate start_index="0" end_index="0" fixed_duration="false">0.0000</rate>
+                        <rate start_index="0" end_index="0" fixed_duration="false">0.00009625</rate>
                     </phase_transition_rates>
                 </cycle>
                 <death>
@@ -218,19 +218,19 @@
                     <substrate name="pro_GAP1">
                         <secretion_rate units="1/min">0.0</secretion_rate>
                         <secretion_target units="substrate density">1.0</secretion_target>
-                        <uptake_rate units="1/min">0.00</uptake_rate>
+                        <uptake_rate units="1/min">0.01</uptake_rate>
                         <net_export_rate units="total substrate/min">0.0</net_export_rate>
                     </substrate>
                     <substrate name="pro_GAP2">
                         <secretion_rate units="1/min">0.0</secretion_rate>
                         <secretion_target units="substrate density">1.0</secretion_target>
-                        <uptake_rate units="1/min">0.00</uptake_rate>
+                        <uptake_rate units="1/min">0.01</uptake_rate>
                         <net_export_rate units="total substrate/min">0.0</net_export_rate>
                     </substrate>
                     <substrate name="pro_GAP3">
                         <secretion_rate units="1/min">0.0</secretion_rate>
                         <secretion_target units="substrate density">1.0</secretion_target>
-                        <uptake_rate units="1/min">0.00</uptake_rate>
+                        <uptake_rate units="1/min">0.01</uptake_rate>
                         <net_export_rate units="total substrate/min">0.0</net_export_rate>
                     </substrate>
                 </secretion>
@@ -267,49 +267,60 @@
                         <inheritance global="True" />
                     </settings>
                     <mapping>
-                        <input physicell_name="pro_GAP1" intracellular_name="pro_GAP1">
-                            <settings>
-                                <action>activation</action>
-                                <threshold>0.5</threshold>
-                                <smoothing>0</smoothing>
-                            </settings>
-                        </input>
-                        <input physicell_name="pro_GAP2" intracellular_name="pro_GAP2">
-                            <settings>
-                                <action>activation</action>
-                                <threshold>0.5</threshold>
-                                <smoothing>0</smoothing>
-                            </settings>
-                        </input>
-                        <input physicell_name="pro_GAP3" intracellular_name="pro_GAP3">
-                            <settings>
-                                <action>activation</action>
-                                <threshold>0.5</threshold>
-                                <smoothing>0</smoothing>
-                            </settings>
-                        </input>
                         <output physicell_name="transform to TLGLR1" intracellular_name="Apoptosis">
                             <settings>
                                 <action>activation</action>
-                                <value>0.00001</value>
+                                <value>0.001</value>
                                 <base_value>0.0</base_value>
-                                <smoothing>2</smoothing>
+                                <smoothing>3</smoothing>
                             </settings>
                         </output>
                     </mapping>
                 </intracellular>
             </phenotype>
+            <PD>
+                <substrate name="pro_GAP1">
+                    <model>AUC</model>
+                    <metabolism_rate>0.5</metabolism_rate>
+                    <constant_repair_rate>0.1</constant_repair_rate>
+                    <linear_repair_rate>0.01</linear_repair_rate>
+                    <precompute>true</precompute>
+                    <dt>0.02</dt>
+                </substrate>
+                <substrate name="pro_GAP2">
+                    <model>AUC</model>
+                    <metabolism_rate>0.5</metabolism_rate>
+                    <constant_repair_rate>0</constant_repair_rate>
+                    <linear_repair_rate>0.01</linear_repair_rate>
+                    <precompute>true</precompute>
+                    <dt>0.02</dt>
+                </substrate>
+                <substrate name="pro_GAP3">
+                    <model>AUC</model>
+                    <metabolism_rate>0.5</metabolism_rate>
+                    <constant_repair_rate>0</constant_repair_rate>
+                    <linear_repair_rate>0.01</linear_repair_rate>
+                    <precompute>true</precompute>
+                    <dt>0.02</dt>
+                </substrate>
+            </PD>
             <custom_data>
                 <drug_threshold conserved="false" units="" description="">0.5</drug_threshold>
                 <proliferation_multiplier conserved="false" units="" description="">10.0</proliferation_multiplier>
                 <intervention_induced_apoptosis conserved="false" units="" description="">0.001</intervention_induced_apoptosis>
+                <pro_GAP1_damage conserved="false" units="damage" description="Accumulated damage due to Substrate 1">0.0</pro_GAP1_damage>
+                <pro_GAP2_damage conserved="false" units="damage" description="Accumulated damage due to Substrate 2">0.0</pro_GAP2_damage>
+                <pro_GAP3_damage conserved="false" units="damage" description="Accumulated damage due to Substrate 3">0.0</pro_GAP3_damage>
+                <exp_effect_hill_function conserved="false" units="" description="">8.0</exp_effect_hill_function>
+                <half_max_effect_hill_function conserved="false" units="" description="">5</half_max_effect_hill_function>
+                <resistance conserved="false" units="" description="">0.0</resistance>
             </custom_data>
         </cell_definition>
         <cell_definition name="TLGLR1" ID="1">
             <phenotype>
                 <cycle code="5" name="live">
                     <phase_transition_rates units="1/min">
-                        <rate start_index="0" end_index="0" fixed_duration="false">0.0000</rate>
+                        <rate start_index="0" end_index="0" fixed_duration="false">0.00007700</rate>
                     </phase_transition_rates>
                 </cycle>
                 <death>
@@ -397,19 +408,19 @@
                     <substrate name="pro_GAP1">
                         <secretion_rate units="1/min">0.0</secretion_rate>
                         <secretion_target units="substrate density">1.0</secretion_target>
-                        <uptake_rate units="1/min">0.00</uptake_rate>
+                        <uptake_rate units="1/min">0.005</uptake_rate>
                         <net_export_rate units="total substrate/min">0.0</net_export_rate>
                     </substrate>
                     <substrate name="pro_GAP2">
                         <secretion_rate units="1/min">0.0</secretion_rate>
                         <secretion_target units="substrate density">1.0</secretion_target>
-                        <uptake_rate units="1/min">0.00</uptake_rate>
+                        <uptake_rate units="1/min">0.005</uptake_rate>
                         <net_export_rate units="total substrate/min">0.0</net_export_rate>
                     </substrate>
                     <substrate name="pro_GAP3">
                         <secretion_rate units="1/min">0.0</secretion_rate>
                         <secretion_target units="substrate density">1.0</secretion_target>
-                        <uptake_rate units="1/min">0.00</uptake_rate>
+                        <uptake_rate units="1/min">0.005</uptake_rate>
                         <net_export_rate units="total substrate/min">0.0</net_export_rate>
                     </substrate>
                 </secretion>
@@ -445,36 +456,44 @@
                         <start_time>0.0</start_time>
                         <inheritance global="True" />
                     </settings>
-                    <mapping>
-                        <input physicell_name="pro_GAP1" intracellular_name="pro_GAP1">
-                            <settings>
-                                <action>activation</action>
-                                <threshold>0.9</threshold>
-                                <smoothing>0</smoothing>
-                            </settings>
-                        </input>
-                        <input physicell_name="pro_GAP2" intracellular_name="pro_GAP2">
-                            <settings>
-                                <action>activation</action>
-                                <threshold>0.9</threshold>
-                                <inact_threshold>.9</inact_threshold>
-                                <smoothing>0</smoothing>
-                            </settings>
-                        </input>
-                        <input physicell_name="pro_GAP3" intracellular_name="pro_GAP3">
-                            <settings>
-                                <action>activation</action>
-                                <threshold>.9</threshold>
-                                <smoothing>0</smoothing>
-                            </settings>
-                        </input>
-                    </mapping>
                 </intracellular>
             </phenotype>
+            <PD>
+                <substrate name="pro_GAP1">
+                    <model>AUC</model>
+                    <metabolism_rate>0.5</metabolism_rate>
+                    <constant_repair_rate>0.1</constant_repair_rate>
+                    <linear_repair_rate>0.01</linear_repair_rate>
+                    <precompute>true</precompute>
+                    <dt>0.02</dt>
+                </substrate>
+                <substrate name="pro_GAP2">
+                    <model>AUC</model>
+                    <metabolism_rate>0.5</metabolism_rate>
+                    <constant_repair_rate>0</constant_repair_rate>
+                    <linear_repair_rate>0.01</linear_repair_rate>
+                    <precompute>true</precompute>
+                    <dt>0.02</dt>
+                </substrate>
+                <substrate name="pro_GAP3">
+                    <model>AUC</model>
+                    <metabolism_rate>0.5</metabolism_rate>
+                    <constant_repair_rate>0</constant_repair_rate>
+                    <linear_repair_rate>0.01</linear_repair_rate>
+                    <precompute>true</precompute>
+                    <dt>0.02</dt>
+                </substrate>
+            </PD>
             <custom_data>
                 <drug_threshold conserved="false" units="" description="">0.5</drug_threshold>
                 <proliferation_multiplier conserved="false" units="" description="">10.0</proliferation_multiplier>
                 <intervention_induced_apoptosis conserved="false" units="" description="">0.001</intervention_induced_apoptosis>
+                <pro_GAP1_damage conserved="false" units="damage" description="Accumulated damage due to Substrate 1">0.0</pro_GAP1_damage>
+                <pro_GAP2_damage conserved="false" units="damage" description="Accumulated damage due to Substrate 2">0.0</pro_GAP2_damage>
+                <pro_GAP3_damage conserved="false" units="damage" description="Accumulated damage due to Substrate 3">0.0</pro_GAP3_damage>
+                <exp_effect_hill_function conserved="false" units="" description="">8.0</exp_effect_hill_function>
+                <half_max_effect_hill_function conserved="false" units="" description="">5</half_max_effect_hill_function>
+                <resistance conserved="false" units="" description="">0.0</resistance>
             </custom_data>
         </cell_definition>
     </cell_definitions>
@@ -490,12 +509,15 @@
         <random_seed type="int" units="dimensionless" description="">100</random_seed>
         <node_to_visualize type="string" units="" description="">Apoptosis</node_to_visualize>
         <dose_interval type="double" units="minutes" description="interval between doses of compound">1440</dose_interval>
-        <drug_amount type="double" units="dimensionless" description="concentration/amount of compound to add at dosing interval">1.0</drug_amount>
+        <drug_amount type="double" units="dimensionless" description="concentration/amount of compound to add at dosing interval">100</drug_amount>
         <add_compound type="bool" units="" description="">true</add_compound>
         <substrate_name1 type="string" units="" description="name of intervention">pro_GAP1</substrate_name1>
         <substrate_name2 type="string" units="" description="name of intervention">pro_GAP2</substrate_name2>
         <substrate_name3 type="string" units="" description="name of intervention">pro_GAP3</substrate_name3>
         <num_substrates type="int" units="dimensionless" description="Number of compounds in intervention">3</num_substrates>
         <use_damage_model type="bool" units="" description="Turns on damage model. DO NOT USE DAMAGE MODEL WITH XML BASED THRESHOLD interventions">true</use_damage_model>
+        <EffectNode1 type="string" units="" description="">pro_GAP1</EffectNode1>
+        <EffectNode2 type="string" units="" description="">pro_GAP2</EffectNode2>
+        <EffectNode3 type="string" units="" description="">pro_GAP3</EffectNode3>
     </user_parameters>
 </PhysiCell_settings>
