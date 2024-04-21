@@ -23,7 +23,7 @@
     </domain>
 
     <overall>
-        <max_time units="min">7200.0</max_time>
+        <max_time units="min">10080.0</max_time>
         <time_units>min</time_units>
         <space_units>micron</space_units>
         <dt_diffusion units="min">0.02</dt_diffusion>
@@ -38,11 +38,11 @@
     <save>
         <folder>output</folder>
         <full_data>
-            <interval units="min">12</interval>
+            <interval units="min">18</interval>
             <enable>true</enable>
         </full_data>
         <SVG>
-            <interval units="min">12</interval>
+            <interval units="min">18</interval>
             <enable>true</enable>
             <plot_substrate enabled="false" limits="false">
                 <substrate>pro_GAP1</substrate>
@@ -65,7 +65,7 @@
         <variable name="pro_GAP1" units="dimensionless" ID="0">
             <physical_parameter_set>
                 <diffusion_coefficient units="micron^2/min">10000</diffusion_coefficient>
-                <decay_rate units="1/min">0.0116</decay_rate>
+                <decay_rate units="1/min">0.0058</decay_rate>
             </physical_parameter_set>
             <initial_condition units="dimensionless">100</initial_condition>
             <Dirichlet_boundary_condition units="dimensionless" enabled="False">1</Dirichlet_boundary_condition>
@@ -82,9 +82,9 @@
         <variable name="pro_GAP2" units="dimensionless" ID="1">
             <physical_parameter_set>
                 <diffusion_coefficient units="micron^2/min">10000</diffusion_coefficient>
-                <decay_rate units="1/min">0.0116</decay_rate>
+                <decay_rate units="1/min">0.0058</decay_rate>
             </physical_parameter_set>
-            <initial_condition units="dimensionless">100.0</initial_condition>
+            <initial_condition units="dimensionless">100</initial_condition>
             <Dirichlet_boundary_condition units="dimensionless" enabled="False">1</Dirichlet_boundary_condition>
             <Dirichlet_options>
                 <boundary_value ID="xmin" enabled="False">1</boundary_value>
@@ -99,7 +99,7 @@
         <variable name="pro_GAP3" units="dimensionless" ID="2">
             <physical_parameter_set>
                 <diffusion_coefficient units="micron^2/min">10000</diffusion_coefficient>
-                <decay_rate units="1/min">0.0116</decay_rate>
+                <decay_rate units="1/min">0.0058</decay_rate>
             </physical_parameter_set>
             <initial_condition units="dimensionless">100</initial_condition>
             <Dirichlet_boundary_condition units="dimensionless" enabled="False">1</Dirichlet_boundary_condition>
@@ -270,9 +270,9 @@
                         <output physicell_name="transform to TLGLR1" intracellular_name="Apoptosis">
                             <settings>
                                 <action>activation</action>
-                                <value>0.01</value>
+                                <value>0.001</value>
                                 <base_value>0.0</base_value>
-                                <smoothing>0</smoothing>
+                                <smoothing>3</smoothing>
                             </settings>
                         </output>
                     </mapping>
@@ -282,7 +282,7 @@
                 <substrate name="pro_GAP1">
                     <model>AUC</model>
                     <metabolism_rate>0.5</metabolism_rate>
-                    <constant_repair_rate>0</constant_repair_rate>
+                    <constant_repair_rate>0.1</constant_repair_rate>
                     <linear_repair_rate>0.01</linear_repair_rate>
                     <precompute>true</precompute>
                     <dt>0.02</dt>
@@ -307,12 +307,12 @@
             <custom_data>
                 <drug_threshold conserved="false" units="" description="">0.5</drug_threshold>
                 <proliferation_multiplier conserved="false" units="" description="">10.0</proliferation_multiplier>
-                <intervention_induced_apoptosis conserved="false" units="" description="">0.00</intervention_induced_apoptosis>
+                <intervention_induced_apoptosis conserved="false" units="" description="">0.001</intervention_induced_apoptosis>
                 <pro_GAP1_damage conserved="false" units="damage" description="Accumulated damage due to Substrate 1">0.0</pro_GAP1_damage>
                 <pro_GAP2_damage conserved="false" units="damage" description="Accumulated damage due to Substrate 2">0.0</pro_GAP2_damage>
                 <pro_GAP3_damage conserved="false" units="damage" description="Accumulated damage due to Substrate 3">0.0</pro_GAP3_damage>
                 <exp_effect_hill_function conserved="false" units="" description="">8.0</exp_effect_hill_function>
-                <half_max_effect_hill_function conserved="false" units="" description="">0.5</half_max_effect_hill_function>
+                <half_max_effect_hill_function conserved="false" units="" description="">5</half_max_effect_hill_function>
                 <resistance conserved="false" units="" description="">0.0</resistance>
             </custom_data>
         </cell_definition>
@@ -320,7 +320,7 @@
             <phenotype>
                 <cycle code="5" name="live">
                     <phase_transition_rates units="1/min">
-                        <rate start_index="0" end_index="0" fixed_duration="false">0.00009625</rate>
+                        <rate start_index="0" end_index="0" fixed_duration="false">0.00007700</rate>
                     </phase_transition_rates>
                 </cycle>
                 <death>
@@ -462,7 +462,7 @@
                 <substrate name="pro_GAP1">
                     <model>AUC</model>
                     <metabolism_rate>0.5</metabolism_rate>
-                    <constant_repair_rate>0</constant_repair_rate>
+                    <constant_repair_rate>0.1</constant_repair_rate>
                     <linear_repair_rate>0.01</linear_repair_rate>
                     <precompute>true</precompute>
                     <dt>0.02</dt>
@@ -487,12 +487,12 @@
             <custom_data>
                 <drug_threshold conserved="false" units="" description="">0.5</drug_threshold>
                 <proliferation_multiplier conserved="false" units="" description="">10.0</proliferation_multiplier>
-                <intervention_induced_apoptosis conserved="false" units="" description="">0.00</intervention_induced_apoptosis>
+                <intervention_induced_apoptosis conserved="false" units="" description="">0.001</intervention_induced_apoptosis>
                 <pro_GAP1_damage conserved="false" units="damage" description="Accumulated damage due to Substrate 1">0.0</pro_GAP1_damage>
                 <pro_GAP2_damage conserved="false" units="damage" description="Accumulated damage due to Substrate 2">0.0</pro_GAP2_damage>
                 <pro_GAP3_damage conserved="false" units="damage" description="Accumulated damage due to Substrate 3">0.0</pro_GAP3_damage>
                 <exp_effect_hill_function conserved="false" units="" description="">8.0</exp_effect_hill_function>
-                <half_max_effect_hill_function conserved="false" units="" description="">0.5</half_max_effect_hill_function>
+                <half_max_effect_hill_function conserved="false" units="" description="">5</half_max_effect_hill_function>
                 <resistance conserved="false" units="" description="">0.0</resistance>
             </custom_data>
         </cell_definition>
