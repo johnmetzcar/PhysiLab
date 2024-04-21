@@ -9,6 +9,7 @@ import os
 import multiprocessing
 import pcdl
 import pandas as pd
+import sys
 
 def loadData(args):
     intervention, input_dir, output_dir = args
@@ -29,7 +30,7 @@ def loadData(args):
     output_csv_path = os.path.join(intervention_input_path, 'live_cells.csv')
     df.to_csv(output_csv_path, index=False)
 
-def aggregateResults(input_dir, output_dir, interventions):
+def aggregateResults(input_dir, output_dir, interventions, output_file_name):
     aggregated_df = pd.DataFrame()
 
     for intervention in interventions:
@@ -38,14 +39,14 @@ def aggregateResults(input_dir, output_dir, interventions):
             data = pd.read_csv(csv_path)
             aggregated_df = pd.concat([aggregated_df, data], ignore_index=True)
 
-    output_csv_path = os.path.join(output_dir, 'aggregated_live_cells_time_and_space.csv')
+    output_csv_path = os.path.join(output_dir, output_file_name)
     aggregated_df.to_csv(output_csv_path, index=False)
     print("Aggregated results saved to:", {output_csv_path})
 
-def main():
+def main(input_dir, output_dir, output_file_name):
     # Assuming the below directory adjustments and path listings are similar to your initial setup
-    rel_input_dir = 'leukemia_time_space_output/'
-    rel_output_dir = 'dataframes/'
+    rel_input_dir = input_dir
+    rel_output_dir = output_dir
 
     full_path = os.getcwd()
     print("Current Working Directory:", full_path)
@@ -56,7 +57,7 @@ def main():
     output_dir = os.path.join(full_path, rel_output_dir)
     print("Output Directory:", output_dir)
 
-    input("Press Enter to continue...\n Press Ctrl + C to exit...")
+    # input("Press Enter to continue...\n Press Ctrl + C to exit...")
 
     # Ensure the output directory exists
     if not os.path.exists(output_dir):
@@ -72,7 +73,10 @@ def main():
         pool.map(loadData, args_list)
 
     # Aggregate results after all processes have completed
-    aggregateResults(input_dir, output_dir, interventions)
+    aggregateResults(input_dir, output_dir, interventions, output_file_name)
 
 if __name__ == '__main__':
-    main()
+    input_dir = sys.argv[1]
+    output_dir = sys.argv[2]
+    output_file_name = sys.argv[3]
+    main(input_dir, output_dir, output_file_name)
