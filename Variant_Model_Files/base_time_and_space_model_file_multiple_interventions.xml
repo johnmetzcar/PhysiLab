@@ -80,7 +80,7 @@
             <PK enabled="true">
                 <model>1C</model>
                 <schedule format="parameters">
-                    <total_doses>6</total_doses>
+                    <total_doses>7</total_doses>
                     <loading_doses>0</loading_doses>
                     <first_dose_time units="days">0</first_dose_time>
                     <dose_interval units="days">1</dose_interval>
@@ -109,7 +109,7 @@
             <PK enabled="true">
                 <model>1C</model>
                 <schedule format="parameters">
-                    <total_doses>6</total_doses>
+                    <total_doses>7</total_doses>
                     <loading_doses>0</loading_doses>
                     <first_dose_time units="days">0</first_dose_time>
                     <dose_interval units="days">1</dose_interval>
@@ -138,7 +138,7 @@
             <PK enabled="true">
                 <model>1C</model>
                 <schedule format="parameters">
-                    <total_doses>6</total_doses>
+                    <total_doses>7</total_doses>
                     <loading_doses>0</loading_doses>
                     <first_dose_time units="days">0</first_dose_time>
                     <dose_interval units="days">1</dose_interval>

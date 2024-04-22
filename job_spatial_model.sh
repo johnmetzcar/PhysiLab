@@ -17,6 +17,6 @@ module load python/3.9.8
 export OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK
 
 srun -A r00241 --cpu-bind=sockets python RunSimulations_testing.py leukemia_spatial_model_files
-srun -A r00241 python scripts/loadDataParallel.py leukemia_spatial_output dataframes aggregated_live_cells_spatial.csv
+# srun -A r00241 python scripts/loadDataParallel.py leukemia_spatial_output dataframes aggregated_live_cells_spatial.csv
 
 #SBATCH --mem=240G
