@@ -36,3 +36,4 @@ final*.txt
 initial*.txt
 leukemia_model_files/*
 leukemia_output/*
+.venv/*
