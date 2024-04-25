@@ -81,6 +81,36 @@ def model(ConfigFile, Executable):
         print(f"Error: model output error! Executable: {Executable} ConfigFile {ConfigFile}. returned: \n{str(cache.returncode)}")
         print(cache.stdout[-200])
 
+### This is what Heber is using now - and of note, if I am going to use it and then remove data, I need to make sure that the data is stored
+# somewhere else. And it needs a unique name - thats whats going here. And yes Co-pilote I will sue teh ID and what not to name it. 
+# SToring a little bit differently - but still row by row .... Something to think about. 
+
+# def summ_func(OutputFolder,SummaryFile, dic_params, SampleID, ReplicateID):
+#     mcds = pcdl.TimeStep('final.xml',OutputFolder, microenv=False, graph=False, settingxml=None, verbose=False)
+#     df_cell = mcds.get_cell_df() 
+#     live_cells = len(df_cell[ (df_cell['dead'] == False) ] )
+#     dead_cells = len(df_cell[ (df_cell['dead'] == True) ] )
+#     data = {'time': mcds.get_time(), 'sampleID': SampleID, 'replicateID': ReplicateID, 'live_cells': live_cells, 'dead_cells': dead_cells, 'run_time_sec': mcds.get_runtime()}
+#     data_conc = {**data,**dic_params} # concatenate output data and parameters
+#     df = pd.DataFrame([data_conc])
+#     # remove replicate output folder
+#     rmtree( OutputFolder )
+#     df.to_csv(SummaryFile, sep='\t', encoding='utf-8')
+
+    # else:
+    #     # remove config file XML
+    #     # if (RemoveConfigFile): os.remove( pathlib.Path(ConfigFile) )
+    #     # write the stats in a file and remove the folder
+    #     if (SummaryFunction):
+    #         OutputFolder = self.get_outputPath(SampleID, ReplicateID)
+    #         SummaryFile = self.outputs_folder+'SummaryFile_%06d_%02d.csv'%(SampleID,ReplicateID)
+    #         ParamNames = [self.parameters[param_key][1] for param_key in self.keys_variable_params]
+    #         dic_params = {ParamNames[i]: Parameters[i] for i in range(len(Parameters))}
+    #         try: result_summary = SummaryFunction(OutputFolder,SummaryFile, dic_params,  SampleID, ReplicateID)
+    #         except OSError as error: print(f"\t{error}\n\tError in SummaryFunction! (Sample: {SampleID} and Replicate: {ReplicateID}).")
+    #         except SystemError as error: print(f"\t{error}\n\tError in SummaryFunction! (Sample: {SampleID} and Replicate: {ReplicateID}).")
+    # return 0
+
 if __name__ == '__main__':
     # PhysiCell_Model, Samples, Replicates = args_run_simulations(sys.argv[1:]) 
 
