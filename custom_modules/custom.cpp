@@ -92,7 +92,13 @@ void create_cell_types( void )
 	cell_defaults.functions.update_velocity = standard_update_cell_velocity;
 
 	// cell_defaults.functions.update_migration_bias = NULL; 
-	// cell_defaults.functions.pre_update_intracellular = pre_update_intracellular_drug_effect; 
+
+	if (parameters.bools("use_damage_model") == true)
+	{
+		cell_defaults.functions.pre_update_intracellular = pre_update_intracellular_drug_effect;
+		std::cout<<"Using damage model"<<std::endl;
+	}
+
 	cell_defaults.functions.post_update_intracellular = post_update_intracellular_drug_effect; 
 	// cell_defaults.functions.custom_cell_rule = NULL; 
 	
@@ -173,20 +179,126 @@ void setup_tissue( void )
 	load_cells_from_pugixml(); 	
 }
 
+void evaluateEffect(double impact, double half_max, double hill_power, Phenotype& phenotype, std::string effectNode)
+{
+    double random = UniformRandom();
+    
+    double hill_probability_response = Hill_response_function(impact, half_max, hill_power);
+    if (hill_probability_response > random)
+    {
+        phenotype.intracellular->set_boolean_variable_value(effectNode, true);
+		
+    }
+    else
+    {
+        phenotype.intracellular->set_boolean_variable_value(effectNode, false);
+    }
+}
+
+void pre_update_intracellular_drug_effect(Cell* pCell, Phenotype& phenotype, double dt)
+{
+
+	double half_max = pCell->custom_data["half_max_effect_hill_function"];
+	double hill_power = pCell->custom_data["exp_effect_hill_function"];
+	double hill_probability_response;
+
+	// ASSUMES TARGET INPUT NODES AND SUSBSTRATE NAMES ARE THE SAME!!!!!
+
+	if (parameters.ints("num_substrates") == 1)
+	{
+		std::string damage_variable = parameters.strings("EffectNode1") + "_damage";
+		double impact = pCell->custom_data[damage_variable];
+		evaluateEffect(impact, half_max, hill_power, phenotype, parameters.strings("EffectNode1"));
+
+	}
+
+	else if (parameters.ints("num_substrates") == 2)
+	{
+		std::string damage1 = parameters.strings("EffectNode1") + "_damage";
+		std::string damage2 = parameters.strings("EffectNode2") + "_damage";
+		double impact1 = pCell->custom_data[damage1];
+		double impact2 = pCell->custom_data[damage2];
+
+		evaluateEffect(impact1, half_max, hill_power, phenotype, parameters.strings("EffectNode1"));
+		evaluateEffect(impact2, half_max, hill_power, phenotype, parameters.strings("EffectNode2"));
+
+	}
+
+	else if (parameters.ints("num_substrates") == 3)
+	{
+		std::string damage1 = parameters.strings("EffectNode1") + "_damage";
+		std::string damage2 = parameters.strings("EffectNode2") + "_damage";
+		std::string damage3 = parameters.strings("EffectNode3") + "_damage";
+		double impact1 = pCell->custom_data[damage1];
+		double impact2 = pCell->custom_data[damage2];
+		double impact3 = pCell->custom_data[damage3];
+
+		evaluateEffect(impact1, half_max, hill_power, phenotype, parameters.strings("EffectNode1"));
+		evaluateEffect(impact2, half_max, hill_power, phenotype, parameters.strings("EffectNode2"));
+		evaluateEffect(impact3, half_max, hill_power, phenotype, parameters.strings("EffectNode3"));
+	}
+
+}
+
+double update_value(double value, double previous_value, double smoothing) {
+	double smoothed_value = (previous_value * smoothing + value)/(smoothing + 1);
+	return smoothed_value;
+
+	// I am going to have to go my own way on this ... And really try some kind of rolling average - I don't see how this will ever equal 1... 
+	// Maybe multiple cell types IS easier. 
+}
+
+void evaluateResistance(Cell* pCell, Phenotype& phenotype, double dt)
+{
+	bool Apoptosis = pCell->phenotype.intracellular->get_boolean_variable_value("Apoptosis"); // ? 1.0 : 0.0;
+
+	static int resistance_index = pCell->custom_data.find_variable_index("resistance");
+	if (resistance_index < 0)
+	{
+		std::cout << "resistance variable not found" << std::endl;
+		std::exit(-1);
+	}
+
+	static int resistance_smoothing = pCell->custom_data.find_variable_index("resistance_smoothing");
+	if (resistance_smoothing < 0)
+	{
+		std::cout << "resistance_smoothing variable not found" << std::endl;
+		std::exit(-1);
+	}
+
+	double resistanceValue = pCell->custom_data["resistance"];
+	double resistanceSmoothing = pCell->custom_data["resistance_smoothing"];
+
+	// Then need to pass through hill funcction ... whats up there is more like 'update resistance likelyhood" - NEXT is evaluate (and thats where I'll have to figure out how to make it permanent)
+	// How will I make the resistance permanent????? Some extxr int?? (more and more complicated ... )
+	// double half_max = pCell->custom_data["half_max_effect_hill_function"];
+	// double hill_power = pCell->custom_data["exp_effect_hill_function"];
+	// double hill_probability_response;
+
+	// std::string damage_variable = parameters.strings("EffectNode1") + "_damage";
+	// double impact = pCell->custom_data[damage_variable];
+	// double random = UniformRandom();
+	// double hill_probability_response = Hill_response_function(impact, half_max, hill_power);
+	// if (hill_probability_response > random)
+	// {
+	// 	return 1;
+	// }
+	// else
+	// {
+	// 	return 0;
+	// }
+}	
+
 void post_update_intracellular_drug_effect(Cell* pCell, Phenotype& phenotype, double dt)
 {
 	bool Apoptosis = pCell->phenotype.intracellular->get_boolean_variable_value("Apoptosis"); // ? 1.0 : 0.0;
 	bool Proliferation = pCell->phenotype.intracellular->get_boolean_variable_value("Proliferation"); // ? 1.0 : 0.0;
 
-	// std::cout<<"Apoptosis = "<<Apoptosis<<std::endl;
+	
+	double base_apoptosis = get_single_base_behavior(pCell, "apoptosis");
 
-	// if(pCell->ID=1)
-	// {
-	// 	std::cout<<"Time: " << PhysiCell_globals.current_time <<std::endl;
-
-	// 	std::cout<<"cell: " << pCell->type_name << " " << pCell->ID <<std::endl;
-	// 	// std::getchar();
-	// }
+	// Evaluate to see if resistance likelihood should be increased
+	// evaluateResistance(pCell, phenotype, dt); 
 	
 	// was using the logical test - not sure if I should use the value of the variable instead??? 
 	// and why isn't the set single behavior working as expected?
@@ -197,7 +309,7 @@ void post_update_intracellular_drug_effect(Cell* pCell, Phenotype& phenotype, do
 		// std::cout<<"base_cycle_entry = "<<base_cycle_entry<<std::endl;
 		// set_single_behavior( pCell , "cycle entry" , base_cycle_entry  ); 
 
-		double base_apoptosis = get_single_base_behavior(pCell, "apoptosis");
+		// double base_apoptosis = get_single_base_behavior(pCell, "apoptosis");
 		// std::cout<<"base_apoptosis = "<<base_apoptosis<<std::endl;
 
 		double total_apoptosis_rate = base_apoptosis + pCell->custom_data["intervention_induced_apoptosis"];
@@ -209,9 +321,13 @@ void post_update_intracellular_drug_effect(Cell* pCell, Phenotype& phenotype, do
 
 	else
 	{
-		set_single_behavior( pCell , "apoptosis" , 0  );
+		set_single_behavior( pCell , "apoptosis" , base_apoptosis  );
 		// std::cout<<"apoptosis = false"<<std::endl;
 	}
+
+	// Resitance
+
+	// from MaBoSS
 
 
 	// if(Apoptosis == true && Proliferation == true)
@@ -297,25 +413,7 @@ void add_compound( double drug_amount, double dose_interval, std::string substra
 
 
 // Old - not using this anymore - 02.04.24 - replaced with XML (but probably chould have just used this instead of changing to XML....)
-void pre_update_intracellular_drug_effect(Cell* pCell, Phenotype& phenotype, double dt)
-{
-	Cell_Definition* pCD = find_cell_definition(pCell->type_name);	
 
-	double drug_conc = get_single_signal(pCell, parameters.strings("substrate_name"));
-	// std::cout<<"drug_conc = "<<drug_conc<<std::endl;
-	if(drug_conc > pCell->custom_data["drug_threshold"])
-	{
-		pCell->phenotype.intracellular->set_boolean_variable_value(parameters.strings("substrate_name"), true);
-	}
-	else
-	{
-		pCell->phenotype.intracellular->set_boolean_variable_value(parameters.strings("substrate_name"), false);
-	}
-	
-	// Without doing something with the accumulating substrate, internal values rises without end. So - skipping for now 
-	// and assuming uptake is just proportional to the external concentration. I could do something fancy 
-	// like slowing the rate of uptake as the internal concentration rises, but I don't think that's merited at this time.
-}
 
 // Old - not using this anymore - 02.04.24
 void transition_to_resistant_cell_type(Cell* pCell, Phenotype& phenotype, double dt)
@@ -380,15 +478,15 @@ void from_nodes_to_cell(Cell* pCell, Phenotype& phenotype, double dt)
 }
 
 // Old - not using this anymore - 02.04.24
-void pre_update_intracellular( Cell* pCell, Phenotype& phenotype, double dt )
-{
-	if (PhysiCell::PhysiCell_globals.current_time >= 100.0 
-		&& pCell->phenotype.intracellular->get_parameter_value("$time_scale") == 0.0
-	){
-		pCell->phenotype.intracellular->set_parameter_value("$time_scale", 0.1);
-	}
+// void pre_update_intracellular( Cell* pCell, Phenotype& phenotype, double dt )
+// {
+// 	if (PhysiCell::PhysiCell_globals.current_time >= 100.0 
+// 		&& pCell->phenotype.intracellular->get_parameter_value("$time_scale") == 0.0
+// 	){
+// 		pCell->phenotype.intracellular->set_parameter_value("$time_scale", 0.1);
+// 	}
 
-}
+// }
 // Old - not using this anymore - 02.04.24
 void post_update_intracellular( Cell* pCell, Phenotype& phenotype, double dt )
 {

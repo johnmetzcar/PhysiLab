@@ -23,7 +23,7 @@ MaBoSS_config = "TLGL_base_survival_attractors.cfg"
 
 # PhysiCell files
 # EDIT TO BE NAME OF ORIGINAL XML FILE (PhysiCell model)
-PhysiCell_file = "base_model_file_multiple_interventions.xml"
+PhysiCell_file = "base_spatial_model_file_multiple_interventions.xml"
 print("CURRENTLY OTHER PHYSICELL CONFIG FILES ARE ASSUMED TO BE IN CONFIG (rules, cell initialization, Dirichelet nodes, and substrate initializaiton)" )
 
 #################### Intervention Files ########################
@@ -40,9 +40,9 @@ rel_input_dir = 'Variant_Model_Files/'
 
 # relative path to output directory
 # EDIT TO BE LOCATION OF WHERE YOU WANT TO STORE THE NEW MODEL FILES
-rel_output_dir = 'leukemia_model_files/'
+rel_output_dir = 'leukemia_spatial_model_files/'
 
-rel_simulation_output_dir = 'leukemia_output/'
+rel_simulation_output_dir = 'leukemia_spatial_output/'
 
 ########################### PATHING ###########################
 # move to PhysiCell root directory - this assumes this script is one folder below the root
@@ -168,22 +168,22 @@ def createXML(intervention, substrateNames, numInterventions, decayID, replicate
     physical_parameter_set = variable1.find("physical_parameter_set")
     decay_rate = physical_parameter_set.find("decay_rate")
     if decayID == "1":
-        decay_rate.text = "0.0116" # 1 hour above 0.5 - current threshold
-    elif decayID == "2":
-        decay_rate.text = "0.00192" # 6 hours above 0.5 - current threshold 
-    else:
-        decay_rate.text = "0.000963" # 12 hours above 0.5 - current threshold
+        decay_rate.text = "0.00475" 
+    # elif decayID == "2":
+    #     decay_rate.text = "0.00192" # 6 hours above 0.5 - current threshold 
+    # else:
+    #     decay_rate.text = "0.000963" # 12 hours above 0.5 - current threshold
 
     if numInterventions > 1:
         variable2.attrib = {"name": substrateNames[1], "units": "dimensionless", "ID": "1"}
         physical_parameter_set = variable2.find("physical_parameter_set")
         decay_rate = physical_parameter_set.find("decay_rate")
         if decayID == "1":
-            decay_rate.text = "0.0116" # 1 hour above 0.5 - current threshold
-        elif decayID == "2":
-            decay_rate.text = "0.00192" # 6 hours above 0.5 - current threshold 
-        else:
-            decay_rate.text = "0.000963" # 12 hours above 0.5 - current threshold
+            decay_rate.text = "0.00475" 
+            # elif decayID == "2":
+            #     decay_rate.text = "0.00192" # 6 hours above 0.5 - current threshold 
+            # else:
+            #     decay_rate.text = "0.01" "0.000963" # 12 hours above 0.5 - current threshold
     else:
         microenvironment.remove(variable2)
 
@@ -192,16 +192,16 @@ def createXML(intervention, substrateNames, numInterventions, decayID, replicate
         physical_parameter_set = variable3.find("physical_parameter_set")
         decay_rate = physical_parameter_set.find("decay_rate")
         if decayID == "1":
-            decay_rate.text = "0.0116" # 1 hour above 0.5 - current threshold
-        elif decayID == "2":
-            decay_rate.text = "0.00192" # 6 hours above 0.5 - current threshold 
-        else:
-            decay_rate.text = "0.000963" # 12 hours above 0.5 - current threshold
+            decay_rate.text = "0.00475" 
+        # elif decayID == "2":
+        #     decay_rate.text = "0.00192" # 6 hours above 0.5 - current threshold 
+        # else:
+        #     decay_rate.text = "0.01" "0.000963" # 12 hours above 0.5 - current threshold
     else:
         microenvironment.remove(variable3)
 
     # modify chemotaxis
-    cell_defs = xml_root.find("cell_definitions") # could we just loop over each cell definition???? Probably ... 
+    cell_defs = xml_root.find("cell_definitions")
     cell_def = cell_defs.find("cell_definition")
     phenotype = cell_def.find("phenotype")
     motility = phenotype.find("motility")
@@ -436,11 +436,12 @@ for intervention in ibmfaDict:
     createCFG(interventionName, ibmfaDict[intervention])
 
     # create xml files
-    for d in range(3):
-        for r in range(3):
-            decay = str(d + 1)
-            replicate = str(r + 1)
-            createXML(interventionName, substrateNames, numInterventions, decay, replicate)
+    # for d in range(3): # makes 3 decay rates
+    #     for r in range(3): # makes 3 replicates
+    #         decay = str(d + 1)
+    #         replicate = str(r + 1)
+            # createXML(interventionName, substrateNames, numInterventions, decay, replicate)
+    createXML(interventionName, substrateNames, numInterventions, "1", "1")
 
 print("--------------------------")
 print("Finished with IBMFA files.")
@@ -518,11 +519,13 @@ for intervention in stableMotifDict:
     createCFG(interventionName, stableMotifDict[intervention])
 
     # create xml files
-    for d in range(3):
-        for r in range(3):
-            decay = str(d + 1)
-            replicate = str(r + 1)
-            createXML(interventionName, substrateNames, numInterventions, decay, replicate)
+    # for d in range(3): # makes 3 decay rates
+    #     for r in range(3): # makes 3 replicates
+    #         decay = str(d + 1)
+    #         replicate = str(r + 1)
+            # createXML(interventionName, substrateNames, numInterventions, decay, replicate)
+    createXML(interventionName, substrateNames, numInterventions, "1", "1")
+
 
 print("----------------------------------")
 print("Finished with Stable Motifs files.")
@@ -576,15 +579,16 @@ for i in range(len(edgetic)):
     fileName = source + "_" + target + "_" + action
 
     # add algorithm name to intervention name
-    fileName = "EG_" + fileName # differs slightly from previous names - BE AWARE!
+    fileName = "EG_" + fileName # differs slightly from previous names - may need to change
 
     # create new xml files
     # def createXML(intervention, substrateNames, numInterventions, decayID, replicateID):
-    for d in range(3):
-        for r in range(3):
-            decay = str(d + 1)
-            replicate = str(r + 1)
-            createXML(fileName, [newName], 1, decay, replicate)
+    # for d in range(3):
+    #     for r in range(3):
+    #         decay = str(d + 1)
+    #         replicate = str(r + 1)
+    #         createXML(fileName, [newName], 1, decay, replicate)
+    createXML(fileName, [newName], 1, "1", "1")
             
     # create new BND file
     newFileName = fileName + ".bnd"
@@ -598,6 +602,7 @@ for i in range(len(edgetic)):
     # create cfg file
     createCFG(fileName, [newName])
     print("Created file " + fileName + ".cfg")
+
 
 print("----------------------------------------------")
 print("Finished with Single Edge Perturbations Files.")

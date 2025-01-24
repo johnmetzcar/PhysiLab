@@ -12,8 +12,8 @@
     <domain>
         <x_min>-400</x_min>
         <x_max>400</x_max>
-        <y_min>-400</y_min>
-        <y_max>400</y_max>
+        <y_min>-200</y_min>
+        <y_max>200</y_max>
         <z_min>-10</z_min>
         <z_max>10</z_max>
         <dx>20</dx>
@@ -23,7 +23,7 @@
     </domain>
 
     <overall>
-        <max_time units="min">7920.0</max_time>
+        <max_time units="min">10080.0</max_time>
         <time_units>min</time_units>
         <space_units>micron</space_units>
         <dt_diffusion units="min">0.02</dt_diffusion>
@@ -64,54 +64,90 @@
     <microenvironment_setup>
         <variable name="pro_GAP1" units="dimensionless" ID="0">
             <physical_parameter_set>
-                <diffusion_coefficient units="micron^2/min">0</diffusion_coefficient>
-                <decay_rate units="1/min">0.0116</decay_rate>
+                <diffusion_coefficient units="micron^2/min">1025</diffusion_coefficient>
+                <decay_rate units="1/min">.00475</decay_rate>
             </physical_parameter_set>
-            <initial_condition units="dimensionless">1.0</initial_condition>
-            <Dirichlet_boundary_condition units="dimensionless" enabled="False">1</Dirichlet_boundary_condition>
+            <initial_condition units="dimensionless">0</initial_condition>
+            <Dirichlet_boundary_condition units="dimensionless" enabled="True">1</Dirichlet_boundary_condition>
             <Dirichlet_options>
-                <boundary_value ID="xmin" enabled="False">1</boundary_value>
-                <boundary_value ID="xmax" enabled="False">1</boundary_value>
+                <boundary_value ID="xmin" enabled="True">1</boundary_value>
+                <boundary_value ID="xmax" enabled="False">0</boundary_value>
                 <boundary_value ID="ymin" enabled="False">1</boundary_value>
                 <boundary_value ID="ymax" enabled="False">1</boundary_value>
                 <boundary_value ID="zmin" enabled="False">1</boundary_value>
                 <boundary_value ID="zmax" enabled="False">1</boundary_value>
             </Dirichlet_options>
-            <PK enabled="false" />
+            <PK enabled="true">
+                <model>1C</model>
+                <schedule format="parameters">
+                    <total_doses>7</total_doses>
+                    <loading_doses>0</loading_doses>
+                    <first_dose_time units="days">0</first_dose_time>
+                    <dose_interval units="days">1</dose_interval>
+                    <regular_dose>1</regular_dose>
+                    <loading_dose>0</loading_dose>
+                </schedule>
+                <elimination_rate units="1/min">0.002888</elimination_rate>
+                <biot_number>1</biot_number>
+            </PK>
         </variable>
         <variable name="pro_GAP2" units="dimensionless" ID="1">
             <physical_parameter_set>
-                <diffusion_coefficient units="micron^2/min">0</diffusion_coefficient>
-                <decay_rate units="1/min">0.0116</decay_rate>
+                <diffusion_coefficient units="micron^2/min">1025</diffusion_coefficient>
+                <decay_rate units="1/min">.00475</decay_rate>
             </physical_parameter_set>
-            <initial_condition units="dimensionless">1.0</initial_condition>
-            <Dirichlet_boundary_condition units="dimensionless" enabled="False">1</Dirichlet_boundary_condition>
+            <initial_condition units="dimensionless">0</initial_condition>
+            <Dirichlet_boundary_condition units="dimensionless" enabled="True">1</Dirichlet_boundary_condition>
             <Dirichlet_options>
-                <boundary_value ID="xmin" enabled="False">1</boundary_value>
-                <boundary_value ID="xmax" enabled="False">1</boundary_value>
+                <boundary_value ID="xmin" enabled="True">1</boundary_value>
+                <boundary_value ID="xmax" enabled="False">0</boundary_value>
                 <boundary_value ID="ymin" enabled="False">1</boundary_value>
                 <boundary_value ID="ymax" enabled="False">1</boundary_value>
                 <boundary_value ID="zmin" enabled="False">1</boundary_value>
                 <boundary_value ID="zmax" enabled="False">1</boundary_value>
             </Dirichlet_options>
-            <PK enabled="false" />
+            <PK enabled="true">
+                <model>1C</model>
+                <schedule format="parameters">
+                    <total_doses>7</total_doses>
+                    <loading_doses>0</loading_doses>
+                    <first_dose_time units="days">0</first_dose_time>
+                    <dose_interval units="days">1</dose_interval>
+                    <regular_dose>1</regular_dose>
+                    <loading_dose>0</loading_dose>
+                </schedule>
+                <elimination_rate units="1/min">0.002888</elimination_rate>
+                <biot_number>1</biot_number>
+            </PK>
         </variable>
         <variable name="pro_GAP3" units="dimensionless" ID="2">
             <physical_parameter_set>
-                <diffusion_coefficient units="micron^2/min">0</diffusion_coefficient>
-                <decay_rate units="1/min">0.0116</decay_rate>
+                <diffusion_coefficient units="micron^2/min">1025</diffusion_coefficient>
+                <decay_rate units="1/min">.00475</decay_rate>
             </physical_parameter_set>
-            <initial_condition units="dimensionless">1.0</initial_condition>
-            <Dirichlet_boundary_condition units="dimensionless" enabled="False">1</Dirichlet_boundary_condition>
+            <initial_condition units="dimensionless">0</initial_condition>
+            <Dirichlet_boundary_condition units="dimensionless" enabled="True">1</Dirichlet_boundary_condition>
             <Dirichlet_options>
-                <boundary_value ID="xmin" enabled="False">1</boundary_value>
-                <boundary_value ID="xmax" enabled="False">1</boundary_value>
+                <boundary_value ID="xmin" enabled="True">1</boundary_value>
+                <boundary_value ID="xmax" enabled="False">0</boundary_value>
                 <boundary_value ID="ymin" enabled="False">1</boundary_value>
                 <boundary_value ID="ymax" enabled="False">1</boundary_value>
                 <boundary_value ID="zmin" enabled="False">1</boundary_value>
                 <boundary_value ID="zmax" enabled="False">1</boundary_value>
             </Dirichlet_options>
-            <PK enabled="false" />
+            <PK enabled="true">
+                <model>1C</model>
+                <schedule format="parameters">
+                    <total_doses>7</total_doses>
+                    <loading_doses>0</loading_doses>
+                    <first_dose_time units="days">0</first_dose_time>
+                    <dose_interval units="days">1</dose_interval>
+                    <regular_dose>1</regular_dose>
+                    <loading_dose>0</loading_dose>
+                </schedule>
+                <elimination_rate units="1/min">0.002888</elimination_rate>
+                <biot_number>1</biot_number>
+            </PK>
         </variable>
         <options>
             <calculate_gradients>true</calculate_gradients>
@@ -289,22 +325,22 @@
             <custom_data>
                 <drug_threshold conserved="false" units="" description="">0.5</drug_threshold>
                 <proliferation_multiplier conserved="false" units="" description="">10.0</proliferation_multiplier>
-                <intervention_induced_apoptosis conserved="false" units="" description="">0.001</intervention_induced_apoptosis>
+                <intervention_induced_apoptosis conserved="false" units="" description="">0.01</intervention_induced_apoptosis>
             </custom_data>
         </cell_definition>
     </cell_definitions>
 
     <initial_conditions>
         <cell_positions enabled="true" type="csv">
-            <folder>./config</folder>
-            <filename>cells_well_mixed_1500.csv</filename>
+            <folder>config</folder>
+            <filename>cells_spatial_1000.csv</filename>
         </cell_positions>
     </initial_conditions>
 
     <user_parameters>
         <random_seed type="int" units="dimensionless" description="">100</random_seed>
         <node_to_visualize type="string" units="" description="">Apoptosis</node_to_visualize>
-        <dose_interval type="double" units="minutes" description="interval between doses of compound">1440</dose_interval>
+        <dose_interval type="double" units="minutes" description="interval between doses of compound">0</dose_interval>
         <drug_amount type="double" units="dimensionless" description="concentration/amount of compound to add at dosing interval">1.0</drug_amount>
         <add_compound type="bool" units="" description="">true</add_compound>
         <substrate_name1 type="string" units="" description="name of intervention">pro_GAP1</substrate_name1>

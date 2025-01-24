@@ -23,7 +23,7 @@
     </domain>
 
     <overall>
-        <max_time units="min">5760.0</max_time>
+        <max_time units="min">5040.0</max_time>
         <time_units>min</time_units>
         <space_units>micron</space_units>
         <dt_diffusion units="min">0.02</dt_diffusion>
@@ -80,14 +80,14 @@
             <PK enabled="true">
                 <model>1C</model>
                 <schedule format="parameters">
-                    <total_doses>1</total_doses>
+                    <total_doses>6</total_doses>
                     <loading_doses>0</loading_doses>
                     <first_dose_time units="days">0</first_dose_time>
-                    <dose_interval units="days">0</dose_interval>
+                    <dose_interval units="days">1</dose_interval>
                     <regular_dose>1</regular_dose>
                     <loading_dose>0</loading_dose>
                 </schedule>
-                <elimination_rate units="1/min">0.000</elimination_rate>
+                <elimination_rate units="1/min">0.002888</elimination_rate>
                 <biot_number>1</biot_number>
             </PK>
         </variable>
@@ -109,14 +109,14 @@
             <PK enabled="true">
                 <model>1C</model>
                 <schedule format="parameters">
-                    <total_doses>1</total_doses>
+                    <total_doses>6</total_doses>
                     <loading_doses>0</loading_doses>
                     <first_dose_time units="days">0</first_dose_time>
-                    <dose_interval units="days">0</dose_interval>
+                    <dose_interval units="days">1</dose_interval>
                     <regular_dose>1</regular_dose>
                     <loading_dose>0</loading_dose>
                 </schedule>
-                <elimination_rate units="1/min">0</elimination_rate>
+                <elimination_rate units="1/min">0.002888</elimination_rate>
                 <biot_number>1</biot_number>
             </PK>
         </variable>
@@ -138,14 +138,14 @@
             <PK enabled="true">
                 <model>1C</model>
                 <schedule format="parameters">
-                    <total_doses>1</total_doses>
+                    <total_doses>6</total_doses>
                     <loading_doses>0</loading_doses>
                     <first_dose_time units="days">0</first_dose_time>
-                    <dose_interval units="days">0</dose_interval>
+                    <dose_interval units="days">1</dose_interval>
                     <regular_dose>1</regular_dose>
                     <loading_dose>0</loading_dose>
                 </schedule>
-                <elimination_rate units="1/min">0</elimination_rate>
+                <elimination_rate units="1/min">0.002888</elimination_rate>
                 <biot_number>1</biot_number>
             </PK>
         </variable>
@@ -217,6 +217,7 @@
                     <relative_maximum_adhesion_distance units="dimensionless">1.25</relative_maximum_adhesion_distance>
                     <cell_adhesion_affinities>
                         <cell_adhesion_affinity name="TLGL">1.0</cell_adhesion_affinity>
+                        <cell_adhesion_affinity name="TLGL_res1">1.0</cell_adhesion_affinity>
                     </cell_adhesion_affinities>
                     <options>
                         <set_relative_equilibrium_distance enabled="false" units="dimensionless">1.8</set_relative_equilibrium_distance>
@@ -273,18 +274,201 @@
                     <dead_phagocytosis_rate units="1/min">0.0</dead_phagocytosis_rate>
                     <live_phagocytosis_rates>
                         <phagocytosis_rate name="TLGL" units="1/min">0.0</phagocytosis_rate>
+                        <phagocytosis_rate name="TLGL_res1" units="1/min">0.0</phagocytosis_rate>
                     </live_phagocytosis_rates>
                     <attack_rates>
                         <attack_rate name="TLGL" units="1/min">0.0</attack_rate>
+                        <attack_rate name="TLGL_res1" units="1/min">0.0</attack_rate>
                     </attack_rates>
                     <damage_rate units="1/min">1.0</damage_rate>
                     <fusion_rates>
                         <fusion_rate name="TLGL" units="1/min">0.0</fusion_rate>
+                        <fusion_rate name="TLGL_res1" units="1/min">0.0</fusion_rate>
                     </fusion_rates>
                 </cell_interactions>
                 <cell_transformations>
                     <transformation_rates>
                         <transformation_rate name="TLGL" units="1/min">0.0</transformation_rate>
+                        <transformation_rate name="TLGL_res1" units="1/min">0.0</transformation_rate>
+                    </transformation_rates>
+                </cell_transformations>
+                <intracellular type="maboss">
+                    <bnd_filename>config/TLGL_pro_GAP_base_model_test.bnd</bnd_filename>
+                    <cfg_filename>config/TLGL_pro_GAP_base_model_test_survival_attractors.cfg</cfg_filename>
+                    <settings>
+                        <intracellular_dt>6</intracellular_dt>
+                        <time_stochasticity>0.0</time_stochasticity>
+                        <scaling>60</scaling>
+                        <start_time>0.0</start_time>
+                        <inheritance global="True" />
+                    </settings>
+                    <mapping>
+                        <input physicell_name="pro_GAP1" intracellular_name="pro_GAP1">
+                            <settings>
+                                <action>activation</action>
+                                <threshold>0.5</threshold>
+                                <smoothing>0</smoothing>
+                            </settings>
+                        </input>
+                        <input physicell_name="pro_GAP2" intracellular_name="pro_GAP2">
+                            <settings>
+                                <action>activation</action>
+                                <threshold>0.5</threshold>
+                                <smoothing>0</smoothing>
+                            </settings>
+                        </input>
+                        <input physicell_name="pro_GAP3" intracellular_name="pro_GAP3">
+                            <settings>
+                                <action>activation</action>
+                                <threshold>0.5</threshold>
+                                <smoothing>0</smoothing>
+                            </settings>
+                        </input>
+                        <output physicell_name="transform to TLGL_res1" intracellular_name="Apoptosis">
+                            <settings>
+                                <action>activation</action>
+                                <value>1.0</value>
+                                <base_value>0.0</base_value>
+                                <smoothing>0</smoothing>
+                            </settings>
+                        </output>
+                    </mapping>
+                </intracellular>
+            </phenotype>
+            <custom_data>
+                <drug_threshold conserved="false" units="" description="">0.5</drug_threshold>
+                <proliferation_multiplier conserved="false" units="" description="">10.0</proliferation_multiplier>
+                <intervention_induced_apoptosis conserved="false" units="" description="">0.01</intervention_induced_apoptosis>
+            </custom_data>
+        </cell_definition>
+        <cell_definition name="TLGL_res1" ID="1">
+            <phenotype>
+                <cycle code="5" name="live">
+                    <phase_transition_rates units="1/min">
+                        <rate start_index="0" end_index="0" fixed_duration="false">0.00009625</rate>
+                    </phase_transition_rates>
+                </cycle>
+                <death>
+                    <model code="100" name="apoptosis">
+                        <death_rate units="1/min">0.0000</death_rate>
+                        <phase_durations units="min">
+                            <duration index="0" fixed_duration="true">516</duration>
+                        </phase_durations>
+                        <parameters>
+                            <unlysed_fluid_change_rate units="1/min">0.05</unlysed_fluid_change_rate>
+                            <lysed_fluid_change_rate units="1/min">0</lysed_fluid_change_rate>
+                            <cytoplasmic_biomass_change_rate units="1/min">1.66667e-02</cytoplasmic_biomass_change_rate>
+                            <nuclear_biomass_change_rate units="1/min">5.83333e-03</nuclear_biomass_change_rate>
+                            <calcification_rate units="1/min">0</calcification_rate>
+                            <relative_rupture_volume units="dimensionless">2.0</relative_rupture_volume>
+                        </parameters>
+                    </model>
+                    <model code="101" name="necrosis">
+                        <death_rate units="1/min">0.0</death_rate>
+                        <phase_durations units="min">
+                            <duration index="0" fixed_duration="true">0</duration>
+                            <duration index="1" fixed_duration="true">86400</duration>
+                        </phase_durations>
+                        <parameters>
+                            <unlysed_fluid_change_rate units="1/min">0.05</unlysed_fluid_change_rate>
+                            <lysed_fluid_change_rate units="1/min">0</lysed_fluid_change_rate>
+                            <cytoplasmic_biomass_change_rate units="1/min">1.66667e-02</cytoplasmic_biomass_change_rate>
+                            <nuclear_biomass_change_rate units="1/min">5.83333e-03</nuclear_biomass_change_rate>
+                            <calcification_rate units="1/min">0</calcification_rate>
+                            <relative_rupture_volume units="dimensionless">2.0</relative_rupture_volume>
+                        </parameters>
+                    </model>
+                </death>
+                <volume>
+                    <total units="micron^3">2494</total>
+                    <fluid_fraction units="dimensionless">0.75</fluid_fraction>
+                    <nuclear units="micron^3">540</nuclear>
+                    <fluid_change_rate units="1/min">0.05</fluid_change_rate>
+                    <cytoplasmic_biomass_change_rate units="1/min">0.0045</cytoplasmic_biomass_change_rate>
+                    <nuclear_biomass_change_rate units="1/min">0.0055</nuclear_biomass_change_rate>
+                    <calcified_fraction units="dimensionless">0.0</calcified_fraction>
+                    <calcification_rate units="1/min">0.0</calcification_rate>
+                    <relative_rupture_volume units="dimensionless">2</relative_rupture_volume>
+                </volume>
+                <mechanics>
+                    <cell_cell_adhesion_strength units="micron/min">0.4</cell_cell_adhesion_strength>
+                    <cell_cell_repulsion_strength units="micron/min">10.0</cell_cell_repulsion_strength>
+                    <relative_maximum_adhesion_distance units="dimensionless">1.25</relative_maximum_adhesion_distance>
+                    <cell_adhesion_affinities>
+                        <cell_adhesion_affinity name="TLGL">1.0</cell_adhesion_affinity>
+                        <cell_adhesion_affinity name="TLGL_res1">1.0</cell_adhesion_affinity>
+                    </cell_adhesion_affinities>
+                    <options>
+                        <set_relative_equilibrium_distance enabled="false" units="dimensionless">1.8</set_relative_equilibrium_distance>
+                        <set_absolute_equilibrium_distance enabled="false" units="micron">15.12</set_absolute_equilibrium_distance>
+                    </options>
+                    <attachment_elastic_constant units="1/min">0.01</attachment_elastic_constant>
+                    <attachment_rate units="1/min">0.0</attachment_rate>
+                    <detachment_rate units="1/min">0.0</detachment_rate>
+                </mechanics>
+                <motility>
+                    <speed units="micron/min">0.25</speed>
+                    <persistence_time units="min">5</persistence_time>
+                    <migration_bias units="dimensionless">0.5</migration_bias>
+                    <options>
+                        <enabled>false</enabled>
+                        <use_2D>false</use_2D>
+                        <chemotaxis>
+                            <enabled>false</enabled>
+                            <substrate>pro_GAP1</substrate>
+                            <direction>-1</direction>
+                        </chemotaxis>
+                        <advanced_chemotaxis>
+                            <enabled>false</enabled>
+                            <normalize_each_gradient>false</normalize_each_gradient>
+                            <chemotactic_sensitivities>
+                                <chemotactic_sensitivity substrate="pro_GAP1">0.0</chemotactic_sensitivity>
+                                <chemotactic_sensitivity substrate="pro_GAP2">0.0</chemotactic_sensitivity>
+                                <chemotactic_sensitivity substrate="pro_GAP3">0.0</chemotactic_sensitivity>
+                            </chemotactic_sensitivities>
+                        </advanced_chemotaxis>
+                    </options>
+                </motility>
+                <secretion>
+                    <substrate name="pro_GAP1">
+                        <secretion_rate units="1/min">0.0</secretion_rate>
+                        <secretion_target units="substrate density">1.0</secretion_target>
+                        <uptake_rate units="1/min">0.00</uptake_rate>
+                        <net_export_rate units="total substrate/min">0.0</net_export_rate>
+                    </substrate>
+                    <substrate name="pro_GAP2">
+                        <secretion_rate units="1/min">0.0</secretion_rate>
+                        <secretion_target units="substrate density">1.0</secretion_target>
+                        <uptake_rate units="1/min">0.00</uptake_rate>
+                        <net_export_rate units="total substrate/min">0.0</net_export_rate>
+                    </substrate>
+                    <substrate name="pro_GAP3">
+                        <secretion_rate units="1/min">0.0</secretion_rate>
+                        <secretion_target units="substrate density">1.0</secretion_target>
+                        <uptake_rate units="1/min">0.00</uptake_rate>
+                        <net_export_rate units="total substrate/min">0.0</net_export_rate>
+                    </substrate>
+                </secretion>
+                <cell_interactions>
+                    <dead_phagocytosis_rate units="1/min">0.0</dead_phagocytosis_rate>
+                    <live_phagocytosis_rates>
+                        <phagocytosis_rate name="TLGL" units="1/min">0.0</phagocytosis_rate>
+                        <phagocytosis_rate name="TLGL_res1" units="1/min">0.0</phagocytosis_rate>
+                    </live_phagocytosis_rates>
+                    <attack_rates>
+                        <attack_rate name="TLGL" units="1/min">0.0</attack_rate>
+                        <attack_rate name="TLGL_res1" units="1/min">0.0</attack_rate>
+                    </attack_rates>
+                    <damage_rate units="1/min">1.0</damage_rate>
+                    <fusion_rates>
+                        <fusion_rate name="TLGL" units="1/min">0.0</fusion_rate>
+                        <fusion_rate name="TLGL_res1" units="1/min">0.0</fusion_rate>
+                    </fusion_rates>
+                </cell_interactions>
+                <cell_transformations>
+                    <transformation_rates>
+                        <transformation_rate name="TLGL" units="1/min">0.0</transformation_rate>
+                        <transformation_rate name="TLGL_res1" units="1/min">0.0</transformation_rate>
                     </transformation_rates>
                 </cell_transformations>
                 <intracellular type="maboss">
@@ -332,7 +516,7 @@
 
     <initial_conditions>
         <cell_positions enabled="true" type="csv">
-            <folder>config</folder>
+            <folder>/Users/JohnMetzcar/Documents/GitHub/PhysiLab/config</folder>
             <filename>cells_spatial_1000.csv</filename>
         </cell_positions>
     </initial_conditions>
@@ -347,6 +531,6 @@
         <substrate_name2 type="string" units="" description="name of intervention">pro_GAP2</substrate_name2>
         <substrate_name3 type="string" units="" description="name of intervention">pro_GAP3</substrate_name3>
         <num_substrates type="int" units="dimensionless" description="Number of compounds in intervention">3</num_substrates>
-        <use_damage_model type="bool" units="" description="Turns on damage model. DO NOT USE DAMAGE MODEL WITH XML BASED THRESHOLD interventions">false</use_damage_model>
+        <use_damage_model type="bool" units="" description="Turns on damage model. DO NOT USE DAMAGE MODEL WITH XML BASED THRESHOLD interventions">True</use_damage_model>
     </user_parameters>
 </PhysiCell_settings>
